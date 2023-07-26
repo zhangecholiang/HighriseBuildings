@@ -215,7 +215,7 @@ const onisApproved = async () => {
     <el-table-column label="社区" prop="departName" width="140"/>
     <el-table-column label="小区(楼)名称" prop="xqName" width="140"/>
     <el-table-column label="楼号" prop="lh" width="120"/>
-    <el-table-column label="地址" prop="szdz" width="160"/>
+    <el-table-column label="地址" prop="szdz" width="180" show-overflow-tooltip/>
     <el-table-column label="状态" width="140">
       <template #default="{row}">
         <div v-if="row.shzt === null">已上报</div>
@@ -230,8 +230,8 @@ const onisApproved = async () => {
     <el-table-column fixed="right" label="操作" width="250">
       <template #default="{row}">
         <el-button v-if="row.shzt === null" type="primary" @click="onView(row)">审核</el-button>
-        <el-button v-else-if=" row.shzt === '1' || row.shzt === 0" type="primary" @click="onView(row)">查看</el-button>
-        <el-button type="warning" @click="onEditor(row)">编辑</el-button>
+        <el-button v-if="row.shzt === 1 || row.shzt === 0" type="primary" @click="onView(row)">查看</el-button>
+        <el-button type="warning" v-if="row.shzt === null" @click="onEditor(row)">编辑</el-button>
         <el-button type="danger" @click="delSuccess(row)">删除</el-button>
       </template>
     </el-table-column>

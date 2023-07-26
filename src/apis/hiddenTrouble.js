@@ -20,3 +20,10 @@ export function submitRectification (data) {
 		url: "/api/jzw/yhzg", method: "post", data
 	});
 }
+
+// 查看整改
+export function getRectificationDetail (bh, jcxm) {
+	return axios({
+		url: "/api/jzw/yhglzgwcck?bh=" + bh + "&jcxm=" + jcxm, method: "get",
+	});
+}

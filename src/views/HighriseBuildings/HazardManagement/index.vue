@@ -7,6 +7,7 @@ import { getHiddenDangerList } from "@/apis/hiddenTrouble.js";
 import { useDict } from "@/stores/dict.js";
 import { getCommunity } from "@/apis/dict.js";
 import dayjs from "dayjs";
+import ViewHainfo from "@/views/HighriseBuildings/HazardManagement/components/ViewHainfo.vue";
 
 const params = reactive({
   "pageIndex": 1, "pageSize": 10, "where": {
@@ -54,12 +55,14 @@ const onClose = () => {
   showSuccess.value = false
 }
 const param = ref({})
-const showFooter = ref(false)
 const addmasg = (row) => {
-  showFooter.value = row.zt === '未整改';
+  if (row.zt === '未整改') {
+    showSuccess.value = true
+  } else {
+    showView.value = true
+  }
   param.value.bh = row.bh
   param.value.jcxm = row.jcxm
-  showSuccess.value = true
 }
 const onRefresh = () => {
   ElMessage({
@@ -72,6 +75,8 @@ const onConfirm = () => {
   Confirm.value.submitForm(Confirm.value.ruleFormRef)
   getData()
 }
+
+const showView = ref(false)
 </script>
 
 <template>
@@ -162,7 +167,7 @@ const onConfirm = () => {
   />
   <el-dialog v-model="showSuccess" center draggable title="查看" width="65%">
     <NewInformation v-if="showSuccess" ref="Confirm" :params="param" @colsemasg="onClose"></NewInformation>
-    <template #footer v-if="showFooter">
+    <template #footer>
       <span class="dialog-footer">
         <el-button @click="showSuccess = false">取消</el-button>
         <el-button type="primary" @click="onConfirm">
@@ -170,6 +175,9 @@ const onConfirm = () => {
         </el-button>
       </span>
     </template>
+  </el-dialog>
+  <el-dialog v-model="showView" center draggable title="查看" width="65%">
+    <ViewHainfo v-if="showView" ref="Confirm" :params="param" @colsemasg="onClose"></ViewHainfo>
   </el-dialog>
 </template>
 

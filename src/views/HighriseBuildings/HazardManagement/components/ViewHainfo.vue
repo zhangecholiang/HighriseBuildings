@@ -20,7 +20,7 @@ const props = defineProps({
 const emits = defineEmits(['colsemasg'])
 if (props.params.bh !== "") {
   const getData = async () => {
-    const {data} = await getRectification(props.params.bh, props.params.jcxm)
+    const {data} = await getRectificationDetail(props.params.bh, props.params.jcxm)
     Object.assign(Information, data)
     Information.jzgcxfyjszp = data.jzgcxfyjszp.map(item => {
       return {
@@ -37,58 +37,27 @@ if (props.params.bh !== "") {
         url: 'http://kfq.kejin.net.cn:8223' + item.path,
       }
     })
+    Information.zgzp = data.zgzp.map(item => {
+      return {
+        url: 'http://kfq.kejin.net.cn:8223' + item.path,
+      }
+    })
   }
   getData()
 }
 const ruleFormRef = ref()
-const rules = reactive({
-  zgsm: [{required: true, message: '请输入整改说明', trigger: 'blur'},],
-  zgwcsj: [{required: true, message: '请输入整改完成时间', trigger: 'blur'},],
-  zgzp: [{required: true, message: '请上传整改图片', trigger: 'blur'},]
-})
+
 const Information = reactive({
   qyfzrTel: '', fileList: [], fjbhzp: [],
 })
 
 const HazarInfo = reactive({})
-const submitForm = async (formEl) => {
-  if (!formEl) return
-  await formEl.validate(async (valid, fields) => {
-    if (valid) {
-      HazarInfo.jcxx_itme = props.params.bh
-      HazarInfo.jcxm = props.params.jcxm
-      HazarInfo.zgzp = HazarInfo.zgzp.map(item => {
-        return item.response.data
-      })
-      const data = await submitRectification(HazarInfo)
-      if (data.code === 200) {
-        ElMessage({
-          message: '提交成功', grouping: true, type: 'success',
-        })
-        setTimeout(() => {
-          emits('colsemasg')
-        }, 1000)
-      } else {
-        ElMessage({
-          message: data.msg, grouping: true, type: 'error',
-        })
-        setTimeout(() => {
-          emits('colsemasg')
-        }, 1000)
-      }
-    } else {
-      console.log('error submit!', fields)
-    }
-  })
-}
-defineExpose({
-  submitForm, ruleFormRef,
-})
+
 </script>
 
 <template>
   <el-scrollbar>
-    <el-form ref="ruleFormRef" :model="HazarInfo" :rules="rules" label-position="right"
+    <el-form ref="ruleFormRef" :model="HazarInfo" label-position="right"
              label-width="160px" status-icon>
       <div class="label-title">
         <span>基本信息</span>
@@ -201,40 +170,34 @@ defineExpose({
       <div class="label-title">
         <span>整改情况</span>
       </div>
-      <el-row :gutter="0" justify="start">
+      <el-row :gutter="0"  class="View-box" justify="start">
         <el-col :span="8">
-          <el-form-item label="检查事项" prop="">
+          <el-form-item label="检查事项：" prop="">
             <el-input v-model="Information.jcxm" readonly placeholder=""/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="备注" prop="">
-            <el-input v-model="HazarInfo.bz" readonly placeholder=""/>
+          <el-form-item label="备注：" prop="">
+            <el-input v-model="Information.bz" readonly placeholder=""/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="整改期限" prop="">
+          <el-form-item label="整改期限：" prop="">
             <el-input v-if="Information.zgqx" :value="dayjs(Information.zgqx).format('YYYY-MM-DD')" placeholder="" readonly/>
           </el-form-item>
         </el-col>
         <el-col :span="16">
-          <el-form-item label="整改说明" prop="zgsm">
-            <el-input v-model="HazarInfo.zgsm" placeholder=""/>
+          <el-form-item label="整改说明：" prop="">
+            <el-input v-model="Information.zgsm" placeholder=""/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="整改完成时间" prop="zgwcsj">
-            <el-date-picker
-                v-model="HazarInfo.zgwcsj"
-                format="YYYY/MM/DD"
-                placeholder=""
-                type="date"
-                value-format="YYYY-MM-DD"
-            />
+          <el-form-item label="整改完成时间：" prop="">
+            <el-input :value="dayjs(Information.zgwcsj).format('YYYY-MM-DD')" placeholder=""/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="检查图片" prop="">
+          <el-form-item label="检查图片：" prop="">
             <div v-for="fit in Information.fjbhzp" class="block">
               <el-image :preview-src-list="[fit.url]" :src="fit.url" fit="cover"
                         style="width: 100px; height: 100px;margin-right: 10px;"/>
@@ -242,20 +205,10 @@ defineExpose({
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="整改图片" prop="zgzp">
-            <div style="display: flex">
-              <el-upload
-                  v-model:file-list=HazarInfo.zgzp
-                  :before-upload="afterRead"
-                  :headers="{Authorization:store.token}"
-                  action="http://kfq.kejin.net.cn:8222/api/FileSet/uploadimage"
-                  class="upload-demo"
-                  list-type="picture-card"
-              >
-                <el-icon>
-                  <Plus/>
-                </el-icon>
-              </el-upload>
+          <el-form-item label="整改图片：" prop="">
+            <div v-for="fit in Information.zgzp" class="block">
+              <el-image :preview-src-list="[fit.url]" :src="fit.url" fit="cover"
+                        style="width: 100px; height: 100px;margin-right: 10px;"/>
             </div>
           </el-form-item>
         </el-col>

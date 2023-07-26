@@ -137,6 +137,7 @@ const activeNames = ref(['消防安全管理'])
 const getDict = async () => {
   const {data} = await getTreeMenu(873)
   BasicChecks.value = data
+  Information.BasicChecks = data
   EditInfo()
   loading.value = false
 }
@@ -284,10 +285,17 @@ const DeleteCustom = (index) => {
       <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
         <el-tab-pane label="基础检查项" name="first">
           <el-collapse v-model="activeNames" :accordion="isAccordion">
-            <el-collapse-item v-for="item in BasicChecks" :name="item.dictName" :title="item.dictName">
+            <el-collapse-item v-for="item in Information.BasicChecks" :name="item.dictName" :title="item.dictName">
               <el-row :gutter="15">
-                <el-col v-for="i in item.children" :span="8">
-                  <el-form-item :label=i.dictName :required="i.dictValue1 === '1'">
+                <el-col v-for="(i,index) in item.children" :key="index" :span="8">
+                  <el-form-item :key="index"
+                                :label=i.dictName
+                                :prop="'请输入'+i.dictName"
+                                :rules="i.dictValue1 === '1' ? {
+                                        required: true,
+                                        message: '请选择'+i.dictName,
+                                        trigger: 'change',
+                                      }: {}">
                     <el-select v-model="i.jcjg" clearable value-key="dictName">
                       <el-option v-for="opt in i.children" :label=opt.dictName :value=opt></el-option>
                     </el-select>

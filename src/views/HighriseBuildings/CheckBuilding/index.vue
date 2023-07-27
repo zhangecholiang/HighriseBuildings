@@ -211,11 +211,15 @@ const onisApproved = async () => {
     </el-row>
   </div>
   <el-table v-loading="loading" :data="tableData" element-loading-text="加载中..." stripe>
-    <el-table-column label="序号" type="index" width="100"/>
+    <el-table-column label="序号" type="index" width="80"/>
     <el-table-column label="社区" prop="departName" width="140"/>
     <el-table-column label="小区(楼)名称" prop="xqName" width="140"/>
     <el-table-column label="楼号" prop="lh" width="120"/>
-    <el-table-column label="地址" prop="szdz" width="180" show-overflow-tooltip/>
+    <el-table-column label="地址" prop="szdz" width="220" show-overflow-tooltip>
+      <template #default="{row}">
+        <div style="text-align: left">{{row.szdz}}</div>
+      </template>
+    </el-table-column>
     <el-table-column label="状态" width="140">
       <template #default="{row}">
         <div v-if="row.shzt === null">已上报</div>
@@ -226,7 +230,7 @@ const onisApproved = async () => {
     <el-table-column label="建筑性质" prop="jzxz"/>
     <el-table-column label="登记人" prop="jcr"/>
     <el-table-column label="登记时间" prop="jcsj"/>
-    <el-table-column label="检查次数" prop="jcts"/>
+    <el-table-column label="检查条数" prop="jcts"/>
     <el-table-column fixed="right" label="操作" width="250">
       <template #default="{row}">
         <el-button v-if="row.shzt === null" type="primary" @click="onView(row)">审核</el-button>

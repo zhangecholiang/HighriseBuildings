@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, ref } from "vue";
 import { Plus } from "@element-plus/icons-vue";
-import { getRectification, getRectificationDetail, submitRectification } from "@/apis/hiddenTrouble.js";
+import { getRectification, submitRectification } from "@/apis/hiddenTrouble.js";
 import { ElMessage } from "element-plus";
 import { useStore } from "@/stores/user.js";
 import { afterRead } from "@/utils/tools.js";
@@ -204,22 +204,13 @@ defineExpose({
       <el-row :gutter="0" justify="start">
         <el-col :span="8">
           <el-form-item label="检查事项" prop="">
-            <el-input v-model="Information.jcxm" readonly placeholder=""/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="备注" prop="">
-            <el-input v-model="HazarInfo.bz" readonly placeholder=""/>
+            <el-input v-model="Information.jcxm" placeholder="" readonly/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="整改期限" prop="">
-            <el-input v-if="Information.zgqx" :value="dayjs(Information.zgqx).format('YYYY-MM-DD')" placeholder="" readonly/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="16">
-          <el-form-item label="整改说明" prop="zgsm">
-            <el-input v-model="HazarInfo.zgsm" placeholder=""/>
+            <el-input v-if="Information.zgqx" :value="dayjs(Information.zgqx).format('YYYY-MM-DD')" placeholder=""
+                      readonly/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -233,32 +224,33 @@ defineExpose({
             />
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item label="检查图片" prop="">
-            <div v-for="fit in Information.fjbhzp" class="block">
-              <el-image :preview-src-list="[fit.url]" :src="fit.url" fit="cover"
-                        style="width: 100px; height: 100px;margin-right: 10px;"/>
-            </div>
+        <el-col :span="24">
+          <el-form-item label="整改说明" prop="zgsm">
+            <el-input v-model="HazarInfo.zgsm" :autosize="{ minRows: 4, maxRows: 10 }" placeholder="" type="textarea"/>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item label="整改图片" prop="zgzp">
-            <div style="display: flex">
-              <el-upload
-                  v-model:file-list=HazarInfo.zgzp
-                  :before-upload="afterRead"
-                  :headers="{Authorization:store.token}"
-                  action="http://kfq.kejin.net.cn:8222/api/FileSet/uploadimage"
-                  class="upload-demo"
-                  list-type="picture-card"
-              >
-                <el-icon>
-                  <Plus/>
-                </el-icon>
-              </el-upload>
-            </div>
-          </el-form-item>
-        </el-col>
+        <el-form-item label="检查图片" prop="">
+          <div v-for="fit in Information.fjbhzp" class="block">
+            <el-image :preview-src-list="[fit.url]" :src="fit.url" fit="cover"
+                      style="width: 100px; height: 100px;margin-right: 10px;"/>
+          </div>
+        </el-form-item>
+        <el-form-item label="整改图片" prop="zgzp">
+          <div style="display: flex">
+            <el-upload
+                v-model:file-list=HazarInfo.zgzp
+                :before-upload="afterRead"
+                :headers="{Authorization:store.token}"
+                action="http://kfq.kejin.net.cn:8222/api/FileSet/uploadimage"
+                class="upload-demo"
+                list-type="picture-card"
+            >
+              <el-icon>
+                <Plus/>
+              </el-icon>
+            </el-upload>
+          </div>
+        </el-form-item>
       </el-row>
     </el-form>
   </el-scrollbar>

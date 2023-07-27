@@ -1,10 +1,7 @@
 <script setup>
 import { reactive, ref } from "vue";
-import { Plus } from "@element-plus/icons-vue";
-import { getRectification, getRectificationDetail, submitRectification } from "@/apis/hiddenTrouble.js";
-import { ElMessage } from "element-plus";
+import { getRectificationDetail } from "@/apis/hiddenTrouble.js";
 import { useStore } from "@/stores/user.js";
-import { afterRead } from "@/utils/tools.js";
 import dayjs from "dayjs";
 
 const store = useStore()
@@ -170,25 +167,16 @@ const HazarInfo = reactive({})
       <div class="label-title">
         <span>整改情况</span>
       </div>
-      <el-row :gutter="0"  class="View-box" justify="start">
+      <el-row :gutter="0" class="View-box" justify="start">
         <el-col :span="8">
           <el-form-item label="检查事项：" prop="">
-            <el-input v-model="Information.jcxm" readonly placeholder=""/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="备注：" prop="">
-            <el-input v-model="Information.bz" readonly placeholder=""/>
+            <el-input v-model="Information.jcxm" placeholder="" readonly/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="整改期限：" prop="">
-            <el-input v-if="Information.zgqx" :value="dayjs(Information.zgqx).format('YYYY-MM-DD')" placeholder="" readonly/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="16">
-          <el-form-item label="整改说明：" prop="">
-            <el-input v-model="Information.zgsm" placeholder=""/>
+            <el-input v-if="Information.zgqx" :value="dayjs(Information.zgqx).format('YYYY-MM-DD')" placeholder=""
+                      readonly/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -196,22 +184,23 @@ const HazarInfo = reactive({})
             <el-input :value="dayjs(Information.zgwcsj).format('YYYY-MM-DD')" placeholder=""/>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item label="检查图片：" prop="">
-            <div v-for="fit in Information.fjbhzp" class="block">
-              <el-image :preview-src-list="[fit.url]" :src="fit.url" fit="cover"
-                        style="width: 100px; height: 100px;margin-right: 10px;"/>
-            </div>
+        <el-col :span="24">
+          <el-form-item label="整改说明：" prop="">
+            <el-input v-model="Information.zgsm" autosize placeholder="" readonly/>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item label="整改图片：" prop="">
-            <div v-for="fit in Information.zgzp" class="block">
-              <el-image :preview-src-list="[fit.url]" :src="fit.url" fit="cover"
-                        style="width: 100px; height: 100px;margin-right: 10px;"/>
-            </div>
-          </el-form-item>
-        </el-col>
+        <el-form-item label="检查图片：" prop="">
+          <div v-for="fit in Information.fjbhzp" class="block">
+            <el-image :preview-src-list="[fit.url]" :src="fit.url" fit="cover"
+                      style="width: 100px; height: 100px;margin-right: 10px;"/>
+          </div>
+        </el-form-item>
+        <el-form-item label="整改图片：" prop="">
+          <div v-for="fit in Information.zgzp" class="block">
+            <el-image :preview-src-list="[fit.url]" :src="fit.url" fit="cover"
+                      style="width: 100px; height: 100px;margin-right: 10px;"/>
+          </div>
+        </el-form-item>
       </el-row>
     </el-form>
   </el-scrollbar>

@@ -180,7 +180,11 @@ const OnView = (row) => {
     <el-table-column label="社区" prop="departName" width="150"/>
     <el-table-column label="小区(楼)名称" prop="xqName" width="150"/>
     <el-table-column label="楼号" prop="lh" width="150"/>
-    <el-table-column label="地址" prop="szdz" width="180" show-overflow-tooltip/>
+    <el-table-column label="地址" width="220" show-overflow-tooltip>
+      <template #default="{row}">
+        <div style="text-align: left">{{row.szdz}}</div>
+      </template>
+    </el-table-column>
     <el-table-column label="建筑性质" prop="jzxz"/>
     <el-table-column label="登记人" prop="lxr"/>
     <el-table-column label="登记时间">

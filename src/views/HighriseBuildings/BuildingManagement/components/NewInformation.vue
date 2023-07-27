@@ -26,7 +26,7 @@ const rules = reactive({
   lxdh: [{required: true, message: '请输入联系电话', trigger: 'blur'}, {
     pattern: /^1[3456789]\d{9}$/, message: '请输入正确的手机号', trigger: 'blur'
   }],
-  ldqm: [{required: true, message: '请上传楼栋全貌', trigger: 'blur'},],
+  el_ldqm: [{required: true, message: '请上传楼栋全貌', trigger: 'blur'},],
   jzgcxfyjs: [{required: true, message: '请上传建筑工程消防意见书', trigger: 'blur'},],
   gcjzlb: [{required: true, message: '请输入高层建筑类别', trigger: 'blur'},],
   lg: [{required: true, message: '请输入楼高', trigger: 'blur'},],
@@ -39,26 +39,18 @@ const rules = reactive({
 const Information = reactive({
   ldqm: [], jzgcxfyjs: [],
 })
-// const ldqbzp = ref([])
-// const onSuccess = (response) => {
-//   Information.jzgcxfyjs = response.data
-// }
-// const jzgc = ref([])
-// const onSuccess = (response) => {
-//   Information.jzgcxfyjs = response.data
-// }
 onBeforeMount(() => {
   if (props.bh !== '') {
     const getBuilding = async (bh) => {
       const {data} = await editBuilding(bh)
-      Information.ldqm = data.ldqmzp.map(item => {
+      Information.el_ldqm = data.ldqmzp.map(item => {
         return {
           url: 'http://kfq.kejin.net.cn:8223' + item.path, response: {
             data: item
           }
         }
       })
-      Information.jzgcxfyjs = data.jzgcxfyjszp.map(item => {
+      Information.el_jzgcxfyjs = data.jzgcxfyjszp.map(item => {
         return {
           url: 'http://kfq.kejin.net.cn:8223' + item.path, response: {
             data: item
@@ -89,10 +81,10 @@ const submitForm = async (formEl) => {
   await formEl.validate(async (valid, fields) => {
     if (valid) {
       loading.value = true
-      Information.ldqm = Information.ldqm.map(item => {
+      Information.ldqm = Information.el_ldqm.map(item => {
         return item.response.data
       })
-      Information.jzgcxfyjs = Information.jzgcxfyjs.map(item => {
+      Information.jzgcxfyjs = Information.el_jzgcxfyjs.map(item => {
         return item.response.data
       })
       if (props.bh !== '') {
@@ -212,9 +204,9 @@ defineExpose({
           </el-form-item>
         </el-col>
       </el-row>
-      <el-form-item label="楼栋全貌" prop="ldqm">
+      <el-form-item label="楼栋全貌" prop="el_ldqm">
         <el-upload
-            v-model:file-list=Information.ldqm
+            v-model:file-list=Information.el_ldqm
             :before-upload="afterRead"
             :headers="{Authorization:store.token}"
             action="http://kfq.kejin.net.cn:8222/api/FileSet/uploadimage"
@@ -228,7 +220,7 @@ defineExpose({
       </el-form-item>
       <el-form-item label="建筑工程消防意见书" prop="">
         <el-upload
-            v-model:file-list=Information.jzgcxfyjs
+            v-model:file-list=Information.el_jzgcxfyjs
             :before-upload="afterRead"
             :headers="{Authorization:store.token}"
             action="http://kfq.kejin.net.cn:8222/api/FileSet/uploadimage"

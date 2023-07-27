@@ -9,7 +9,7 @@ import { getCommunity } from "@/apis/dict.js";
 
 const params = reactive({
   "pageIndex": 1, "pageSize": 10, "where": {
-    "csqLoginid": "", "xqbh": "", "sj": [],
+    "loginid": "", "sj": ['', ''],
   }
 })
 const dict = useDict()
@@ -25,9 +25,6 @@ const getxqList = async (loginid) => {
 const tableData = ref([])
 const loading = ref(false)
 const getData = () => {
-  if (params.where.sj.length > 0) {
-    return  params.where.sj.split(',')
-  }
   loading.value = true
   setTimeout(async () => {
     const {data} = await getStatisticsList(params)
@@ -53,6 +50,8 @@ const handleCurrentChange = (val) => {
 }
 const showSuccess = ref(false)
 const onRefresh = () => {
+  params.where.loginid = ''
+  params.where.sj = ['', '']
   ElMessage({
     message: '清除成功', grouping: true, type: 'success',
   })
@@ -67,7 +66,7 @@ const onConfirm = () => {
 <template>
   <el-form :inline="true" :model="params" class="demo-form-inline">
     <el-form-item>
-      <el-select v-model="params.where.csqLoginid" clearable placeholder="社区名称" @change="getxqList">
+      <el-select v-model="params.where.loginid" clearable placeholder="社区名称" @change="getxqList">
         <el-option
             v-for="item in dict.sqList"
             :key="item.loginid"
@@ -77,18 +76,8 @@ const onConfirm = () => {
       </el-select>
     </el-form-item>
     <el-form-item>
-      <el-select v-model="params.where.xqbh" clearable placeholder="小区">
-        <el-option
-            v-for="item in xqlist"
-            :key="item.xqbh"
-            :label="item.xqName"
-            :value="item.xqbh">
-        </el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item>
       <el-date-picker
-          v-model="params.where.patientType"
+          v-model="params.where.sj"
           end-placeholder="结束日期"
           format="YYYY-MM-DD"
           range-separator="至"

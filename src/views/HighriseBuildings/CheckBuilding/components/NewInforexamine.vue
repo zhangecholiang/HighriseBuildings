@@ -6,7 +6,7 @@ import { useDict } from "@/stores/dict.js";
 import { ElMessage } from "element-plus";
 import { addcheck, getbuild, getbuildinfo, getcheckDetail } from "@/apis/examine.js";
 import { useStore } from "@/stores/user.js";
-import { afterRead } from "@/utils/tools.js";
+import { afterRead, elFormErrorScrollIntoView } from "@/utils/tools.js";
 
 const props = defineProps({
   bh: {
@@ -119,8 +119,11 @@ const submitForm = (formEl) => {
         }
       }
     } else {
-      console.log('error submit!', fields)
-      // isAccordion.value = false
+      isAccordion.value = false
+      activeNames.value = ['消防安全管理', '建筑防火', '消防设施']
+      setTimeout(() => {
+        elFormErrorScrollIntoView()
+      }, 100)
     }
   })
 }
@@ -284,7 +287,8 @@ const DeleteCustom = (index) => {
       <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
         <el-tab-pane label="基础检查项" name="first">
           <el-collapse v-model="activeNames" :accordion="isAccordion">
-            <el-collapse-item v-for="(item,ind) in Information.BasicChecks" :name="item.dictName" :title="item.dictName">
+            <el-collapse-item v-for="(item,ind) in Information.BasicChecks" :name="item.dictName"
+                              :title="item.dictName">
               <el-row :gutter="15">
                 <el-col v-for="(i,index) in item.children" :key="index" :span="8">
                   <el-form-item :label=i.dictName

@@ -133,12 +133,14 @@ const showView = ref(false)
     </el-row>
   </div>
   <el-table v-loading="loading" :data="tableData" element-loading-text="加载中..." stripe>
-    <el-table-column label="序号" type="index" width="100"/>
-    <el-table-column label="建筑性质" prop="jzxz" width="150"/>
-    <el-table-column label="社区" prop="departName" width="150"/>
-    <el-table-column label="小区(楼)名称" prop="xqName" width="150"/>
-    <el-table-column label="检查类型" prop="jcxm" width="200" show-overflow-tooltip/>
-    <el-table-column label="检查事项" prop="jcjg" width="200" show-overflow-tooltip/>
+    <el-table-column label="序号" type="index" width="80"/>
+    <el-table-column label="检查人" prop="jcr" width="130"/>
+    <el-table-column label="检查时间" prop="jcsj" width="130"/>
+    <el-table-column label="建筑性质" prop="jzxz" width="130"/>
+    <el-table-column label="社区" prop="departName" width="130"/>
+    <el-table-column label="小区(楼)名称" prop="xqName" width="130"/>
+    <el-table-column label="检查类型" prop="jcxm" width="180" show-overflow-tooltip/>
+    <el-table-column label="检查事项" prop="jcjg" width="180" show-overflow-tooltip/>
     <el-table-column label="隐患等级" prop="yhdj"/>
     <el-table-column label="隐患状态" prop="zt"/>
     <el-table-column label="整改期限">

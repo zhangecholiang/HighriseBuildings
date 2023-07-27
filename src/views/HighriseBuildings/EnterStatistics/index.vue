@@ -9,7 +9,7 @@ import { getCommunity } from "@/apis/dict.js";
 
 const params = reactive({
   "pageIndex": 1, "pageSize": 10, "where": {
-    "csqLoginid": "", "xqbh": "", "patientType": "",
+    "csqLoginid": "", "xqbh": "", "sj": [],
   }
 })
 const dict = useDict()
@@ -25,6 +25,9 @@ const getxqList = async (loginid) => {
 const tableData = ref([])
 const loading = ref(false)
 const getData = () => {
+  if (params.where.sj.length > 0) {
+    return  params.where.sj.split(',')
+  }
   loading.value = true
   setTimeout(async () => {
     const {data} = await getStatisticsList(params)
@@ -87,9 +90,11 @@ const onConfirm = () => {
       <el-date-picker
           v-model="params.where.patientType"
           end-placeholder="结束日期"
+          format="YYYY-MM-DD"
           range-separator="至"
           start-placeholder="开始日期"
           type="daterange"
+          value-format="YYYY-MM-DD"
       />
     </el-form-item>
   </el-form>

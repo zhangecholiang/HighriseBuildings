@@ -176,7 +176,7 @@ const OnView = (row) => {
     </el-row>
   </div>
   <el-table v-loading="loading" :data="tableData" element-loading-text="加载中..." stripe>
-    <el-table-column label="序号" type="index" width="100"/>
+    <el-table-column label="序号" type="index" width="80"/>
     <el-table-column label="社区" prop="departName" width="150"/>
     <el-table-column label="小区(楼)名称" prop="xqName" width="150"/>
     <el-table-column label="楼号" prop="lh" width="150"/>

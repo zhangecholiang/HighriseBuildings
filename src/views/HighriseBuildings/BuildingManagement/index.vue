@@ -180,7 +180,7 @@ const OnView = (row) => {
     <el-table-column label="社区" prop="departName" width="150"/>
     <el-table-column label="小区(楼)名称" prop="xqName" width="150"/>
     <el-table-column label="楼号" prop="lh" width="150"/>
-    <el-table-column label="地址" width="220" show-overflow-tooltip>
+    <el-table-column label="地址" width="230" show-overflow-tooltip>
       <template #default="{row}">
         <div style="text-align: left">{{row.szdz}}</div>
       </template>
@@ -192,7 +192,7 @@ const OnView = (row) => {
         {{ dayjs(row.posttime).format('YYYY-MM-DD') }}
       </template>
     </el-table-column>
-    <el-table-column label="检查条数" prop="jcts"/>
+    <el-table-column label="检查条数" prop="jcts" width="130"/>
     <el-table-column fixed="right" label="操作" width="300">
       <template #default="{row}">
         <el-button type="primary" @click="OnView(row)">查看</el-button>

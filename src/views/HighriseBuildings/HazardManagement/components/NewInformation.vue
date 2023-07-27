@@ -44,20 +44,21 @@ const ruleFormRef = ref()
 const rules = reactive({
   zgsm: [{required: true, message: '请输入整改说明', trigger: 'blur'},],
   zgwcsj: [{required: true, message: '请输入整改完成时间', trigger: 'blur'},],
-  zgzp: [{required: true, message: '请上传整改图片', trigger: 'blur'},]
+  el_zgzp: [{required: true, message: '请上传整改图片', trigger: 'blur'},]
 })
 const Information = reactive({
   qyfzrTel: '', fileList: [], fjbhzp: [],
 })
-
+const loading = ref(false)
 const HazarInfo = reactive({})
 const submitForm = async (formEl) => {
   if (!formEl) return
   await formEl.validate(async (valid, fields) => {
     if (valid) {
+      loading.value = true
       HazarInfo.jcxx_itme = props.params.bh
       HazarInfo.jcxm = props.params.jcxm
-      HazarInfo.zgzp = HazarInfo.zgzp.map(item => {
+      HazarInfo.zgzp = HazarInfo.el_zgzp.map(item => {
         return item.response.data
       })
       const data = await submitRectification(HazarInfo)
@@ -66,6 +67,7 @@ const submitForm = async (formEl) => {
           message: '提交成功', grouping: true, type: 'success',
         })
         setTimeout(() => {
+          loading.value = false
           emits('colsemasg')
         }, 1000)
       } else {
@@ -73,6 +75,7 @@ const submitForm = async (formEl) => {
           message: data.msg, grouping: true, type: 'error',
         })
         setTimeout(() => {
+          loading.value = false
           emits('colsemasg')
         }, 1000)
       }
@@ -88,8 +91,8 @@ defineExpose({
 
 <template>
   <el-scrollbar>
-    <el-form ref="ruleFormRef" :model="HazarInfo" :rules="rules" label-position="right"
-             label-width="160px" status-icon>
+    <el-form ref="ruleFormRef" v-loading="loading" :model="HazarInfo" :rules="rules"
+             element-loading-text="提交中..." label-position="right" label-width="160px" status-icon>
       <div class="label-title">
         <span>基本信息</span>
       </div>
@@ -235,10 +238,10 @@ defineExpose({
                       style="width: 100px; height: 100px;margin-right: 10px;"/>
           </div>
         </el-form-item>
-        <el-form-item label="整改图片" prop="zgzp">
+        <el-form-item label="整改图片" prop="el_zgzp">
           <div style="display: flex">
             <el-upload
-                v-model:file-list=HazarInfo.zgzp
+                v-model:file-list=HazarInfo.el_zgzp
                 :before-upload="afterRead"
                 :headers="{Authorization:store.token}"
                 action="http://kfq.kejin.net.cn:8222/api/FileSet/uploadimage"

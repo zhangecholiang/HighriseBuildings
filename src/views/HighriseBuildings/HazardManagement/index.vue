@@ -141,7 +141,9 @@ const showView = ref(false)
     <el-table-column label="小区(楼)名称" prop="xqName" width="130"/>
     <el-table-column label="检查类型" prop="jcxm" width="180" show-overflow-tooltip/>
     <el-table-column label="检查事项" prop="jcjg" width="180" show-overflow-tooltip/>
-    <el-table-column label="隐患等级" prop="yhdj"/>
+    <el-table-column label="隐患等级">
+      <span>一般隐患</span>
+    </el-table-column>
     <el-table-column label="隐患状态" prop="zt"/>
     <el-table-column label="整改期限">
       <template #default="{row}">

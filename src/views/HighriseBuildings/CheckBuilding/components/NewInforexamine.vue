@@ -297,7 +297,7 @@ const DeleteCustom = (index) => {
                                         required: true,
                                         message: '请选择'+i.dictName,
                                         trigger: 'change',
-                                      }: {}">
+                                      }: ''">
                     <el-select v-model="i.jcjg" clearable value-key="dictName">
                       <el-option v-for="opt in i.children" :label=opt.dictName :value=opt></el-option>
                     </el-select>

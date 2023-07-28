@@ -1,9 +1,9 @@
 <script setup>
 import { useRouter } from "vue-router";
-import {
-  Fold, UserFilled, User, Setting, EditPen, Lock, Notebook, Refresh, SwitchButton
-} from "@element-plus/icons-vue";
+import { Fold, Refresh, SwitchButton, UserFilled } from "@element-plus/icons-vue";
+import { useStore } from "@/stores/user.js";
 
+const store = useStore()
 const emits = defineEmits(['CollapseChange'])
 const router = useRouter()
 const gopack = () => {
@@ -32,7 +32,8 @@ const cleanTheCache = () => {
 }
 const logout = () => {
   // User.user.loginOut()
-  router.push('/')
+  // router.push('/')
+  window.location.href = 'http://kfq.kejin.net.cn:8005/login_230307.aspx'
 }
 </script>
 
@@ -42,46 +43,17 @@ const logout = () => {
       <el-icon class="fun-ico" size="35" @click="gopack">
         <component :is="Fold"/>
       </el-icon>
+      <span style="color: #000c17;line-height: 59px">欢迎进入 昆山开发区应急高层建筑检查系统</span>
     </div>
     <el-dropdown class="setting">
       <div style="display: flex;justify-content: center;align-items: center">
         <el-icon size="25">
           <UserFilled/>
         </el-icon>
-        <span style="margin-left: 15px;">欢迎您！</span>
+        <span style="margin-left: 15px;">欢迎您！{{ store.userInfo.realName }}</span>
       </div>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item @click="">
-            <el-icon>
-              <User/>
-            </el-icon>
-            个人中心
-          </el-dropdown-item>
-          <el-dropdown-item @click="">
-            <el-icon>
-              <Setting/>
-            </el-icon>
-            账户设置
-          </el-dropdown-item>
-          <el-dropdown-item @click="">
-            <el-icon>
-              <EditPen/>
-            </el-icon>
-            系统设置
-          </el-dropdown-item>
-          <el-dropdown-item @click="">
-            <el-icon>
-              <Lock/>
-            </el-icon>
-            密码修改
-          </el-dropdown-item>
-          <el-dropdown-item @click="">
-            <el-icon>
-              <Notebook/>
-            </el-icon>
-            切换部门
-          </el-dropdown-item>
           <el-dropdown-item @click="cleanTheCache">
             <el-icon>
               <Refresh/>
@@ -107,15 +79,15 @@ const logout = () => {
   .function-l {
     float: left;
     display: flex;
-    height: 50px;
+    height: 59px;
     align-items: center;
 
     .fun-ico {
       width: 26px;
       height: 25px;
-      margin-right: 50px;
+      margin-right: 25px;
       cursor: pointer;
-      color: #fff;
+      color: #000;
     }
   }
 
@@ -134,11 +106,12 @@ const logout = () => {
   }
 
   .setting {
-    color: #fff;
+    color: gray;
     float: right;
     cursor: pointer;
+    margin-right: 10px;
     display: flex;
-    height: 50px;
+    height: 59px;
     align-items: center;
   }
 }

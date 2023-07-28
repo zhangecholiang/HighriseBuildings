@@ -10,7 +10,7 @@ import dayjs from "dayjs";
 import ViewHainfo from "@/views/HighriseBuildings/HazardManagement/components/ViewHainfo.vue";
 
 const params = reactive({
-  "pageIndex": 1, "pageSize": 10, "where": {
+  "pageIndex": 1, "pageSize": 20, "where": {
     "csqLoginid": "", "xqbh": "", "zt": "", "jzxz": '', "yhdj": ''
   }
 })
@@ -37,7 +37,7 @@ const getData = () => {
 }
 getData()
 const currentPage3 = ref(1)
-const pageSize3 = ref(10)
+const pageSize3 = ref(20)
 const total = ref(1)
 const small = ref(false)
 const background = ref(false)
@@ -80,6 +80,9 @@ const showView = ref(false)
 </script>
 
 <template>
+  <div class="table-title">
+    隐患管理
+  </div>
   <el-form :inline="true" :model="params" class="demo-form-inline">
     <el-form-item>
       <el-select v-model="params.where.csqLoginid" clearable placeholder="社区名称" @change="getxqList">
@@ -123,36 +126,47 @@ const showView = ref(false)
         <el-option label="重大隐患" value="重大隐患"/>
       </el-select>
     </el-form-item>
+    <el-form-item>
+      <el-button :icon="Search" type="primary" @click="getData">查询</el-button>
+    </el-form-item>
+    <el-form-item>
+      <el-button :icon="Refresh" @click="onRefresh">清除查询</el-button>
+    </el-form-item>
   </el-form>
-  <div class="tab-header">
-    <el-row>
-      <el-col :span="24" align="right">
-        <el-button :icon="Search" type="primary" @click="getData">查询</el-button>
-        <el-button :icon="Refresh" @click="onRefresh">清除查询</el-button>
-      </el-col>
-    </el-row>
-  </div>
-  <el-table v-loading="loading" :data="tableData" element-loading-text="加载中..." stripe>
+  <!--  <div class="tab-header">-->
+  <!--    <el-row>-->
+  <!--      <el-col :span="24" align="right">-->
+  <!--      </el-col>-->
+  <!--    </el-row>-->
+  <!--  </div>-->
+  <el-table v-loading="loading" :data="tableData" height="calc(100vh - 250px)"
+            :header-cell-style="{ 'fontSize':'16px',color: '#606266',height:'50px' }"
+            element-loading-text="加载中..." stripe>
     <el-table-column label="序号" type="index" width="80"/>
-    <el-table-column label="检查人" prop="jcr" width="130"/>
-    <el-table-column label="检查时间" prop="jcsj" width="130"/>
-    <el-table-column label="建筑性质" prop="jzxz" width="130"/>
-    <el-table-column label="社区" prop="departName" width="130"/>
-    <el-table-column label="小区(楼)名称" prop="xqName" width="130"/>
-    <el-table-column label="检查类型" prop="jcxm" width="180" show-overflow-tooltip/>
-    <el-table-column label="检查事项" prop="jcjg" width="180" show-overflow-tooltip/>
+    <el-table-column label="检查人" prop="jcr" width="100"/>
+    <el-table-column label="检查时间" prop="jcsj" width="120"/>
+    <el-table-column label="建筑性质" prop="jzxz" width="120"/>
+    <el-table-column label="社区" prop="departName" width="120"/>
+    <el-table-column label="小区(楼)名称" prop="xqName" width="120"/>
+    <el-table-column label="检查类型" prop="jcxm" show-overflow-tooltip width="220"/>
+    <el-table-column label="检查事项" prop="jcjg" show-overflow-tooltip width="220"/>
     <el-table-column label="隐患等级">
       <span>一般隐患</span>
     </el-table-column>
-    <el-table-column label="隐患状态" prop="zt"/>
+    <el-table-column label="隐患状态">
+      <template #default="{row}">
+        <el-tag v-if="row.zt === '未整改'" class="ml-2" size="large" type="warning">{{ row.zt }}</el-tag>
+        <el-tag v-else class="ml-2" size="large" type="success">{{ row.zt }}</el-tag>
+      </template>
+    </el-table-column>
     <el-table-column label="整改期限">
       <template #default="{row}">
         <span v-if="row.zgqx">{{ dayjs(row.zgqx).format('YYYY-MM-DD') }}</span>
       </template>
     </el-table-column>
-    <el-table-column fixed="right" label="操作" width="150">
+    <el-table-column fixed="right" label="操作" width="140">
       <template #default="{row}">
-        <el-button v-if="row.zt === '未整改'" type="primary" @click="addmasg(row)">整改</el-button>
+        <el-button v-if="row.zt === '未整改'" color="rgb(49, 109, 198)" @click="addmasg(row)">整改</el-button>
         <el-button v-else type="primary" @click="addmasg(row)">查看</el-button>
       </template>
     </el-table-column>
@@ -197,7 +211,7 @@ const showView = ref(false)
 }
 
 .el-table {
-  margin-top: 20px;
+  margin-top: 5px;
   height: calc(100vh - 260px);
 }
 

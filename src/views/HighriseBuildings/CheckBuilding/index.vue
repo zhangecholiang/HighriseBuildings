@@ -10,7 +10,7 @@ import ViewInfoexamine from "@/views/HighriseBuildings/CheckBuilding/components/
 
 const dict = useDict()
 const params = reactive({
-  "pageIndex": 1, "pageSize": 10, "where": {
+  "pageIndex": 1, "pageSize": 20, "where": {
     "csqLoginid": "", "xqbh": "", "jzxz": "",
   }
 })
@@ -36,7 +36,7 @@ const getData = () => {
 }
 getData()
 const currentPage3 = ref(1)
-const pageSize3 = ref(10)
+const pageSize3 = ref(20)
 const total = ref(1)
 const small = ref(false)
 const background = ref(false)
@@ -161,6 +161,9 @@ const onisApproved = async () => {
 </script>
 
 <template>
+  <div class="table-title">
+    建筑物检查
+  </div>
   <el-form :inline="true" :model="params" class="demo-form-inline">
     <el-form-item>
       <el-select v-model="params.where.csqLoginid" clearable placeholder="社区名称" @change="getxqList">
@@ -210,21 +213,23 @@ const onisApproved = async () => {
       </el-col>
     </el-row>
   </div>
-  <el-table v-loading="loading" :data="tableData" element-loading-text="加载中..." stripe>
+  <el-table v-loading="loading" :data="tableData" :header-cell-style="{ 'fontSize':'16px',color: '#606266',height:'50px' }"
+            element-loading-text="加载中..." height="calc(100vh - 310px)"
+            stripe>
     <el-table-column label="序号" type="index" width="80"/>
-    <el-table-column label="社区" prop="departName" width="140"/>
-    <el-table-column label="小区(楼)名称" prop="xqName" width="140"/>
+    <el-table-column label="社区" prop="departName" width="130"/>
+    <el-table-column label="小区(楼)名称" prop="xqName" width="130"/>
     <el-table-column label="楼号" prop="lh" width="120"/>
-    <el-table-column label="地址" prop="szdz" width="230" show-overflow-tooltip>
+    <el-table-column label="地址" prop="szdz" show-overflow-tooltip width="250">
       <template #default="{row}">
-        <div style="text-align: left">{{row.szdz}}</div>
+        <div style="text-align: left">{{ row.szdz }}</div>
       </template>
     </el-table-column>
     <el-table-column label="状态" width="140">
       <template #default="{row}">
-        <div v-if="row.shzt === null">已上报</div>
-        <div v-else-if="row.shzt === 0 ">审核不通过</div>
-        <div v-else-if="row.shzt">已审核通过</div>
+        <el-tag v-if="row.shzt === null" class="ml-2" effect="light" size="large" type="info">已上报</el-tag>
+        <el-tag v-else-if="row.shzt === 0 " class="ml-2" effect="light" size="large" type="danger">审核不通过</el-tag>
+        <el-tag v-else-if="row.shzt" class="ml-2" effect="light" size="large" type="success">已审核通过</el-tag>
       </template>
     </el-table-column>
     <el-table-column label="建筑性质" prop="jzxz"/>
@@ -235,7 +240,7 @@ const onisApproved = async () => {
       <template #default="{row}">
         <el-button v-if="row.shzt === null" type="primary" @click="onView(row)">审核</el-button>
         <el-button v-if="row.shzt === 1 || row.shzt === 0" type="primary" @click="onView(row)">查看</el-button>
-        <el-button type="warning" v-if="row.shzt === null" @click="onEditor(row)">编辑</el-button>
+        <el-button v-if="row.shzt === null" type="warning" @click="onEditor(row)">编辑</el-button>
         <el-button type="danger" @click="delSuccess(row)">删除</el-button>
       </template>
     </el-table-column>
@@ -289,8 +294,8 @@ const onisApproved = async () => {
 }
 
 .el-table {
-  margin-top: 20px;
-  height: calc(100vh - 260px);
+  margin-top: 5px;
+  height: calc(100vh - 320px);
 }
 
 :deep(.el-table__cell) {

@@ -11,7 +11,7 @@ import NewInforexamine from "@/views/HighriseBuildings/CheckBuilding/components/
 import ViewInfomation from "@/views/HighriseBuildings/BuildingManagement/components/ViewInfomation.vue";
 
 const params = reactive({
-  "pageIndex": 1, "pageSize": 10, "where": {
+  "pageIndex": 1, "pageSize": 20, "where": {
     "csqLoginid": "", "xqbh": "", "jzxz": "",
   }
 })
@@ -38,7 +38,7 @@ const getData = () => {
 }
 getData()
 const currentPage3 = ref(1)
-const pageSize3 = ref(10)
+const pageSize3 = ref(20)
 const total = ref(1)
 const small = ref(false)
 const background = ref(false)
@@ -125,6 +125,9 @@ const OnView = (row) => {
 </script>
 
 <template>
+  <div class="table-title">
+    建筑物管理
+  </div>
   <el-form :inline="true" :model="params" class="demo-form-inline">
     <el-form-item>
       <el-select v-model="params.where.csqLoginid" clearable placeholder="社区名称" @change="getxqList">
@@ -175,14 +178,17 @@ const OnView = (row) => {
       </el-col>
     </el-row>
   </div>
-  <el-table v-loading="loading" :data="tableData" element-loading-text="加载中..." stripe>
+  <el-table v-loading="loading" :data="tableData" element-loading-text="加载中..." stripe
+            :header-cell-style="{ 'fontSize':'16px',color: '#606266',height:'50px' }"
+            height="calc(100vh - 310px)"
+  >
     <el-table-column label="序号" type="index" width="80"/>
     <el-table-column label="社区" prop="departName" width="150"/>
     <el-table-column label="小区(楼)名称" prop="xqName" width="150"/>
     <el-table-column label="楼号" prop="lh" width="150"/>
-    <el-table-column label="地址" width="230" show-overflow-tooltip>
+    <el-table-column label="地址" show-overflow-tooltip width="250">
       <template #default="{row}">
-        <div style="text-align: left">{{row.szdz}}</div>
+        <div style="text-align: left">{{ row.szdz }}</div>
       </template>
     </el-table-column>
     <el-table-column label="建筑性质" prop="jzxz"/>
@@ -193,7 +199,7 @@ const OnView = (row) => {
       </template>
     </el-table-column>
     <el-table-column label="检查条数" prop="jcts" width="130"/>
-    <el-table-column fixed="right" label="操作" width="300">
+    <el-table-column fixed="right" label="操作" width="320">
       <template #default="{row}">
         <el-button type="primary" @click="OnView(row)">查看</el-button>
         <el-button type="warning" @click="onEditor(row)">编辑</el-button>
@@ -245,6 +251,7 @@ const OnView = (row) => {
 </template>
 
 <style lang="less" scoped>
+
 .demo-form-inline {
   border-bottom: 1px solid #ebeef5;
   display: flex;
@@ -256,8 +263,8 @@ const OnView = (row) => {
 }
 
 .el-table {
-  margin-top: 20px;
-  height: calc(100vh - 260px);
+  margin-top: 5px;
+  height: calc(100vh - 320px);
 }
 
 :deep(.el-table__cell) {

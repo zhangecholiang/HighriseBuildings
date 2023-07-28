@@ -53,16 +53,29 @@ const getinfos = async () => {
 }
 getinfos()
 
-const objectSpanMethod = ({rowIndex, columnIndex}) => {
+const genderSpanCity = ({ row, column, rowIndex, columnIndex}) => {
   if (columnIndex === 0) {
-    if (rowIndex % 2 === 0) {
-      return {
-        rowspan: 2, colspan: 1,
-      }
+    // 获取当前单元格的值
+    const currentValue = row[column.property];
+    // 获取上一行相同列的值
+    const preRow = tableData.value[rowIndex - 1];
+    const preValue = preRow ? preRow[column.property] : null;
+    // 如果当前值和上一行的值相同，则将当前单元格隐藏
+    if (currentValue === preValue) {
+      return {rowspan: 0, colspan: 0};
     } else {
-      return {
-        rowspan: 0, colspan: 0,
+      // 否则计算当前单元格应该跨越多少行
+      let rowspan = 1;
+      for (let i = rowIndex + 1; i < tableData.value.length; i ++) {
+        const nextRow = tableData.value[i];
+        const nextValue = nextRow[column.property];
+        if (nextValue === currentValue) {
+          rowspan ++;
+        } else {
+          break;
+        }
       }
+      return {rowspan, colspan: 1};
     }
   }
 }
@@ -71,25 +84,31 @@ const objectSpanMethod = ({rowIndex, columnIndex}) => {
 <template>
   <el-scrollbar class="el-scrollbar">
     <el-descriptions :column="4" :size="size" border title="基本信息">
-      <el-descriptions-item label="社区：">{{ Infor.departName }}</el-descriptions-item>
-      <el-descriptions-item label="小区（楼）名称：">{{ Infor.xqName }}</el-descriptions-item>
-      <el-descriptions-item label="楼号：">{{ Infor.lh }}</el-descriptions-item>
-      <el-descriptions-item label="所在地址：">{{ Infor.szdz }}</el-descriptions-item>
-      <el-descriptions-item label="建筑性质：">{{ Infor.jzxz }}</el-descriptions-item>
-      <el-descriptions-item label="物业单位：">{{ Infor.wydw }}</el-descriptions-item>
-      <el-descriptions-item label="联系人：">{{ Infor.lxr }}</el-descriptions-item>
-      <el-descriptions-item label="联系电话：">{{ Infor.lxdh }}</el-descriptions-item>
-      <el-descriptions-item label="楼栋全貌：">
-        <div style="display: flex">
+      <el-descriptions-item label="社区：" label-align="right" width="130px">{{
+          Infor.departName
+        }}
+      </el-descriptions-item>
+      <el-descriptions-item label="小区（楼）名称：" label-align="right" width="130px">{{
+          Infor.xqName
+        }}
+      </el-descriptions-item>
+      <el-descriptions-item label="楼号：" label-align="right" width="130px">{{ Infor.lh }}</el-descriptions-item>
+      <el-descriptions-item label="所在地址：" label-align="right" width="130px">{{ Infor.szdz }}</el-descriptions-item>
+      <el-descriptions-item label="建筑性质：" label-align="right">{{ Infor.jzxz }}</el-descriptions-item>
+      <el-descriptions-item label="物业单位：" label-align="right">{{ Infor.wydw }}</el-descriptions-item>
+      <el-descriptions-item label="联系人：" label-align="right">{{ Infor.lxr }}</el-descriptions-item>
+      <el-descriptions-item label="联系电话：" label-align="right">{{ Infor.lxdh }}</el-descriptions-item>
+      <el-descriptions-item :span="4" label="楼栋全貌：" label-align="right">
+        <div style="display: flex;flex-wrap: wrap">
           <div v-for="i in Infor.ldqmzp">
             <el-image :preview-src-list="['http://kfq.kejin.net.cn:8223'+i.path]"
-                      :src="'http://kfq.kejin.net.cn:8223'+i.path" fit="cover"
+                      :src="'http://kfq.kejin.net.cn:8223'+i.path" fit="contain"
                       style="width: 100px; height: 100px;margin-right: 10px;"/>
           </div>
         </div>
       </el-descriptions-item>
-      <el-descriptions-item label="建筑工程消防意见书：">
-        <div style="display: flex">
+      <el-descriptions-item :span="4" label="建筑工程消防意见书：">
+        <div style="display: flex;flex-wrap: wrap">
           <div v-for="i in Infor.jzgcxfyjszp">
             <el-image :preview-src-list="['http://kfq.kejin.net.cn:8223'+i.path]"
                       :src="'http://kfq.kejin.net.cn:8223'+i.path" fit="cover"
@@ -99,19 +118,37 @@ const objectSpanMethod = ({rowIndex, columnIndex}) => {
       </el-descriptions-item>
     </el-descriptions>
     <el-descriptions :column="4" :size="size" border style="margin-top: 20px;" title="建筑基本信息">
-      <el-descriptions-item label="高层建筑类别：">{{ Infor.gcjzlb }}</el-descriptions-item>
-      <el-descriptions-item label="楼高（米）：">{{ Infor.lg }}</el-descriptions-item>
-      <el-descriptions-item label="是否挂牌：">{{ Infor.sfgp }}</el-descriptions-item>
-      <el-descriptions-item label="地上建筑层数(层)：">{{ Infor.dsjzcs }}</el-descriptions-item>
-      <el-descriptions-item label="地下建筑层数(层)：">{{ Infor.dxjzcs }}</el-descriptions-item>
-      <el-descriptions-item label="架空层(层)：">{{ Infor.jkc }}</el-descriptions-item>
-      <el-descriptions-item label="架空层位置(层)：">{{ Infor.jkcwz }}</el-descriptions-item>
-      <el-descriptions-item label="火灾发生情况：">{{ Infor.hzfsqk }}</el-descriptions-item>
+      <el-descriptions-item label="高层建筑类别：" label-align="right" width="150px">{{
+          Infor.gcjzlb
+        }}
+      </el-descriptions-item>
+      <el-descriptions-item label="楼高(米)：" label-align="right" width="150px">{{ Infor.lg }}</el-descriptions-item>
+      <el-descriptions-item label="是否挂牌：" label-align="right" width="140px">{{ Infor.sfgp }}</el-descriptions-item>
+      <el-descriptions-item label="地上建筑层数(层)：" label-align="right" width="150px">{{
+          Infor.dsjzcs
+        }}
+      </el-descriptions-item>
+      <el-descriptions-item label="地下建筑层数(层)：" label-align="right" width="140px">{{
+          Infor.dxjzcs
+        }}
+      </el-descriptions-item>
+      <el-descriptions-item label="架空层(层)：" label-align="right" width="140px">{{ Infor.jkc }}</el-descriptions-item>
+      <el-descriptions-item label="架空层位置(层)：" label-align="right" width="140px">{{
+          Infor.jkcwz
+        }}
+      </el-descriptions-item>
+      <el-descriptions-item label="火灾发生情况：" label-align="right" width="140px">{{
+          Infor.hzfsqk
+        }}
+      </el-descriptions-item>
     </el-descriptions>
     <el-descriptions style="margin-top: 20px;" title="检查汇总">
       <el-descriptions-item>
         <el-table
             :data="tableData"
+            :header-cell-style="{ 'fontSize':'16px',color: '#606266',height:'50px' }"
+            :span-method="genderSpanCity"
+            border
             style="width: 100%; margin-top: 20px"
         >
           <el-table-column label="检查类型" prop="parentName" width="180"/>
@@ -130,10 +167,10 @@ const objectSpanMethod = ({rowIndex, columnIndex}) => {
               <el-image
                   v-for="item in row.files"
                   :key="item.url"
-                  :src="item.url"
-                  fit="cover"
-                  hide-on-click-modal
                   :preview-src-list="[item.url]"
+                  :src="item.url"
+                  fit="contain"
+                  hide-on-click-modal
                   style="width: 100px; height: 100px;margin-right: 10px;"
               />
             </template>

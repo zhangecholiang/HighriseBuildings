@@ -211,6 +211,11 @@ defineExpose({
           </el-form-item>
         </el-col>
         <el-col :span="8">
+          <el-form-item label="检查结果：" prop="">
+            <el-input v-model="Information.jcjg" placeholder="" readonly/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
           <el-form-item label="整改期限" prop="">
             <el-input v-if="Information.zgqx" :value="dayjs(Information.zgqx).format('YYYY-MM-DD')" placeholder=""
                       readonly/>

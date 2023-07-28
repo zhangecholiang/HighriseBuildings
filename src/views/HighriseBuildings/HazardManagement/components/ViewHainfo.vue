@@ -105,7 +105,7 @@ const HazarInfo = reactive({})
         <el-col :span="8">
           <el-form-item label="楼栋全貌：" prop="">
             <div v-for="fit in Information.ldqmzp" class="block">
-              <el-image :preview-src-list="[fit.url]" :src="fit.url" fit="cover"
+              <el-image :preview-src-list="[fit.url]" :src="fit.url" fit="contain"
                         style="width: 100px; height: 100px;margin-right: 10px;"/>
             </div>
           </el-form-item>
@@ -113,7 +113,7 @@ const HazarInfo = reactive({})
         <el-col :span="8">
           <el-form-item label="建筑工程消防意见书:" prop="">
             <div v-for="fit in Information.jzgcxfyjszp" class="block">
-              <el-image :preview-src-list="[fit.url]" :src="fit.url" fit="cover"
+              <el-image :preview-src-list="[fit.url]" :src="fit.url" fit="contain"
                         style="width: 100px; height: 100px;margin-right: 10px;"/>
             </div>
           </el-form-item>
@@ -174,6 +174,11 @@ const HazarInfo = reactive({})
           </el-form-item>
         </el-col>
         <el-col :span="8">
+          <el-form-item label="检查结果：" prop="">
+            <el-input v-model="Information.jcjg" placeholder="" readonly/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
           <el-form-item label="整改期限：" prop="">
             <el-input v-if="Information.zgqx" :value="dayjs(Information.zgqx).format('YYYY-MM-DD')" placeholder=""
                       readonly/>
@@ -186,18 +191,18 @@ const HazarInfo = reactive({})
         </el-col>
         <el-col :span="24">
           <el-form-item label="整改说明：" prop="">
-            <el-input v-model="Information.zgsm" autosize placeholder="" readonly/>
+            <el-input v-model="Information.zgsm" placeholder="" readonly style="box-shadow: none" type="textarea"/>
           </el-form-item>
         </el-col>
         <el-form-item label="检查图片：" prop="">
           <div v-for="fit in Information.fjbhzp" class="block">
-            <el-image :preview-src-list="[fit.url]" :src="fit.url" fit="cover"
+            <el-image :preview-src-list="[fit.url]" :src="fit.url" fit="contain"
                       style="width: 100px; height: 100px;margin-right: 10px;"/>
           </div>
         </el-form-item>
         <el-form-item label="整改图片：" prop="">
           <div v-for="fit in Information.zgzp" class="block">
-            <el-image :preview-src-list="[fit.url]" :src="fit.url" fit="cover"
+            <el-image :preview-src-list="[fit.url]" :src="fit.url" fit="contain"
                       style="width: 100px; height: 100px;margin-right: 10px;"/>
           </div>
         </el-form-item>
@@ -241,6 +246,10 @@ const HazarInfo = reactive({})
 
   .el-select {
     width: 100%;
+  }
+
+  :deep(.el-textarea__inner) {
+    box-shadow: none;
   }
 
   .label-title {

@@ -1,9 +1,10 @@
 <script setup>
 import { useRoute } from "vue-router";
 import { onMounted, ref } from "vue";
+import { routes } from "@/router/index.js";
 
 const route = useRoute()
-const meuns = route.matched[0].children
+const meuns = route.matched
 
 const activeIndex = ref('')
 onMounted(() => {
@@ -17,6 +18,7 @@ const closeColl = () => {
 defineExpose({
   closeColl
 })
+console.log(routes)
 </script>
 
 <template>
@@ -26,7 +28,7 @@ defineExpose({
       :unique-opened="true"
       active-text-color="#fff"
       class="el-menu-vertical-demo">
-    <template v-for="v in meuns">
+    <template v-for="v in routes">
       <el-sub-menu v-if="v.children" :index="String(v.path)">
         <template #title>
           <el-icon>
@@ -34,17 +36,36 @@ defineExpose({
           </el-icon>
           <span class="menu-title">{{ v.meta.name }}</span>
         </template>
-        <el-menu-item v-for="vitem in v.children" :index="'/high-buildings/'+vitem.path"
-                      @click="() => $router.push('/high-buildings/'+vitem.path)">
-          <template #title>
-            <el-icon>
-              <component :is="vitem.meta.icon"/>
-            </el-icon>
-            {{ vitem.meta.name }}
-          </template>
-        </el-menu-item>
+        <template v-for="vitem in v.children">
+          <el-sub-menu v-if="vitem.children" :index="String(vitem.path)">
+            <template #title>
+              <el-icon>
+                <component :is="vitem.meta.icon"/>
+              </el-icon>
+              <span class="menu-title">{{ vitem.meta.name }}</span>
+            </template>
+            <el-menu-item v-for="vv in vitem.children" :index="'/high-buildings/yhgl/'+vv.path"
+                          @click="() => $router.push('/high-buildings/yhgl/'+vv.path)">
+              <template #title>
+                <el-icon>
+                  <component :is="vv.meta.icon"/>
+                </el-icon>
+                {{ vv.meta.name }}
+              </template>
+            </el-menu-item>
+          </el-sub-menu>
+          <el-menu-item v-else :index="'/high-buildings/'+vitem.path"
+                        @click="() => $router.push('/high-buildings/'+vitem.path)">
+            <template #title>
+              <el-icon>
+                <component :is="vitem.meta.icon"/>
+              </el-icon>
+              {{ vitem.meta.name }}
+            </template>
+          </el-menu-item>
+        </template>
       </el-sub-menu>
-      <el-menu-item v-else :index="String(v.path)" @click="() => $router.push(v.path)">
+      <el-menu-item v-else-if="v.meta" :index="String(v.path)" @click="() => $router.push(v.path)">
         <template #title>
           <el-icon>
             <component :is="v.meta.icon"/>
@@ -70,7 +91,6 @@ defineExpose({
   --el-menu-active-color: #fff;
 
   .menu-title {
-    margin-left: 15px;
     font-size: 15px;
     font-family: SourceHanSansCN-Medium, SourceHanSansCN;
     font-weight: 500;

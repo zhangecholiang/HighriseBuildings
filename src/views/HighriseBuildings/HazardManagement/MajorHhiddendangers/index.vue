@@ -1,27 +1,29 @@
 <script setup>
 import { reactive, ref } from "vue";
-import NewInformation from "@/views/HighriseBuildings/HazardManagement/components/NewInformation.vue";
+import NewInformation from "@/views/HighriseBuildings/HazardManagement/GeneralHiddendangers/components/NewInformation.vue";
 import { ElMessage } from 'element-plus'
 import { Refresh, Search } from "@element-plus/icons-vue";
 import { getHiddenDangerList } from "@/apis/hiddenTrouble.js";
 import { useDict } from "@/stores/dict.js";
 import { getCommunity } from "@/apis/dict.js";
 import dayjs from "dayjs";
-import ViewHainfo from "@/views/HighriseBuildings/HazardManagement/components/ViewHainfo.vue";
+import ViewHainfo from "@/views/HighriseBuildings/HazardManagement/GeneralHiddendangers/components/ViewHainfo.vue";
 
 const params = reactive({
   "pageIndex": 1, "pageSize": 20, "where": {
-    "csqLoginid": "", "xqbh": "", "zt": "", "jzxz": '', "yhdj": ''
+    "csqLoginid": "", "xqbh": "", "zt": "", "jzxz": '', "yhdj": '',iszg:2
   }
 })
 const xqlist = ref([])
 const getxqList = async (loginid) => {
   params.where.xqbh = ''
-  if (!loginid) {
+  if (loginid !== '') {
+    const {data} = await getCommunity(loginid)
+    xqlist.value = data
+  } else {
     loginid = null
+    xqlist.value = []
   }
-  const {data} = await getCommunity(loginid)
-  xqlist.value = data
 }
 const dict = useDict()
 const tableData = ref([])
@@ -33,7 +35,7 @@ const getData = () => {
     tableData.value = data.list
     total.value = data.total
     loading.value = false
-  }, 1000)
+  }, 500)
 }
 getData()
 const currentPage3 = ref(1)
@@ -65,6 +67,11 @@ const addmasg = (row) => {
   param.value.jcxm = row.jcxm
 }
 const onRefresh = () => {
+  params.where.csqLoginid = ''
+  params.where.xqbh = ''
+  params.where.zt = ''
+  params.where.jzxz = ''
+  params.where.iszg = ''
   ElMessage({
     message: '清除成功', grouping: true, type: 'success',
   })
@@ -83,55 +90,71 @@ const showView = ref(false)
   <div class="table-title">
     隐患管理
   </div>
-  <el-form :inline="true" :model="params" class="demo-form-inline">
-    <el-form-item>
-      <el-select v-model="params.where.csqLoginid" clearable placeholder="社区名称" @change="getxqList">
-        <el-option
-            v-for="item in dict.sqList"
-            :key="item.loginid"
-            :label="item.departName"
-            :value="item.loginid">
-        </el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item>
-      <el-select v-model="params.where.xqbh" clearable placeholder="小区">
-        <el-option
-            v-for="item in xqlist"
-            :key="item.xqbh"
-            :label="item.xqName"
-            :value="item.xqbh">
-        </el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item>
-      <el-select v-model="params.where.zt" clearable placeholder="状态选择">
-        <el-option label="未整改" value="未整改"/>
-        <el-option label="已整改" value="已整改"/>
-      </el-select>
-    </el-form-item>
-    <el-form-item>
-      <el-select v-model="params.where.jzxz" clearable placeholder="建筑性质">
-        <el-option
-            v-for="item in dict.jzwxzlist"
-            :key="item.id"
-            :label="item.dictName"
-            :value="item.dictName">
-        </el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item>
-      <el-select v-model="params.where.yhdj" clearable placeholder="状态选择">
-        <el-option label="一般隐患" value="一般隐患"/>
-        <el-option label="重大隐患" value="重大隐患"/>
-      </el-select>
-    </el-form-item>
-    <el-form-item>
-      <el-button :icon="Search" type="primary" @click="getData">查询</el-button>
-    </el-form-item>
-    <el-form-item>
-      <el-button :icon="Refresh" @click="onRefresh">清除查询</el-button>
-    </el-form-item>
+  <el-form :model="params" class="demo-form-inline">
+    <el-row :gutter="20" justify="space-between">
+      <el-col :span="4">
+        <el-form-item>
+          <el-select v-model="params.where.csqLoginid" clearable placeholder="社区名称" @change="getxqList">
+            <el-option
+                v-for="item in dict.sqList"
+                :key="item.loginid"
+                :label="item.departName"
+                :value="item.loginid">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col :span="4">
+        <el-form-item>
+          <el-select v-model="params.where.xqbh" clearable placeholder="小区">
+            <el-option
+                v-for="item in xqlist"
+                :key="item.xqbh"
+                :label="item.xqName"
+                :value="item.xqbh">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col :span="4">
+        <el-form-item>
+          <el-select v-model="params.where.zt" clearable placeholder="状态选择">
+            <el-option label="未整改" value="未整改"/>
+            <el-option label="已整改" value="已整改"/>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col :span="4">
+        <el-form-item>
+          <el-select v-model="params.where.jzxz" clearable placeholder="建筑性质">
+            <el-option
+                v-for="item in dict.jzwxzlist"
+                :key="item.id"
+                :label="item.dictName"
+                :value="item.dictName">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col :span="4">
+        <el-form-item>
+          <el-select v-model.number="params.where.iszg" clearable placeholder="隐患等级">
+            <el-option :value="1" label="一般隐患">一般隐患</el-option>
+            <el-option :value="2" label="重大隐患">重大隐患</el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col :span="1.5">
+        <el-form-item>
+          <el-button :icon="Search" type="primary" @click="getData">查询</el-button>
+        </el-form-item>
+      </el-col>
+      <el-col :span="2.5">
+        <el-form-item>
+          <el-button :icon="Refresh" @click="onRefresh">清除查询</el-button>
+        </el-form-item>
+      </el-col>
+    </el-row>
   </el-form>
   <!--  <div class="tab-header">-->
   <!--    <el-row>-->
@@ -139,9 +162,10 @@ const showView = ref(false)
   <!--      </el-col>-->
   <!--    </el-row>-->
   <!--  </div>-->
-  <el-table v-loading="loading" :data="tableData" height="calc(100vh - 250px)"
+  <el-table v-loading="loading" :data="tableData"
             :header-cell-style="{ 'fontSize':'16px',color: '#606266',height:'50px' }"
-            element-loading-text="加载中..." stripe>
+            element-loading-text="加载中..."
+            height="calc(100vh - 250px)" stripe>
     <el-table-column label="序号" type="index" width="80"/>
     <el-table-column label="检查人" prop="jcr" width="100"/>
     <el-table-column label="检查时间" prop="jcsj" width="120"/>
@@ -151,7 +175,10 @@ const showView = ref(false)
     <el-table-column label="检查类型" prop="jcxm" show-overflow-tooltip width="220"/>
     <el-table-column label="检查事项" prop="jcjg" show-overflow-tooltip width="220"/>
     <el-table-column label="隐患等级">
-      <span>一般隐患</span>
+      <template #default="{row}">
+        <span v-if="row.iszg === 1">一般隐患</span>
+        <span v-else>重大隐患</span>
+      </template>
     </el-table-column>
     <el-table-column label="隐患状态">
       <template #default="{row}">
@@ -202,8 +229,15 @@ const showView = ref(false)
 <style lang="less" scoped>
 .demo-form-inline {
   border-bottom: 1px solid #ebeef5;
-  display: flex;
-  flex-wrap: wrap;
+}
+
+:deep(.el-select) {
+  width: 100%;
+}
+
+.el-form-item {
+  width: 100%;
+  --el-form-inline-content-width: 100%;
 }
 
 .tab-header {

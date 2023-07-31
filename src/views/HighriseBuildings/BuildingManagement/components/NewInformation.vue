@@ -168,12 +168,12 @@ defineExpose({
         </el-col>
         <el-col :span="8">
           <el-form-item label="楼号" prop="lh">
-            <el-input v-model="Information.lh" clearable placeholder=""/>
+            <el-input v-model="Information.lh" clearable placeholder="" maxlength="10"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="所在地址" prop="szdz">
-            <el-input v-model="Information.szdz" clearable placeholder=""/>
+            <el-input v-model="Information.szdz" clearable placeholder="" maxlength="100"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -190,12 +190,12 @@ defineExpose({
         </el-col>
         <el-col :span="8">
           <el-form-item label="物业单位" prop="wydw">
-            <el-input v-model="Information.wydw" clearable/>
+            <el-input v-model="Information.wydw" clearable maxlength="20"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="联系人" prop="lxr">
-            <el-input v-model="Information.lxr" clearable placeholder=""/>
+            <el-input v-model="Information.lxr" clearable placeholder="" maxlength="20"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">

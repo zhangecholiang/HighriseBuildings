@@ -31,7 +31,7 @@ const getData = () => {
     tableData.value = data.list
     total.value = data.total
     loading.value = false
-  }, 1000)
+  }, 500)
 }
 getData()
 const currentPage3 = ref(1)
@@ -64,34 +64,44 @@ const onConfirm = () => {
 </script>
 
 <template>
-  <el-form :inline="true" :model="params" class="demo-form-inline">
-    <el-form-item>
-      <el-select v-model="params.where.loginid" clearable placeholder="社区名称" @change="getxqList">
-        <el-option
-            v-for="item in dict.sqList"
-            :key="item.loginid"
-            :label="item.departName"
-            :value="item.loginid">
-        </el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item>
-      <el-date-picker
-          v-model="params.where.sj"
-          end-placeholder="结束日期"
-          format="YYYY-MM-DD"
-          range-separator="至"
-          start-placeholder="开始日期"
-          type="daterange"
-          value-format="YYYY-MM-DD"
-      />
-    </el-form-item>
-    <el-form-item>
-      <el-button :icon="Search" type="primary" @click="getData">查询</el-button>
-    </el-form-item>
-    <el-form-item>
-      <el-button :icon="Refresh" @click="onRefresh">清除查询</el-button>
-    </el-form-item>
+  <el-form :model="params" class="demo-form-inline">
+    <el-row :gutter="20" justify="start">
+      <el-col :span="4">
+        <el-form-item>
+          <el-select v-model="params.where.loginid" clearable placeholder="社区名称" @change="getxqList">
+            <el-option
+                v-for="item in dict.sqList"
+                :key="item.loginid"
+                :label="item.departName"
+                :value="item.loginid">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col :span="4">
+        <el-form-item>
+          <el-date-picker
+              v-model="params.where.sj"
+              end-placeholder="结束日期"
+              format="YYYY-MM-DD"
+              range-separator="至"
+              start-placeholder="开始日期"
+              type="daterange"
+              value-format="YYYY-MM-DD"
+          />
+        </el-form-item>
+      </el-col>
+      <el-col :span="2">
+        <el-form-item>
+          <el-button :icon="Search" type="primary" @click="getData">查询</el-button>
+        </el-form-item>
+      </el-col>
+      <el-col :span="2">
+        <el-form-item>
+          <el-button :icon="Refresh" @click="onRefresh">清除查询</el-button>
+        </el-form-item>
+      </el-col>
+    </el-row>
   </el-form>
   <!--  <div class="tab-header">-->
   <!--    <el-row>-->
@@ -137,8 +147,6 @@ const onConfirm = () => {
 <style lang="less" scoped>
 .demo-form-inline {
   border-bottom: 1px solid #ebeef5;
-  display: flex;
-  flex-wrap: wrap;
 }
 
 .tab-header {
@@ -162,11 +170,6 @@ const onConfirm = () => {
 
 :deep(.el-table__cell) {
   text-align: center;
-}
-
-.pagination {
-  margin-top: 15px;
-  float: right;
 }
 
 </style>

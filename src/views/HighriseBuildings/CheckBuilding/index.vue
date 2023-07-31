@@ -11,17 +11,19 @@ import ViewInfoexamine from "@/views/HighriseBuildings/CheckBuilding/components/
 const dict = useDict()
 const params = reactive({
   "pageIndex": 1, "pageSize": 20, "where": {
-    "csqLoginid": "", "xqbh": "", "jzxz": "",
+    "csqLoginid": "", "xqbh": "", "jzxz": "", "shzt": "", "lh": "", "jcr": "",
   }
 })
 const xqlist = ref([])
 const getxqList = async (loginid) => {
   params.where.xqbh = ''
-  if (!loginid) {
+  if (loginid !== '') {
+    const {data} = await getCommunity(loginid)
+    xqlist.value = data
+  } else {
     loginid = null
+    xqlist.value = []
   }
-  const {data} = await getCommunity(loginid)
-  xqlist.value = data
 }
 const tableData = ref([])
 const loading = ref(false)
@@ -32,7 +34,7 @@ const getData = () => {
     tableData.value = data.list
     total.value = data.total
     loading.value = false
-  }, 1000)
+  }, 500)
 }
 getData()
 const currentPage3 = ref(1)
@@ -58,6 +60,9 @@ const onRefresh = () => {
   params.where.csqLoginid = ''
   params.where.xqbh = ''
   params.where.jzxz = ''
+  params.where.shzt = ''
+  params.where.lh = ''
+  params.where.jcr = ''
   ElMessage({
     message: '清除成功', grouping: true, type: 'success',
   })
@@ -104,7 +109,7 @@ const bh = ref()
 const jcbh = ref()
 const view = ref(false)
 const onView = (row) => {
-  if (row.shzt === null) {
+  if (row.shzt === 2) {
     isShowck.value = true
   } else {
     isShowck.value = false
@@ -164,41 +169,68 @@ const onisApproved = async () => {
   <div class="table-title">
     建筑物检查
   </div>
-  <el-form :inline="true" :model="params" class="demo-form-inline">
-    <el-form-item>
-      <el-select v-model="params.where.csqLoginid" clearable placeholder="社区名称" @change="getxqList">
-        <el-option
-            v-for="item in dict.sqList"
-            :key="item.loginid"
-            :label="item.departName"
-            :value="item.loginid">
-        </el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item>
-      <el-select v-model="params.where.xqbh" clearable placeholder="小区">
-        <el-option
-            v-for="item in xqlist"
-            :key="item.xqbh"
-            :label="item.xqName"
-            :value="item.xqbh">
-        </el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item>
-      <el-select v-model="params.where.jzxz" clearable placeholder="建筑性质">
-        <el-option
-            v-for="item in dict.jzwxzlist"
-            :key="item.id"
-            :label="item.dictName"
-            :value="item.dictName">
-        </el-option>
-      </el-select>
-    </el-form-item>
+  <el-form :model="params" class="demo-form-inline">
+    <el-row :gutter="20" justify="space-between">
+      <el-col :span="4">
+        <el-form-item>
+          <el-select v-model="params.where.csqLoginid" clearable placeholder="社区名称" @change="getxqList">
+            <el-option
+                v-for="item in dict.sqList"
+                :key="item.loginid"
+                :label="item.departName"
+                :value="item.loginid">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col :span="4">
+        <el-form-item>
+          <el-select v-model="params.where.xqbh" clearable placeholder="小区">
+            <el-option
+                v-for="item in xqlist"
+                :key="item.xqbh"
+                :label="item.xqName"
+                :value="item.xqbh">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col :span="4">
+        <el-form-item>
+          <el-select v-model="params.where.jzxz" clearable placeholder="建筑性质">
+            <el-option
+                v-for="item in dict.jzwxzlist"
+                :key="item.id"
+                :label="item.dictName"
+                :value="item.dictName">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col :span="4">
+        <el-form-item>
+          <el-select v-model="params.where.shzt" clearable placeholder="状态">
+            <el-option :value="2" label="已上报">已上报</el-option>
+            <el-option :value="1" label="已审核通过">已审核通过</el-option>
+            <el-option :value="0" label="审核不通过">审核不通过</el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col :span="4">
+        <el-form-item>
+          <el-input v-model="params.where.lh" placeholder="楼号"></el-input>
+        </el-form-item>
+      </el-col>
+      <el-col :span="4">
+        <el-form-item>
+          <el-input v-model="params.where.jcr" placeholder="登记人"></el-input>
+        </el-form-item>
+      </el-col>
+    </el-row>
   </el-form>
   <div class="tab-header">
     <el-row>
-      <el-col :span="21">
+      <el-col :span="12">
         <div style="display: flex">
           <el-button :icon="Plus" type="primary" @click="addmasg">新增检查</el-button>
           <!--          <el-button :icon="Download" style="margin-left: 10px;" type="success">-->
@@ -207,13 +239,14 @@ const onisApproved = async () => {
           <!--          </el-button>-->
         </div>
       </el-col>
-      <el-col :span="3">
+      <el-col align="right" :span="12">
         <el-button :icon="Search" type="primary" @click="getData">查询</el-button>
         <el-button :icon="Refresh" @click="onRefresh">清除查询</el-button>
       </el-col>
     </el-row>
   </div>
-  <el-table v-loading="loading" :data="tableData" :header-cell-style="{ 'fontSize':'16px',color: '#606266',height:'50px' }"
+  <el-table v-loading="loading" :data="tableData"
+            :header-cell-style="{ 'fontSize':'16px',color: '#606266',height:'50px' }"
             element-loading-text="加载中..." height="calc(100vh - 310px)"
             stripe>
     <el-table-column label="序号" type="index" width="80"/>
@@ -227,7 +260,7 @@ const onisApproved = async () => {
     </el-table-column>
     <el-table-column label="状态" width="140">
       <template #default="{row}">
-        <el-tag v-if="row.shzt === null" class="ml-2" effect="light" size="large" type="info">已上报</el-tag>
+        <el-tag v-if="row.shzt === 2" class="ml-2" effect="light" size="large" type="info">已上报</el-tag>
         <el-tag v-else-if="row.shzt === 0 " class="ml-2" effect="light" size="large" type="danger">审核不通过</el-tag>
         <el-tag v-else-if="row.shzt" class="ml-2" effect="light" size="large" type="success">已审核通过</el-tag>
       </template>
@@ -238,9 +271,9 @@ const onisApproved = async () => {
     <el-table-column label="检查条数" prop="jcts" width="120"/>
     <el-table-column fixed="right" label="操作" width="240">
       <template #default="{row}">
-        <el-button v-if="row.shzt === null" type="primary" @click="onView(row)">审核</el-button>
+        <el-button v-if="row.shzt === 2" type="primary" @click="onView(row)">审核</el-button>
         <el-button v-if="row.shzt === 1 || row.shzt === 0" type="primary" @click="onView(row)">查看</el-button>
-        <el-button v-if="row.shzt === null" type="warning" @click="onEditor(row)">编辑</el-button>
+        <el-button v-if="row.shzt === 2" type="warning" @click="onEditor(row)">编辑</el-button>
         <el-button type="danger" @click="delSuccess(row)">删除</el-button>
       </template>
     </el-table-column>
@@ -285,8 +318,15 @@ const onisApproved = async () => {
 <style lang="less" scoped>
 .demo-form-inline {
   border-bottom: 1px solid #ebeef5;
-  display: flex;
-  flex-wrap: wrap;
+}
+
+:deep(.el-select) {
+  width: 100%;
+}
+
+.el-form-item {
+  width: 100%;
+  --el-form-inline-content-width: 100%;
 }
 
 .tab-header {

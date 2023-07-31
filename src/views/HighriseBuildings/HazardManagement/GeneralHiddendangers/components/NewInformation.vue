@@ -1,7 +1,10 @@
 <script setup>
 import { reactive, ref } from "vue";
-import { getRectificationDetail } from "@/apis/hiddenTrouble.js";
+import { Plus } from "@element-plus/icons-vue";
+import { getRectification, submitRectification } from "@/apis/hiddenTrouble.js";
+import { ElMessage } from "element-plus";
 import { useStore } from "@/stores/user.js";
+import { afterRead } from "@/utils/tools.js";
 import dayjs from "dayjs";
 
 const store = useStore()
@@ -17,7 +20,7 @@ const props = defineProps({
 const emits = defineEmits(['colsemasg'])
 if (props.params.bh !== "") {
   const getData = async () => {
-    const {data} = await getRectificationDetail(props.params.bh, props.params.jcxm)
+    const {data} = await getRectification(props.params.bh, props.params.jcxm)
     Object.assign(Information, data)
     Information.jzgcxfyjszp = data.jzgcxfyjszp.map(item => {
       return {
@@ -34,28 +37,62 @@ if (props.params.bh !== "") {
         url: 'http://kfq.kejin.net.cn:8223' + item.path,
       }
     })
-    Information.zgzp = data.zgzp.map(item => {
-      return {
-        url: 'http://kfq.kejin.net.cn:8223' + item.path,
-      }
-    })
   }
   getData()
 }
 const ruleFormRef = ref()
-
+const rules = reactive({
+  zgsm: [{required: true, message: '请输入整改说明', trigger: 'blur'},],
+  zgwcsj: [{required: true, message: '请输入整改完成时间', trigger: 'blur'},],
+  el_zgzp: [{required: true, message: '请上传整改图片', trigger: 'blur'},]
+})
 const Information = reactive({
   qyfzrTel: '', fileList: [], fjbhzp: [],
 })
-
+const loading = ref(false)
 const HazarInfo = reactive({})
-
+const submitForm = async (formEl) => {
+  if (!formEl) return
+  await formEl.validate(async (valid, fields) => {
+    if (valid) {
+      loading.value = true
+      HazarInfo.jcxx_itme = props.params.bh
+      HazarInfo.jcxm = props.params.jcxm
+      HazarInfo.zgzp = HazarInfo.el_zgzp.map(item => {
+        return item.response.data
+      })
+      const data = await submitRectification(HazarInfo)
+      if (data.code === 200) {
+        ElMessage({
+          message: '提交成功', grouping: true, type: 'success',
+        })
+        setTimeout(() => {
+          loading.value = false
+          emits('colsemasg')
+        }, 1000)
+      } else {
+        ElMessage({
+          message: data.msg, grouping: true, type: 'error',
+        })
+        setTimeout(() => {
+          loading.value = false
+          emits('colsemasg')
+        }, 1000)
+      }
+    } else {
+      console.log('error submit!', fields)
+    }
+  })
+}
+defineExpose({
+  submitForm, ruleFormRef,
+})
 </script>
 
 <template>
   <el-scrollbar>
-    <el-form ref="ruleFormRef" :model="HazarInfo" label-position="right"
-             label-width="160px" status-icon>
+    <el-form ref="ruleFormRef" v-loading="loading" :model="HazarInfo" :rules="rules"
+             element-loading-text="提交中..." label-position="right" label-width="165px" status-icon>
       <div class="label-title">
         <span>基本信息</span>
       </div>
@@ -101,24 +138,20 @@ const HazarInfo = reactive({})
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
-        <el-col :span="8">
-          <el-form-item label="楼栋全貌：" prop="">
-            <div v-for="fit in Information.ldqmzp" class="block">
-              <el-image :preview-src-list="[fit.url]" :src="fit.url" fit="contain"
-                        style="width: 100px; height: 100px;margin-right: 10px;"/>
-            </div>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="建筑工程消防意见书:" prop="">
-            <div v-for="fit in Information.jzgcxfyjszp" class="block">
-              <el-image :preview-src-list="[fit.url]" :src="fit.url" fit="contain"
-                        style="width: 100px; height: 100px;margin-right: 10px;"/>
-            </div>
-          </el-form-item>
-        </el-col>
-      </el-row>
+      <!--      <div style="display: flex">-->
+      <el-form-item label="楼栋全貌：" prop="">
+        <div v-for="fit in Information.ldqmzp" class="block">
+          <el-image :preview-src-list="[fit.url]" :src="fit.url" fit="contain"
+                    style="width: 100px; height: 100px;margin-right: 10px;"/>
+        </div>
+      </el-form-item>
+      <el-form-item label="建筑工程消防意见书:" prop="">
+        <div v-for="fit in Information.jzgcxfyjszp" class="block">
+          <el-image :preview-src-list="[fit.url]" :src="fit.url" fit="contain"
+                    style="width: 100px; height: 100px;margin-right: 10px;"/>
+        </div>
+      </el-form-item>
+      <!--      </div>-->
       <div class="label-title">
         <span>建筑基本信息</span>
       </div>
@@ -139,22 +172,22 @@ const HazarInfo = reactive({})
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="地上建筑层数(层)：" prop="">
+          <el-form-item label="地上建筑层数（层）：" prop="">
             <el-input v-model="Information.dsjzcs" placeholder="" readonly/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="地下建筑层数(层)：" prop="">
+          <el-form-item label="地下建筑层数（层）：" prop="">
             <el-input v-model="Information.dxjzcs" placeholder="" readonly/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="架空层(层)：" prop="">
+          <el-form-item label="架空层（层）：" prop="">
             <el-input v-model="Information.jkc" placeholder="" readonly/>
           </el-form-item>
         </el-col>
         <el-col v-if="Information.jkc === '是'" :span="8">
-          <el-form-item label="架空层位置(层):" prop="">
+          <el-form-item label="架空层位置（层）:" prop="">
             <el-input v-model="Information.jkcwz" placeholder=""/>
           </el-form-item>
         </el-col>
@@ -167,9 +200,9 @@ const HazarInfo = reactive({})
       <div class="label-title">
         <span>整改情况</span>
       </div>
-      <el-row :gutter="0" class="View-box" justify="start">
+      <el-row :gutter="0" justify="start">
         <el-col :span="8">
-          <el-form-item label="检查事项：" prop="">
+          <el-form-item label="检查事项" prop="">
             <el-input v-model="Information.jcxm" placeholder="" readonly/>
           </el-form-item>
         </el-col>
@@ -179,31 +212,48 @@ const HazarInfo = reactive({})
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="整改期限：" prop="">
+          <el-form-item label="整改期限" prop="">
             <el-input v-if="Information.zgqx" :value="dayjs(Information.zgqx).format('YYYY-MM-DD')" placeholder=""
                       readonly/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="整改完成时间：" prop="">
-            <el-input :value="dayjs(Information.zgwcsj).format('YYYY-MM-DD')" placeholder=""/>
+          <el-form-item label="整改完成时间" prop="zgwcsj">
+            <el-date-picker
+                v-model="HazarInfo.zgwcsj"
+                format="YYYY/MM/DD"
+                placeholder=""
+                type="date"
+                value-format="YYYY-MM-DD"
+            />
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item label="整改说明：" prop="">
-            <el-input v-model="Information.zgsm" placeholder="" readonly style="box-shadow: none" type="textarea"/>
+          <el-form-item label="整改说明" prop="zgsm">
+            <el-input v-model="HazarInfo.zgsm" :autosize="{ minRows: 4, maxRows: 10 }" maxlength="500" placeholder=""
+                      type="textarea"/>
           </el-form-item>
         </el-col>
-        <el-form-item label="检查图片：" prop="">
+        <el-form-item label="检查图片" prop="">
           <div v-for="fit in Information.fjbhzp" class="block">
             <el-image :preview-src-list="[fit.url]" :src="fit.url" fit="contain"
                       style="width: 100px; height: 100px;margin-right: 10px;"/>
           </div>
         </el-form-item>
-        <el-form-item label="整改图片：" prop="">
-          <div v-for="fit in Information.zgzp" class="block">
-            <el-image :preview-src-list="[fit.url]" :src="fit.url" fit="contain"
-                      style="width: 100px; height: 100px;margin-right: 10px;"/>
+        <el-form-item label="整改图片" prop="el_zgzp">
+          <div style="display: flex">
+            <el-upload
+                v-model:file-list=HazarInfo.el_zgzp
+                :before-upload="afterRead"
+                :headers="{Authorization:store.token}"
+                action="http://kfq.kejin.net.cn:8222/api/FileSet/uploadimage"
+                class="upload-demo"
+                list-type="picture-card"
+            >
+              <el-icon>
+                <Plus/>
+              </el-icon>
+            </el-upload>
           </div>
         </el-form-item>
       </el-row>
@@ -216,6 +266,10 @@ const HazarInfo = reactive({})
   height: 600px;
   width: 100%;
   padding-right: 40px;
+
+  :deep(.el-form-item__label) {
+    font-weight: 550;
+  }
 
   .View-box {
     .el-form-item__content {
@@ -246,10 +300,6 @@ const HazarInfo = reactive({})
 
   .el-select {
     width: 100%;
-  }
-
-  :deep(.el-textarea__inner) {
-    box-shadow: none;
   }
 
   .label-title {

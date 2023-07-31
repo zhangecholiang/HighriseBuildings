@@ -12,18 +12,20 @@ import ViewInfomation from "@/views/HighriseBuildings/BuildingManagement/compone
 
 const params = reactive({
   "pageIndex": 1, "pageSize": 20, "where": {
-    "csqLoginid": "", "xqbh": "", "jzxz": "",
+    "csqLoginid": "", "xqbh": "", "jzxz": "", "szdz": "", "lh": "", "lxr": "",
   }
 })
 const dict = useDict()
 const xqlist = ref([])
 const getxqList = async (loginid) => {
   params.where.xqbh = ''
-  if (!loginid) {
+  if (loginid !== '') {
+    const {data} = await getCommunity(loginid)
+    xqlist.value = data
+  } else {
     loginid = null
+    xqlist.value = []
   }
-  const {data} = await getCommunity(loginid)
-  xqlist.value = data
 }
 const tableData = ref([])
 const loading = ref(false)
@@ -34,7 +36,7 @@ const getData = () => {
     tableData.value = data.list
     total.value = data.total
     loading.value = false
-  }, 1000)
+  }, 500)
 }
 getData()
 const currentPage3 = ref(1)
@@ -64,6 +66,9 @@ const onRefresh = () => {
   params.where.csqLoginid = ''
   params.where.xqbh = ''
   params.where.jzxz = ''
+  params.where.szdz = ''
+  params.where.lh = ''
+  params.where.lxr = ''
   ElMessage({
     message: '清除成功', grouping: true, type: 'success',
   })
@@ -128,40 +133,63 @@ const OnView = (row) => {
   <div class="table-title">
     建筑物管理
   </div>
-  <el-form :inline="true" :model="params" class="demo-form-inline">
-    <el-form-item>
-      <el-select v-model="params.where.csqLoginid" clearable placeholder="社区名称" @change="getxqList">
-        <el-option
-            v-for="item in dict.sqList"
-            :key="item.loginid"
-            :label="item.departName"
-            :value="item.loginid">
-        </el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item>
-      <el-select v-model="params.where.xqbh" clearable placeholder="小区">
-        <el-option
-            v-for="item in xqlist"
-            :key="item.xqbh"
-            :label="item.xqName"
-            :value="item.xqbh">
-        </el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item>
-      <el-select v-model="params.where.jzxz" clearable placeholder="建筑性质">
-        <el-option
-            v-for="item in dict.jzwxzlist"
-            :key="item.id"
-            :label="item.dictName"
-            :value="item.dictName">
-        </el-option>
-      </el-select>
-    </el-form-item>
+  <el-form :model="params" class="demo-form-inline">
+    <el-row :gutter="20" justify="space-between">
+      <el-col :span="4">
+        <el-form-item>
+          <el-select v-model="params.where.csqLoginid" clearable placeholder="社区名称" @change="getxqList">
+            <el-option
+                v-for="item in dict.sqList"
+                :key="item.loginid"
+                :label="item.departName"
+                :value="item.loginid">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col :span="4">
+        <el-form-item>
+          <el-select v-model="params.where.xqbh" clearable placeholder="小区">
+            <el-option
+                v-for="item in xqlist"
+                :key="item.xqbh"
+                :label="item.xqName"
+                :value="item.xqbh">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col :span="4">
+        <el-form-item>
+          <el-select v-model="params.where.jzxz" clearable placeholder="建筑性质">
+            <el-option
+                v-for="item in dict.jzwxzlist"
+                :key="item.id"
+                :label="item.dictName"
+                :value="item.dictName">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col :span="4">
+        <el-form-item>
+          <el-input v-model="params.where.szdz" clearable placeholder="地址"></el-input>
+        </el-form-item>
+      </el-col>
+      <el-col :span="4">
+        <el-form-item>
+          <el-input v-model="params.where.lh" clearable placeholder="楼号"></el-input>
+        </el-form-item>
+      </el-col>
+      <el-col :span="4">
+        <el-form-item>
+          <el-input v-model="params.where.lxr" clearable placeholder="登记人"></el-input>
+        </el-form-item>
+      </el-col>
+    </el-row>
   </el-form>
   <div class="tab-header">
-    <el-row>
+    <el-row justify="space-between">
       <el-col :span="16">
         <div style="display: flex">
           <el-button :icon="Plus" type="primary" @click="addmasg">新增建筑物</el-button>
@@ -178,9 +206,10 @@ const OnView = (row) => {
       </el-col>
     </el-row>
   </div>
-  <el-table v-loading="loading" :data="tableData" element-loading-text="加载中..." stripe
-            :header-cell-style="{ 'fontSize':'16px',color: '#606266',height:'50px' }"
+  <el-table v-loading="loading" :data="tableData"
+            :header-cell-style="{ 'fontSize':'16px',color: '#606266',height:'50px' }" element-loading-text="加载中..."
             height="calc(100vh - 310px)"
+            stripe
   >
     <el-table-column label="序号" type="index" width="80"/>
     <el-table-column label="社区" prop="departName" width="150"/>
@@ -233,7 +262,8 @@ const OnView = (row) => {
   </el-dialog>
 
   <el-dialog v-model="showExamine" center draggable title="新增检查" width="65%">
-    <NewInforexamine v-if="showExamine" ref="Examine" :jxinfo="jxinfo" @colsemasg="onExamineclose"></NewInforexamine>
+    <NewInforexamine v-if="showExamine" ref="Examine" :isjc="true" :jxinfo="jxinfo"
+                     @colsemasg="onExamineclose"></NewInforexamine>
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="showExamine = false">取消</el-button>
@@ -254,12 +284,21 @@ const OnView = (row) => {
 
 .demo-form-inline {
   border-bottom: 1px solid #ebeef5;
-  display: flex;
-  flex-wrap: wrap;
+  //display: flex;
+  //flex-wrap: wrap;
 }
 
 .tab-header {
   margin: 15px 0;
+}
+
+:deep(.el-select) {
+  width: 100%;
+}
+
+.el-form-item {
+  width: 100%;
+  --el-form-inline-content-width: 100%;
 }
 
 .el-table {

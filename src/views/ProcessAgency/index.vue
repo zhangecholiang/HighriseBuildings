@@ -14,16 +14,16 @@ getTotal()
   <div class="process-box">
     <div class="process-list"><span @click="()=> $router.push('/high-buildings/jzwgl')">建筑物登记</span></div>
     <div class="process-list"><span @click="()=> $router.push('/high-buildings/jzwjc')">建筑物检查</span></div>
-    <div class="process-list"><span @click="()=> $router.push('/high-buildings/yhgl')">隐患分级</span></div>
+    <div class="process-list"><span @click="()=> $router.push('/high-buildings/yhgl/ybyh')">隐患分级</span></div>
     <div class="process-list">
       <div class="border-line"></div>
       <div class="process-list-item">
-        <span style="position: relative" @click="()=> $router.push('/high-buildings/yhgl')">隐患数量
+        <span style="position: relative" @click="()=> $router.push('/high-buildings/yhgl/ybyh')">隐患数量
         <span class="tip">{{ yhTotal }}</span>
         </span>
       </div>
       <div class="process-list-item">
-        <span @click="()=> $router.push('/high-buildings/yhgl')">隐患整改数量</span>
+        <span @click="()=> $router.push('/high-buildings/yhgl/ybyh')">隐患整改数量</span>
       </div>
     </div>
     <div class="process-list"><span>验收</span></div>

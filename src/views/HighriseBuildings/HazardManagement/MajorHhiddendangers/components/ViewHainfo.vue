@@ -4,51 +4,55 @@ import { getRectificationDetail } from "@/apis/hiddenTrouble.js";
 import { useStore } from "@/stores/user.js";
 import dayjs from "dayjs";
 
-const store = useStore()
+const store = useStore();
 const props = defineProps({
-  params: {
-    type: Object, default: () => {
-      return {
-        bh: '', jcxm: ''
-      }
-    }
-  }
-})
-const emits = defineEmits(['colsemasg'])
+                            params: {
+                              type: Object,
+                              default: () => {
+                                return {
+                                  bh: "",
+                                  jcxm: ""
+                                };
+                              }
+                            }
+                          });
+const emits = defineEmits(["colsemasg"]);
 if (props.params.bh !== "") {
   const getData = async () => {
-    const {data} = await getRectificationDetail(props.params.bh, props.params.jcxm)
-    Object.assign(Information, data)
+    const { data } = await getRectificationDetail(props.params.bh, props.params.jcxm);
+    Object.assign(Information, data);
     Information.jzgcxfyjszp = data.jzgcxfyjszp.map(item => {
       return {
-        url: 'http://kfq.kejin.net.cn:8223' + item.path,
-      }
-    })
+        url: "http://kfq.kejin.net.cn:8223" + item.path,
+      };
+    });
     Information.ldqmzp = data.ldqmzp.map(item => {
       return {
-        url: 'http://kfq.kejin.net.cn:8223' + item.path,
-      }
-    })
+        url: "http://kfq.kejin.net.cn:8223" + item.path,
+      };
+    });
     Information.fjbhzp = data.fjbhzp.map(item => {
       return {
-        url: 'http://kfq.kejin.net.cn:8223' + item.path,
-      }
-    })
+        url: "http://kfq.kejin.net.cn:8223" + item.path,
+      };
+    });
     Information.zgzp = data.zgzp.map(item => {
       return {
-        url: 'http://kfq.kejin.net.cn:8223' + item.path,
-      }
-    })
-  }
-  getData()
+        url: "http://kfq.kejin.net.cn:8223" + item.path,
+      };
+    });
+  };
+  getData();
 }
-const ruleFormRef = ref()
+const ruleFormRef = ref();
 
 const Information = reactive({
-  qyfzrTel: '', fileList: [], fjbhzp: [],
-})
+                               qyfzrTel: "",
+                               fileList: [],
+                               fjbhzp: [],
+                             });
 
-const HazarInfo = reactive({})
+const HazarInfo = reactive({});
 
 </script>
 

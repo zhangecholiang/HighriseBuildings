@@ -1,11 +1,11 @@
-import axios from 'axios';
+import axios from "axios";
 import { useStore } from "@/stores/user.js";
 
 // 创建一个 Axios 实例
 const HttpRequest = axios.create({
-	baseURL: 'http://kfq.kejin.net.cn:8001/api20220708', // 设置基本的 API 地址
-	timeout: 5000 // 设置请求超时时间
-});
+	                                 baseURL: "http://kfq.kejin.net.cn:8001/api20220708", // 设置基本的 API 地址
+	                                 timeout: 5000 // 设置请求超时时间
+                                 });
 // 请求拦截器
 HttpRequest.interceptors.request.use(config => {
 	const store = useStore();
@@ -13,7 +13,7 @@ HttpRequest.interceptors.request.use(config => {
 	if (store.token) {
 		config.headers.Authorization = `${store.token}`;
 	} else {
-		config.headers.Authorization = localStorage.getItem('token')
+		config.headers.Authorization = localStorage.getItem("token");
 	}
 	return config;
 }, error => {

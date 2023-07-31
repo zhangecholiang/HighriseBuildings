@@ -8,161 +8,182 @@ import { getCommunity } from "@/apis/dict.js";
 import { checkstatus, delcheck, getcheckList } from "@/apis/examine.js";
 import ViewInfoexamine from "@/views/HighriseBuildings/CheckBuilding/components/ViewInfoexamine.vue";
 
-const dict = useDict()
+const dict = useDict();
 const params = reactive({
-  "pageIndex": 1, "pageSize": 20, "where": {
-    "csqLoginid": "", "xqbh": "", "jzxz": "", "shzt": "", "lh": "", "jcr": "",
-  }
-})
-const xqlist = ref([])
+                          "pageIndex": 1,
+                          "pageSize": 20,
+                          "where": {
+                            "csqLoginid": "",
+                            "xqbh": "",
+                            "jzxz": "",
+                            "shzt": "",
+                            "lh": "",
+                            "jcr": "",
+                          }
+                        });
+const xqlist = ref([]);
 const getxqList = async (loginid) => {
-  params.where.xqbh = ''
-  if (loginid !== '') {
-    const {data} = await getCommunity(loginid)
-    xqlist.value = data
+  params.where.xqbh = "";
+  if (loginid !== "") {
+    const { data } = await getCommunity(loginid);
+    xqlist.value = data;
   } else {
-    loginid = null
-    xqlist.value = []
+    loginid = null;
+    xqlist.value = [];
   }
-}
-const tableData = ref([])
-const loading = ref(false)
+};
+const tableData = ref([]);
+const loading = ref(false);
 const getData = () => {
-  loading.value = true
+  loading.value = true;
   setTimeout(async () => {
-    const {data} = await getcheckList(params)
-    tableData.value = data.list
-    total.value = data.total
-    loading.value = false
-  }, 500)
-}
-getData()
-const currentPage3 = ref(1)
-const pageSize3 = ref(20)
-const total = ref(1)
-const small = ref(false)
-const background = ref(false)
-const disabled = ref(false)
+    const { data } = await getcheckList(params);
+    tableData.value = data.list;
+    total.value = data.total;
+    loading.value = false;
+  }, 500);
+};
+getData();
+const currentPage3 = ref(1);
+const pageSize3 = ref(20);
+const total = ref(1);
+const small = ref(false);
+const background = ref(false);
+const disabled = ref(false);
 const handleSizeChange = (val) => {
-  params.pageSize = val
-  getData()
-}
+  params.pageSize = val;
+  getData();
+};
 const handleCurrentChange = (val) => {
-  params.pageIndex = val
-  getData()
-}
+  params.pageIndex = val;
+  getData();
+};
 
 const addmasg = () => {
-  jzwbh.value = ''
-  showSuccess.value = true
-}
+  jzwbh.value = "";
+  showSuccess.value = true;
+};
 const onRefresh = () => {
-  params.where.csqLoginid = ''
-  params.where.xqbh = ''
-  params.where.jzxz = ''
-  params.where.shzt = ''
-  params.where.lh = ''
-  params.where.jcr = ''
+  params.where.csqLoginid = "";
+  params.where.xqbh = "";
+  params.where.jzxz = "";
+  params.where.shzt = "";
+  params.where.lh = "";
+  params.where.jcr = "";
   ElMessage({
-    message: '清除成功', grouping: true, type: 'success',
-  })
-  getData()
-}
-const jzwbh = ref('')
+              message: "清除成功",
+              grouping: true,
+              type: "success",
+            });
+  getData();
+};
+const jzwbh = ref("");
 const onEditor = (row) => {
-  jzwbh.value = row.bh
-  showSuccess.value = true
-}
+  jzwbh.value = row.bh;
+  showSuccess.value = true;
+};
 const delSuccess = (row) => {
-  ElMessageBox.confirm('是否确认删除?', '确认删除', {
-    confirmButtonText: '确认', cancelButtonText: '取消', type: 'warning',
+  ElMessageBox.confirm("是否确认删除?", "确认删除", {
+    confirmButtonText: "确认",
+    cancelButtonText: "取消",
+    type: "warning",
   })
       .then(async () => {
-        const data = await delcheck(row.bh)
+        const data = await delcheck(row.bh);
         if (data.code === 200) {
           ElMessage({
-            type: 'success', message: '已删除',
-          })
-          await getData()
+                      type: "success",
+                      message: "已删除",
+                    });
+          await getData();
         }
       })
       .catch(() => {
         ElMessage({
-          type: 'info', message: '已取消',
-        })
-      })
-}
+                    type: "info",
+                    message: "已取消",
+                  });
+      });
+};
 
-const showSuccess = ref(false)
+const showSuccess = ref(false);
 const onClose = () => {
-  showSuccess.value = false
-  getData()
-}
-const Confirm = ref()
+  showSuccess.value = false;
+  getData();
+};
+const Confirm = ref();
 const onConfirm = () => {
-  Confirm.value.submitForm(Confirm.value.ruleFormRef)
-}
+  Confirm.value.submitForm(Confirm.value.ruleFormRef);
+};
 
 // 查看
-const isShowck = ref(false)
-const bh = ref()
-const jcbh = ref()
-const view = ref(false)
+const isShowck = ref(false);
+const bh = ref();
+const jcbh = ref();
+const view = ref(false);
 const onView = (row) => {
   if (row.shzt === 2) {
-    isShowck.value = true
+    isShowck.value = true;
   } else {
-    isShowck.value = false
+    isShowck.value = false;
   }
-  bh.value = row.bh
-  jcbh.value = row.jzwbh
-  view.value = true
-}
+  bh.value = row.bh;
+  jcbh.value = row.jzwbh;
+  view.value = true;
+};
 
 const onApproved = async () => {
-  ElMessageBox.confirm('是否确认审核通过?', '审核通过', {
-    confirmButtonText: '确认', cancelButtonText: '取消', type: 'success',
+  ElMessageBox.confirm("是否确认审核通过?", "审核通过", {
+    confirmButtonText: "确认",
+    cancelButtonText: "取消",
+    type: "success",
   })
       .then(async () => {
-        const data = await checkstatus(bh.value, 1, '')
+        const data = await checkstatus(bh.value, 1, "");
         if (data.code === 200) {
           ElMessage({
-            type: 'success', message: '已审核',
-          })
+                      type: "success",
+                      message: "已审核",
+                    });
           setTimeout(() => {
-            view.value = false
-          }, 1000)
-          await getData()
+            view.value = false;
+          }, 1000);
+          await getData();
         }
       })
       .catch(() => {
         ElMessage({
-          type: 'info', message: '已取消',
-        })
-      })
-}
+                    type: "info",
+                    message: "已取消",
+                  });
+      });
+};
 const onisApproved = async () => {
-  ElMessageBox.confirm('是否确认审核不通过?', '审核不通过', {
-    confirmButtonText: '确认', cancelButtonText: '取消', type: 'warning',
+  ElMessageBox.confirm("是否确认审核不通过?", "审核不通过", {
+    confirmButtonText: "确认",
+    cancelButtonText: "取消",
+    type: "warning",
   })
       .then(async () => {
-        const data = await checkstatus(bh.value, 0, '')
+        const data = await checkstatus(bh.value, 0, "");
         if (data.code === 200) {
           ElMessage({
-            type: 'success', message: '审核不通过',
-          })
+                      type: "success",
+                      message: "审核不通过",
+                    });
           setTimeout(() => {
-            view.value = false
-          }, 1000)
-          await getData()
+            view.value = false;
+          }, 1000);
+          await getData();
         }
       })
       .catch(() => {
         ElMessage({
-          type: 'info', message: '已取消',
-        })
-      })
-}
+                    type: "info",
+                    message: "已取消",
+                  });
+      });
+};
 </script>
 
 <template>

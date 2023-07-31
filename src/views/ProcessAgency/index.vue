@@ -2,12 +2,12 @@
 import { getHiddenDangerList } from "@/apis/hiddenTrouble.js";
 import { ref } from "vue";
 
-const yhTotal = ref()
+const yhTotal = ref();
 const getTotal = async () => {
-  const {data} = await getHiddenDangerList()
-  yhTotal.value = data.total
-}
-getTotal()
+  const { data } = await getHiddenDangerList();
+  yhTotal.value = data.total;
+};
+getTotal();
 </script>
 
 <template>

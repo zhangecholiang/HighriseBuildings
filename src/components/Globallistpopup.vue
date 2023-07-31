@@ -1,9 +1,9 @@
 <script setup>
 
 defineProps({
-  msg: String,
-})
-const emit = defineEmits(['click'])
+              msg: String,
+            });
+const emit = defineEmits(["click"]);
 
 </script>
 

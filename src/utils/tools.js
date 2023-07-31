@@ -4,12 +4,12 @@
  * @param {String} str 目标字符串
  * @returns 经过处理后的字符串
  */
-import * as imageConversion from 'image-conversion'
-import { ElMessage } from 'element-plus'
+import * as imageConversion from "image-conversion";
+import { ElMessage } from "element-plus";
 
 export function deleteLabel (str) {
-	if (!str) return
-	return str.replace(/<[^<>]+>/g, "").replace(/&nbsp;/gi, "")
+	if (!str) return;
+	return str.replace(/<[^<>]+>/g, "").replace(/&nbsp;/gi, "");
 }
 
 /**
@@ -18,7 +18,7 @@ export function deleteLabel (str) {
  * @returns string
  */
 export function getImageUrl (path) {
-	return import.meta.env.BASE_URL + 'static/images/' + path
+	return import.meta.env.BASE_URL + "static/images/" + path;
 }
 
 /**
@@ -35,9 +35,9 @@ export function uniqueArray (array, uniProp) {
 // 图片上传
 export function afterRead (file) {
 	// 判断是图片
-	const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+	const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
 	if (!isJpgOrPng) {
-		ElMessage.error('图片只能是 JPG 或者 PNG 格式!');
+		ElMessage.error("图片只能是 JPG 或者 PNG 格式!");
 		return false;
 	}
 	return new Promise((resolve) => {
@@ -45,15 +45,16 @@ export function afterRead (file) {
 		imageConversion.compressAccurately(file, 500).then(res => {
 			resolve(res);
 		});
-	})
+	});
 }
 
 // 滚动到未校验位置
 export function elFormErrorScrollIntoView () {
 	// 获取第一个校验错误的元素
-	const element = document.querySelectorAll('.el-form-item__error')[0]
+	const element = document.querySelectorAll(".el-form-item__error")[0];
 	// 滚动到错误元素对应位置
 	element.scrollIntoView({
-		behavior: 'smooth', block: 'center'
-	})
+		                       behavior: "smooth",
+		                       block: "center"
+	                       });
 }

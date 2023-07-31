@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, ref } from "vue";
 import NewInformation from "@/views/HighriseBuildings/BuildingManagement/components/NewInformation.vue";
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox } from "element-plus";
 import { Plus, Refresh, Search } from "@element-plus/icons-vue";
 import { useDict } from "@/stores/dict.js";
 import { getCommunity } from "@/apis/dict.js";
@@ -11,122 +11,136 @@ import NewInforexamine from "@/views/HighriseBuildings/CheckBuilding/components/
 import ViewInfomation from "@/views/HighriseBuildings/BuildingManagement/components/ViewInfomation.vue";
 
 const params = reactive({
-  "pageIndex": 1, "pageSize": 20, "where": {
-    "csqLoginid": "", "xqbh": "", "jzxz": "", "szdz": "", "lh": "", "lxr": "",
-  }
-})
-const dict = useDict()
-const xqlist = ref([])
+                          "pageIndex": 1,
+                          "pageSize": 20,
+                          "where": {
+                            "csqLoginid": "",
+                            "xqbh": "",
+                            "jzxz": "",
+                            "szdz": "",
+                            "lh": "",
+                            "lxr": "",
+                          }
+                        });
+const dict = useDict();
+const xqlist = ref([]);
 const getxqList = async (loginid) => {
-  params.where.xqbh = ''
-  if (loginid !== '') {
-    const {data} = await getCommunity(loginid)
-    xqlist.value = data
+  params.where.xqbh = "";
+  if (loginid !== "") {
+    const { data } = await getCommunity(loginid);
+    xqlist.value = data;
   } else {
-    loginid = null
-    xqlist.value = []
+    loginid = null;
+    xqlist.value = [];
   }
-}
-const tableData = ref([])
-const loading = ref(false)
+};
+const tableData = ref([]);
+const loading = ref(false);
 const getData = () => {
-  loading.value = true
+  loading.value = true;
   setTimeout(async () => {
-    const {data} = await getBuildingList(params)
-    tableData.value = data.list
-    total.value = data.total
-    loading.value = false
-  }, 500)
-}
-getData()
-const currentPage3 = ref(1)
-const pageSize3 = ref(20)
-const total = ref(1)
-const small = ref(false)
-const background = ref(false)
-const disabled = ref(false)
+    const { data } = await getBuildingList(params);
+    tableData.value = data.list;
+    total.value = data.total;
+    loading.value = false;
+  }, 500);
+};
+getData();
+const currentPage3 = ref(1);
+const pageSize3 = ref(20);
+const total = ref(1);
+const small = ref(false);
+const background = ref(false);
+const disabled = ref(false);
 const handleSizeChange = (val) => {
-  params.pageSize = val
-  getData()
-}
+  params.pageSize = val;
+  getData();
+};
 const handleCurrentChange = (val) => {
-  params.pageIndex = val
-  getData()
-}
-const showSuccess = ref(false)
+  params.pageIndex = val;
+  getData();
+};
+const showSuccess = ref(false);
 const onClose = () => {
-  showSuccess.value = false
-  getData()
-}
+  showSuccess.value = false;
+  getData();
+};
 const addmasg = () => {
-  lcbh.value = ''
-  showSuccess.value = true
-}
+  lcbh.value = "";
+  showSuccess.value = true;
+};
 const onRefresh = () => {
-  params.where.csqLoginid = ''
-  params.where.xqbh = ''
-  params.where.jzxz = ''
-  params.where.szdz = ''
-  params.where.lh = ''
-  params.where.lxr = ''
+  params.where.csqLoginid = "";
+  params.where.xqbh = "";
+  params.where.jzxz = "";
+  params.where.szdz = "";
+  params.where.lh = "";
+  params.where.lxr = "";
   ElMessage({
-    message: '清除成功', grouping: true, type: 'success',
-  })
-  getData()
-}
-const Confirm = ref()
+              message: "清除成功",
+              grouping: true,
+              type: "success",
+            });
+  getData();
+};
+const Confirm = ref();
 const onConfirm = () => {
-  Confirm.value.submitForm(Confirm.value.ruleFormRef)
-}
+  Confirm.value.submitForm(Confirm.value.ruleFormRef);
+};
 
-const lcbh = ref('')
+const lcbh = ref("");
 const onEditor = (row) => {
-  lcbh.value = row.bh
-  showSuccess.value = true
-}
+  lcbh.value = row.bh;
+  showSuccess.value = true;
+};
 const delSuccess = async (row) => {
-  ElMessageBox.confirm('是否确认删除?', '确认删除', {
-    confirmButtonText: '确认', cancelButtonText: '取消', type: 'warning',
+  ElMessageBox.confirm("是否确认删除?", "确认删除", {
+    confirmButtonText: "确认",
+    cancelButtonText: "取消",
+    type: "warning",
   })
       .then(async () => {
-        const data = await deleteBuilding(row.bh)
+        const data = await deleteBuilding(row.bh);
         if (data.code === 200) {
           ElMessage({
-            message: '删除成功', grouping: true, type: 'success',
-          })
-          getData()
+                      message: "删除成功",
+                      grouping: true,
+                      type: "success",
+                    });
+          getData();
         }
       })
       .catch(() => {
         ElMessage({
-          type: 'info', message: '已取消',
-        })
-      })
-}
+                    type: "info",
+                    message: "已取消",
+                  });
+      });
+};
 
 // 检查
-const Examine = ref()
-const showExamine = ref(false)
+const Examine = ref();
+const showExamine = ref(false);
 const onExamineclose = () => {
-  showExamine.value = false
-  getData()
-}
+  showExamine.value = false;
+  getData();
+};
 const onExamine = () => {
-  Examine.value.submitForm(Examine.value.ruleFormRef)
-}
-const jxinfo = ref({})
+  Examine.value.submitForm(Examine.value.ruleFormRef);
+};
+const jxinfo = ref({});
 const addVisit = (row) => {
-  jxinfo.value = row
-  showExamine.value = true
-}
+  jxinfo.value = row;
+  showExamine.value = true;
+};
 
 // 查看
-const showView = ref(false)
-const viewbh = ref()
+const showView = ref(false);
+const viewbh = ref();
 const OnView = (row) => {
-  viewbh.value = row.bh
-  showView.value = true
-}
+  viewbh.value = row.bh;
+  showView.value = true;
+};
 </script>
 
 <template>
@@ -224,7 +238,7 @@ const OnView = (row) => {
     <el-table-column label="登记人" prop="lxr"/>
     <el-table-column label="登记时间">
       <template #default="{row}">
-        {{ dayjs(row.posttime).format('YYYY-MM-DD') }}
+        {{ dayjs(row.posttime).format("YYYY-MM-DD") }}
       </template>
     </el-table-column>
     <el-table-column label="检查条数" prop="jcts" width="130"/>

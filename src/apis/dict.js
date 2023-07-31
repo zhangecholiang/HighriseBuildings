@@ -13,5 +13,5 @@ export function getVillage () {
 
 // 小区
 export function getCommunity (csqLoginid) {
-	return axios.get(`/api/common/getxq`, {params: {csqLoginid}});
+	return axios.get(`/api/common/getxq`, { params: { csqLoginid } });
 }

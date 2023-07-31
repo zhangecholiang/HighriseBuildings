@@ -2,117 +2,187 @@
 import { reactive, ref } from "vue";
 import axios from "axios";
 
-const ruleFormRef = ref()
+const ruleFormRef = ref();
 const rules = reactive({
-  District: [{required: true, message: '请输入区镇', trigger: 'blur'},]
-})
-const Information = reactive({})
+                         District: [
+                           {
+                             required: true,
+                             message: "请输入区镇",
+                             trigger: "blur"
+                           },
+                         ]
+                       });
+const Information = reactive({});
 
 const submitForm = (formEl) => {
-  if (!formEl) return
+  if (!formEl) return;
   formEl.validate(async (valid, fields) => {
     if (!valid) {
-      return false
+      return false;
     } else {
-      console.log('error submit!', fields)
+      console.log("error submit!", fields);
     }
-  })
-}
+  });
+};
 defineExpose({
-  submitForm, ruleFormRef,
-})
+               submitForm,
+               ruleFormRef,
+             });
 
-const activeName = ref('first')
+const activeName = ref("first");
 const handleClick = (tab, event) => {
-  console.log(tab, event)
-}
-const activeNames = ref(['1'])
+  console.log(tab, event);
+};
+const activeNames = ref(["1"]);
 const handleChange = (val) => {
-  console.log(val)
-}
+  console.log(val);
+};
 
-const fireSafety = ref([{label: '易燃易爆品', rules: [], option: [{label: '', value: ''}], files: [],},])
-const buildingFireProtection = ref([{
-  label: '竖向管井和电缆桥架防火封堵', rules: [], option: [{label: '', value: ''}], files: [],
-},])
-const FireFightingFacilities = ref([{label: '建筑灭火器', rules: [], option: [{label: '', value: ''}], files: [],},])
+const fireSafety = ref([
+                         {
+                           label: "易燃易爆品",
+                           rules: [],
+                           option: [
+                             {
+                               label: "",
+                               value: ""
+                             }
+                           ],
+                           files: [],
+                         },
+                       ]);
+const buildingFireProtection = ref([
+                                     {
+                                       label: "竖向管井和电缆桥架防火封堵",
+                                       rules: [],
+                                       option: [
+                                         {
+                                           label: "",
+                                           value: ""
+                                         }
+                                       ],
+                                       files: [],
+                                     },
+                                   ]);
+const FireFightingFacilities = ref([
+                                     {
+                                       label: "建筑灭火器",
+                                       rules: [],
+                                       option: [
+                                         {
+                                           label: "",
+                                           value: ""
+                                         }
+                                       ],
+                                       files: [],
+                                     },
+                                   ]);
 const getDict = () => {
-  axios.post('http://kfq.kejin.net.cn:8001/api20220708/api/dict/bindTree/635', {}, {
+  axios.post("http://kfq.kejin.net.cn:8001/api20220708/api/dict/bindTree/635", {}, {
     headers: {
-      'Authorization': '15449AF42BD3D76BD9624F70ED63F8854BD89625EAB98A1E3371B97D7804C8A31D881E94D8C405DF29CBDD7B006ECC0F2F4F948BE6CE5EB700A8C2AD44BAB80205ED7ACF09D0EC7CEA966EC6686F82F3B98890E15E829028E550B1148B4501B9B2589C0547C9D760'
+      "Authorization": "15449AF42BD3D76BD9624F70ED63F8854BD89625EAB98A1E3371B97D7804C8A31D881E94D8C405DF29CBDD7B006ECC0F2F4F948BE6CE5EB700A8C2AD44BAB80205ED7ACF09D0EC7CEA966EC6686F82F3B98890E15E829028E550B1148B4501B9B2589C0547C9D760"
     }
   }).then(res => {
     if (res.data.code === 200) {
       fireSafety.value = res.data.data.map(item => {
         return {
           label: item.dictName,
-          rules: [{required: true, message: '请输入' + item.dictName, trigger: 'blur'}],
+          rules: [
+            {
+              required: true,
+              message: "请输入" + item.dictName,
+              trigger: "blur"
+            }
+          ],
           option: item.children.map(item => {
             return {
-              label: item.dictName, value: item.id,
-            }
+              label: item.dictName,
+              value: item.id,
+            };
           }),
           files: [],
-        }
-      })
+        };
+      });
     }
-  })
-  axios.post('http://kfq.kejin.net.cn:8001/api20220708/api/dict/bindTree/636', {}, {
+  });
+  axios.post("http://kfq.kejin.net.cn:8001/api20220708/api/dict/bindTree/636", {}, {
     headers: {
-      'Authorization': '15449AF42BD3D76BD9624F70ED63F8854BD89625EAB98A1E3371B97D7804C8A31D881E94D8C405DF29CBDD7B006ECC0F2F4F948BE6CE5EB700A8C2AD44BAB80205ED7ACF09D0EC7CEA966EC6686F82F3B98890E15E829028E550B1148B4501B9B2589C0547C9D760'
+      "Authorization": "15449AF42BD3D76BD9624F70ED63F8854BD89625EAB98A1E3371B97D7804C8A31D881E94D8C405DF29CBDD7B006ECC0F2F4F948BE6CE5EB700A8C2AD44BAB80205ED7ACF09D0EC7CEA966EC6686F82F3B98890E15E829028E550B1148B4501B9B2589C0547C9D760"
     }
   }).then(res => {
     if (res.data.code === 200) {
       buildingFireProtection.value = res.data.data.map(item => {
         return {
           label: item.dictName,
-          rules: [{required: true, message: '请输入公司名称', trigger: 'blur'}],
+          rules: [
+            {
+              required: true,
+              message: "请输入公司名称",
+              trigger: "blur"
+            }
+          ],
           option: item.children.map(item => {
             return {
-              label: item.dictName, value: item.id,
-            }
+              label: item.dictName,
+              value: item.id,
+            };
           }),
           files: [],
-        }
-      })
+        };
+      });
     }
-  })
-  axios.post('http://kfq.kejin.net.cn:8001/api20220708/api/dict/bindTree/637', {}, {
+  });
+  axios.post("http://kfq.kejin.net.cn:8001/api20220708/api/dict/bindTree/637", {}, {
     headers: {
-      'Authorization': '15449AF42BD3D76BD9624F70ED63F8854BD89625EAB98A1E3371B97D7804C8A31D881E94D8C405DF29CBDD7B006ECC0F2F4F948BE6CE5EB700A8C2AD44BAB80205ED7ACF09D0EC7CEA966EC6686F82F3B98890E15E829028E550B1148B4501B9B2589C0547C9D760'
+      "Authorization": "15449AF42BD3D76BD9624F70ED63F8854BD89625EAB98A1E3371B97D7804C8A31D881E94D8C405DF29CBDD7B006ECC0F2F4F948BE6CE5EB700A8C2AD44BAB80205ED7ACF09D0EC7CEA966EC6686F82F3B98890E15E829028E550B1148B4501B9B2589C0547C9D760"
     }
   }).then(res => {
     if (res.data.code === 200) {
       FireFightingFacilities.value = res.data.data.map(item => {
         return {
           label: item.dictName,
-          rules: [{required: true, message: '请输入公司名称', trigger: 'blur'}],
+          rules: [
+            {
+              required: true,
+              message: "请输入公司名称",
+              trigger: "blur"
+            }
+          ],
           option: item.children.map(item => {
             return {
-              label: item.dictName, value: item.id,
-            }
+              label: item.dictName,
+              value: item.id,
+            };
           }),
           files: [],
-        }
-      })
+        };
+      });
     }
-  })
-}
-getDict()
-const tableData = []
+  });
+};
+getDict();
+const tableData = [];
 
-const custom = ref([{checkTheMatter: '', checkTheResults: '', checkThePicture: []},])
+const custom = ref([
+                     {
+                       checkTheMatter: "",
+                       checkTheResults: "",
+                       checkThePicture: []
+                     },
+                   ]);
 const AddCustom = () => {
   custom.value.push({
-    checkTheMatter: '', checkTheResults: '', checkThePicture: []
-  })
-}
+                      checkTheMatter: "",
+                      checkTheResults: "",
+                      checkThePicture: []
+                    });
+};
 const DeleteCustom = (index) => {
   if (custom.value.length === 1) {
-    return
+    return;
   }
-  custom.value.splice(index, 1)
-}
+  custom.value.splice(index, 1);
+};
 </script>
 
 <template>

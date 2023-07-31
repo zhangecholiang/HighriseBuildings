@@ -5,55 +5,68 @@ import { getcheckDetail } from "@/apis/examine.js";
 import { getTreeMenu } from "@/apis/dict.js";
 
 const props = defineProps({
-  bh: {
-    type: String, default: ''
-  }, jcbh: {
-    type: String, default: ''
-  }
-})
+                            bh: {
+                              type: String,
+                              default: ""
+                            },
+                            jcbh: {
+                              type: String,
+                              default: ""
+                            }
+                          });
 const getData = async () => {
-  const {data} = await editBuilding(props.jcbh)
-  Object.assign(Infor, data)
-}
-getData()
-const size = ref('large')
-const Infor = reactive({})
-const BasicChecks = ref([])
-const tableData = ref([])
+  const { data } = await editBuilding(props.jcbh);
+  Object.assign(Infor, data);
+};
+getData();
+const size = ref("large");
+const Infor = reactive({});
+const BasicChecks = ref([]);
+const tableData = ref([]);
 
 const getinfos = async () => {
-  const {data} = await getcheckDetail(props.bh)
-  const Basic = await getTreeMenu(873)
+  const { data } = await getcheckDetail(props.bh);
+  const Basic = await getTreeMenu(873);
   BasicChecks.value = Basic.data.map((item) => {
     return item.children.map((i) => {
       data.checkItem && data.checkItem.forEach((ite) => {
         if (ite.jcxm === i.dictName && ite.jcjg !== "") {
-          i.iszg = ite.iszg
-          i.jcxm = ite.jcxm
-          i.jcjg = ite.jcjg
+          i.iszg = ite.iszg;
+          i.jcxm = ite.jcxm;
+          i.jcjg = ite.jcjg;
         }
         if (ite.jcxm === i.dictName && ite.zp) {
           i.files = ite.zp.map((item) => {
             return {
-              url: 'http://kfq.kejin.net.cn:8223' + item.path, response: {
+              url: "http://kfq.kejin.net.cn:8223" + item.path,
+              response: {
                 data: item
               }
-            }
-          })
+            };
+          });
         }
-      })
+      });
       return {
-        parentName: item.dictName, jcjg: i.jcjg, jcxm: i.jcxm, iszg: i.iszg, files: i.files
-      }
-    })
-  })
+        parentName: item.dictName,
+        jcjg: i.jcjg,
+        jcxm: i.jcxm,
+        iszg: i.iszg,
+        files: i.files
+      };
+    });
+  });
   tableData.value = BasicChecks.value.flat(Infinity).filter((item) => {
-    return item.jcjg !== undefined
-  })
-}
-getinfos()
+    return item.jcjg !== undefined;
+  });
+};
+getinfos();
 
-const genderSpanCity = ({row, column, rowIndex, columnIndex}) => {
+const genderSpanCity = ({
+                          row,
+                          column,
+                          rowIndex,
+                          columnIndex
+                        }) => {
   if (columnIndex === 0) {
     // 获取当前单元格的值
     const currentValue = row[column.property];
@@ -62,7 +75,10 @@ const genderSpanCity = ({row, column, rowIndex, columnIndex}) => {
     const preValue = preRow ? preRow[column.property] : null;
     // 如果当前值和上一行的值相同，则将当前单元格隐藏
     if (currentValue === preValue) {
-      return {rowspan: 0, colspan: 0};
+      return {
+        rowspan: 0,
+        colspan: 0
+      };
     } else {
       // 否则计算当前单元格应该跨越多少行
       let rowspan = 1;
@@ -75,10 +91,13 @@ const genderSpanCity = ({row, column, rowIndex, columnIndex}) => {
           break;
         }
       }
-      return {rowspan, colspan: 1};
+      return {
+        rowspan,
+        colspan: 1
+      };
     }
   }
-}
+};
 </script>
 
 <template>

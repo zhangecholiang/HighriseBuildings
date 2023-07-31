@@ -3,12 +3,12 @@ import { useRouter } from "vue-router";
 import { Fold, Refresh, SwitchButton, UserFilled } from "@element-plus/icons-vue";
 import { useStore } from "@/stores/user.js";
 
-const store = useStore()
-const emits = defineEmits(['CollapseChange'])
-const router = useRouter()
+const store = useStore();
+const emits = defineEmits(["CollapseChange"]);
+const router = useRouter();
 const gopack = () => {
-  emits('CollapseChange')
-}
+  emits("CollapseChange");
+};
 const amplification = () => {
 // 全屏/缩小
   const elem = document.documentElement; // 获取整个文档的根节点元素
@@ -24,17 +24,17 @@ const amplification = () => {
       elem.requestFullscreen();
     }
   }
-}
+};
 const cleanTheCache = () => {
   // 清理缓存
-  localStorage.clear()
-  sessionStorage.clear()
-}
+  localStorage.clear();
+  sessionStorage.clear();
+};
 const logout = () => {
   // User.user.loginOut()
   // router.push('/')
-  window.location.href = 'http://kfq.kejin.net.cn:8005/login_230307.aspx'
-}
+  window.location.href = "http://kfq.kejin.net.cn:8005/login_230307.aspx";
+};
 </script>
 
 <template>

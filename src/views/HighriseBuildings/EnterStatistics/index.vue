@@ -1,62 +1,73 @@
 <script setup>
 import { reactive, ref } from "vue";
-import NewInformation from "@/views/HighriseBuildings/EnterStatistics/components/NewInformation.vue";
-import { ElMessage } from 'element-plus'
+import { ElMessage } from "element-plus";
 import { Refresh, Search } from "@element-plus/icons-vue";
 import { useDict } from "@/stores/dict.js";
 import { getCommunity } from "@/apis/dict.js";
 import { getStatisticsList } from "@/apis/statistics.js";
 
 const params = reactive({
-  "pageIndex": 1, "pageSize": 100, "where": {
-    "loginid": "", "sj": ['', ''],
-  }
-})
-const dict = useDict()
-const xqlist = ref([])
+                          "pageIndex": 1,
+                          "pageSize": 100,
+                          "where": {
+                            "loginid": "",
+                            "sj": [
+                              "",
+                              ""
+                            ],
+                          }
+                        });
+const dict = useDict();
+const xqlist = ref([]);
 const getxqList = async (loginid) => {
-  params.where.xqbh = ''
+  params.where.xqbh = "";
   if (!loginid) {
-    loginid = null
+    loginid = null;
   }
-  const {data} = await getCommunity(loginid)
-  xqlist.value = data
-}
-const tableData = ref([])
-const loading = ref(false)
+  const { data } = await getCommunity(loginid);
+  xqlist.value = data;
+};
+const tableData = ref([]);
+const loading = ref(false);
 const getData = () => {
-  loading.value = true
+  loading.value = true;
   setTimeout(async () => {
-    const {data} = await getStatisticsList(params)
-    tableData.value = data.list
-    total.value = data.total
-    loading.value = false
-  }, 500)
-}
-getData()
-const currentPage3 = ref(1)
-const pageSize3 = ref(10)
-const total = ref(1)
-const small = ref(false)
-const background = ref(false)
-const disabled = ref(false)
+    const { data } = await getStatisticsList(params);
+    tableData.value = data.list;
+    total.value = data.total;
+    loading.value = false;
+  }, 500);
+};
+getData();
+const currentPage3 = ref(1);
+const pageSize3 = ref(10);
+const total = ref(1);
+const small = ref(false);
+const background = ref(false);
+const disabled = ref(false);
 const handleSizeChange = (val) => {
-  params.pageSize = val
-  getData()
-}
-const showSuccess = ref(false)
+  params.pageSize = val;
+  getData();
+};
+const showSuccess = ref(false);
 const onRefresh = () => {
-  params.where.loginid = ''
-  params.where.sj = ['', '']
+  params.where.loginid = "";
+  params.where.sj =
+      [
+        "",
+        ""
+      ];
   ElMessage({
-    message: '清除成功', grouping: true, type: 'success',
-  })
-  getData()
-}
-const Confirm = ref()
+              message: "清除成功",
+              grouping: true,
+              type: "success",
+            });
+  getData();
+};
+const Confirm = ref();
 const onConfirm = () => {
-  Confirm.value.submitForm(Confirm.value.ruleFormRef)
-}
+  Confirm.value.submitForm(Confirm.value.ruleFormRef);
+};
 </script>
 
 <template>
@@ -74,7 +85,7 @@ const onConfirm = () => {
           </el-select>
         </el-form-item>
       </el-col>
-      <el-col :span="4">
+      <el-col :span="6">
         <el-form-item>
           <el-date-picker
               v-model="params.where.sj"
@@ -87,16 +98,12 @@ const onConfirm = () => {
           />
         </el-form-item>
       </el-col>
-      <el-col :span="2">
-        <el-form-item>
-          <el-button :icon="Search" type="primary" @click="getData">查询</el-button>
-        </el-form-item>
-      </el-col>
-      <el-col :span="2">
-        <el-form-item>
-          <el-button :icon="Refresh" @click="onRefresh">清除查询</el-button>
-        </el-form-item>
-      </el-col>
+      <el-form-item style="margin-left: 10px;">
+        <el-button :icon="Search" type="primary" @click="getData">查询</el-button>
+      </el-form-item>
+      <el-form-item style="margin-left: 20px;">
+        <el-button :icon="Refresh" @click="onRefresh">清除查询</el-button>
+      </el-form-item>
     </el-row>
   </el-form>
   <!--  <div class="tab-header">-->
@@ -127,17 +134,6 @@ const onConfirm = () => {
       </el-table-column>
     </el-table>
   </el-scrollbar>
-  <el-dialog v-model="showSuccess" center draggable title="新增建筑物" width="65%">
-    <NewInformation v-if="showSuccess" ref="Confirm"></NewInformation>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="showSuccess = false">取消</el-button>
-        <el-button type="primary" @click="onConfirm">
-          确定
-        </el-button>
-      </span>
-    </template>
-  </el-dialog>
 </template>
 
 <style lang="less" scoped>
@@ -157,6 +153,10 @@ const onConfirm = () => {
 .el-table {
   margin-top: 20px;
   //max-height: calc(100vh - 260px);
+}
+
+.el-select {
+  width: 100%;
 }
 
 //:deep(.el-table__footer-wrapper) {

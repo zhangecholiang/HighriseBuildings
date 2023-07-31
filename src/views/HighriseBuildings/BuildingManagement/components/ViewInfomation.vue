@@ -3,18 +3,19 @@ import { editBuilding } from "@/apis/building.js";
 import { reactive, ref } from "vue";
 
 const props = defineProps({
-  bh: {
-    type: String, default: ''
-  }
-})
+                            bh: {
+                              type: String,
+                              default: ""
+                            }
+                          });
 const getData = async () => {
-  const {data} = await editBuilding(props.bh)
-  Object.assign(Infor, data)
-}
-getData()
+  const { data } = await editBuilding(props.bh);
+  Object.assign(Infor, data);
+};
+getData();
 
-const size = ref('large')
-const Infor = reactive({})
+const size = ref("large");
+const Infor = reactive({});
 
 </script>
 

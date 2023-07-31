@@ -2,7 +2,7 @@
 import { reactive, ref } from "vue";
 import NewInformation
   from "@/views/HighriseBuildings/HazardManagement/GeneralHiddendangers/components/NewInformation.vue";
-import { ElMessage } from 'element-plus'
+import { ElMessage } from "element-plus";
 import { Refresh, Search } from "@element-plus/icons-vue";
 import { getHiddenDangerList } from "@/apis/hiddenTrouble.js";
 import { useDict } from "@/stores/dict.js";
@@ -11,80 +11,89 @@ import dayjs from "dayjs";
 import ViewHainfo from "@/views/HighriseBuildings/HazardManagement/GeneralHiddendangers/components/ViewHainfo.vue";
 
 const params = reactive({
-  "pageIndex": 1, "pageSize": 20, "where": {
-    "csqLoginid": "", "xqbh": "", "zt": "", "jzxz": '', "yhdj": '', "iszg": 1
-  }
-})
-const xqlist = ref([])
+                          "pageIndex": 1,
+                          "pageSize": 20,
+                          "where": {
+                            "csqLoginid": "",
+                            "xqbh": "",
+                            "zt": "",
+                            "jzxz": "",
+                            "yhdj": "",
+                            "iszg": 1
+                          }
+                        });
+const xqlist = ref([]);
 const getxqList = async (loginid) => {
-  params.where.xqbh = ''
-  if (loginid !== '') {
-    const {data} = await getCommunity(loginid)
-    xqlist.value = data
+  params.where.xqbh = "";
+  if (loginid !== "") {
+    const { data } = await getCommunity(loginid);
+    xqlist.value = data;
   } else {
-    loginid = null
-    xqlist.value = []
+    loginid = null;
+    xqlist.value = [];
   }
-}
-const dict = useDict()
-const tableData = ref([])
-const loading = ref(false)
+};
+const dict = useDict();
+const tableData = ref([]);
+const loading = ref(false);
 const getData = () => {
-  loading.value = true
+  loading.value = true;
   setTimeout(async () => {
-    const {data} = await getHiddenDangerList(params)
-    tableData.value = data.list
-    total.value = data.total
-    loading.value = false
-  }, 500)
-}
-getData()
-const currentPage3 = ref(1)
-const pageSize3 = ref(20)
-const total = ref(1)
-const small = ref(false)
-const background = ref(false)
-const disabled = ref(false)
+    const { data } = await getHiddenDangerList(params);
+    tableData.value = data.list;
+    total.value = data.total;
+    loading.value = false;
+  }, 500);
+};
+getData();
+const currentPage3 = ref(1);
+const pageSize3 = ref(20);
+const total = ref(1);
+const small = ref(false);
+const background = ref(false);
+const disabled = ref(false);
 const handleSizeChange = (val) => {
-  params.pageSize = val
-  getData()
-}
+  params.pageSize = val;
+  getData();
+};
 const handleCurrentChange = (val) => {
-  params.pageIndex = val
-  getData()
-}
-const showSuccess = ref(false)
+  params.pageIndex = val;
+  getData();
+};
+const showSuccess = ref(false);
 const onClose = () => {
-  showSuccess.value = false
-}
-const param = ref({})
+  showSuccess.value = false;
+};
+const param = ref({});
 const addmasg = (row) => {
-  if (row.zt === '未整改') {
-    showSuccess.value = true
+  if (row.zt === "未整改") {
+    showSuccess.value = true;
   } else {
-    showView.value = true
+    showView.value = true;
   }
-  param.value.bh = row.bh
-  param.value.jcxm = row.jcxm
-}
+  param.value.bh = row.bh;
+  param.value.jcxm = row.jcxm;
+};
 const onRefresh = () => {
-  params.where.csqLoginid = ''
-  params.where.xqbh = ''
-  params.where.zt = ''
-  params.where.jzxz = ''
-  params.where.iszg = ''
+  params.where.csqLoginid = "";
+  params.where.xqbh = "";
+  params.where.zt = "";
+  params.where.jzxz = "";
+  params.where.iszg = "";
   ElMessage({
-    message: '清除成功', grouping: true, type: 'success',
-  })
-  getData()
-}
-const Confirm = ref()
+              message: "清除成功",
+              grouping: true,
+              type: "success",
+            });
+  getData();
+};
+const Confirm = ref();
 const onConfirm = () => {
-  Confirm.value.submitForm(Confirm.value.ruleFormRef)
-  getData()
-}
+  Confirm.value.submitForm(Confirm.value.ruleFormRef);
+  getData();
+};
 
-const showView = ref(false)
+const showView = ref(false);
 </script>
 
 <template>
@@ -189,7 +198,7 @@ const showView = ref(false)
     </el-table-column>
     <el-table-column label="整改期限">
       <template #default="{row}">
-        <span v-if="row.zgqx">{{ dayjs(row.zgqx).format('YYYY-MM-DD') }}</span>
+        <span v-if="row.zgqx">{{ dayjs(row.zgqx).format("YYYY-MM-DD") }}</span>
       </template>
     </el-table-column>
     <el-table-column fixed="right" label="操作" width="140">

@@ -7,86 +7,113 @@ import { useStore } from "@/stores/user.js";
 import { afterRead } from "@/utils/tools.js";
 import dayjs from "dayjs";
 
-const store = useStore()
+const store = useStore();
 const props = defineProps({
-  params: {
-    type: Object, default: () => {
-      return {
-        bh: '', jcxm: ''
-      }
-    }
-  }
-})
-const emits = defineEmits(['colsemasg'])
+                            params: {
+                              type: Object,
+                              default: () => {
+                                return {
+                                  bh: "",
+                                  jcxm: ""
+                                };
+                              }
+                            }
+                          });
+const emits = defineEmits(["colsemasg"]);
 if (props.params.bh !== "") {
   const getData = async () => {
-    const {data} = await getRectification(props.params.bh, props.params.jcxm)
-    Object.assign(Information, data)
+    const { data } = await getRectification(props.params.bh, props.params.jcxm);
+    Object.assign(Information, data);
     Information.jzgcxfyjszp = data.jzgcxfyjszp.map(item => {
       return {
-        url: 'http://kfq.kejin.net.cn:8223' + item.path,
-      }
-    })
+        url: "http://kfq.kejin.net.cn:8223" + item.path,
+      };
+    });
     Information.ldqmzp = data.ldqmzp.map(item => {
       return {
-        url: 'http://kfq.kejin.net.cn:8223' + item.path,
-      }
-    })
+        url: "http://kfq.kejin.net.cn:8223" + item.path,
+      };
+    });
     Information.fjbhzp = data.fjbhzp.map(item => {
       return {
-        url: 'http://kfq.kejin.net.cn:8223' + item.path,
-      }
-    })
-  }
-  getData()
+        url: "http://kfq.kejin.net.cn:8223" + item.path,
+      };
+    });
+  };
+  getData();
 }
-const ruleFormRef = ref()
+const ruleFormRef = ref();
 const rules = reactive({
-  zgsm: [{required: true, message: '请输入整改说明', trigger: 'blur'},],
-  zgwcsj: [{required: true, message: '请输入整改完成时间', trigger: 'blur'},],
-  el_zgzp: [{required: true, message: '请上传整改图片', trigger: 'blur'},]
-})
+                         zgsm: [
+                           {
+                             required: true,
+                             message: "请输入整改说明",
+                             trigger: "blur"
+                           },
+                         ],
+                         zgwcsj: [
+                           {
+                             required: true,
+                             message: "请输入整改完成时间",
+                             trigger: "blur"
+                           },
+                         ],
+                         el_zgzp: [
+                           {
+                             required: true,
+                             message: "请上传整改图片",
+                             trigger: "blur"
+                           },
+                         ]
+                       });
 const Information = reactive({
-  qyfzrTel: '', fileList: [], fjbhzp: [],
-})
-const loading = ref(false)
-const HazarInfo = reactive({})
+                               qyfzrTel: "",
+                               fileList: [],
+                               fjbhzp: [],
+                             });
+const loading = ref(false);
+const HazarInfo = reactive({});
 const submitForm = async (formEl) => {
-  if (!formEl) return
+  if (!formEl) return;
   await formEl.validate(async (valid, fields) => {
     if (valid) {
-      loading.value = true
-      HazarInfo.jcxx_itme = props.params.bh
-      HazarInfo.jcxm = props.params.jcxm
+      loading.value = true;
+      HazarInfo.jcxx_itme = props.params.bh;
+      HazarInfo.jcxm = props.params.jcxm;
       HazarInfo.zgzp = HazarInfo.el_zgzp.map(item => {
-        return item.response.data
-      })
-      const data = await submitRectification(HazarInfo)
+        return item.response.data;
+      });
+      const data = await submitRectification(HazarInfo);
       if (data.code === 200) {
         ElMessage({
-          message: '提交成功', grouping: true, type: 'success',
-        })
+                    message: "提交成功",
+                    grouping: true,
+                    type: "success",
+                  });
         setTimeout(() => {
-          loading.value = false
-          emits('colsemasg')
-        }, 1000)
+          loading.value = false;
+          emits("colsemasg");
+        }, 1000);
       } else {
         ElMessage({
-          message: data.msg, grouping: true, type: 'error',
-        })
+                    message: data.msg,
+                    grouping: true,
+                    type: "error",
+                  });
         setTimeout(() => {
-          loading.value = false
-          emits('colsemasg')
-        }, 1000)
+          loading.value = false;
+          emits("colsemasg");
+        }, 1000);
       }
     } else {
-      console.log('error submit!', fields)
+      console.log("error submit!", fields);
     }
-  })
-}
+  });
+};
 defineExpose({
-  submitForm, ruleFormRef,
-})
+               submitForm,
+               ruleFormRef,
+             });
 </script>
 
 <template>

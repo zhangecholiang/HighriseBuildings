@@ -17,6 +17,6 @@ export function uploadImg (data) {
 // token查
 export function getTokenuser (params) {
 	return axios({
-		url: 'http://kfq.kejin.net.cn:8002/api20220708/api/login/getUserInfo?token='+params, method: 'get'
+		url: 'http://kfq.kejin.net.cn:8002/api20220708/api/login/getUserInfo?token=' + params, method: 'get'
 	})
 }

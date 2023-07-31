@@ -1,6 +1,7 @@
 <script setup>
 import { reactive, ref } from "vue";
-import NewInformation from "@/views/HighriseBuildings/HazardManagement/GeneralHiddendangers/components/NewInformation.vue";
+import NewInformation
+  from "@/views/HighriseBuildings/HazardManagement/GeneralHiddendangers/components/NewInformation.vue";
 import { ElMessage } from 'element-plus'
 import { Refresh, Search } from "@element-plus/icons-vue";
 import { getHiddenDangerList } from "@/apis/hiddenTrouble.js";
@@ -11,7 +12,7 @@ import ViewHainfo from "@/views/HighriseBuildings/HazardManagement/GeneralHidden
 
 const params = reactive({
   "pageIndex": 1, "pageSize": 20, "where": {
-    "csqLoginid": "", "xqbh": "", "zt": "", "jzxz": '', "yhdj": '',"iszg":1
+    "csqLoginid": "", "xqbh": "", "zt": "", "jzxz": '', "yhdj": '', "iszg": 1
   }
 })
 const xqlist = ref([])

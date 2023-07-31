@@ -239,7 +239,7 @@ const onisApproved = async () => {
           <!--          </el-button>-->
         </div>
       </el-col>
-      <el-col align="right" :span="12">
+      <el-col :span="12" align="right">
         <el-button :icon="Search" type="primary" @click="getData">查询</el-button>
         <el-button :icon="Refresh" @click="onRefresh">清除查询</el-button>
       </el-col>

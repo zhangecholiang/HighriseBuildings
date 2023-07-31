@@ -3,9 +3,9 @@ import { reactive, ref } from "vue";
 import NewInformation from "@/views/HighriseBuildings/EnterStatistics/components/NewInformation.vue";
 import { ElMessage } from 'element-plus'
 import { Refresh, Search } from "@element-plus/icons-vue";
-import { getStatisticsList } from "@/apis/statistics.js";
 import { useDict } from "@/stores/dict.js";
 import { getCommunity } from "@/apis/dict.js";
+import { getStatisticsList } from "@/apis/statistics.js";
 
 const params = reactive({
   "pageIndex": 1, "pageSize": 100, "where": {
@@ -42,10 +42,6 @@ const background = ref(false)
 const disabled = ref(false)
 const handleSizeChange = (val) => {
   params.pageSize = val
-  getData()
-}
-const handleCurrentChange = (val) => {
-  params.pageIndex = val
   getData()
 }
 const showSuccess = ref(false)

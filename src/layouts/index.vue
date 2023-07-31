@@ -45,7 +45,7 @@ const closeColl = () => {
   .el-header {
     height: 59px;
     //background: #002140;
-    box-shadow: 0 0 4px rgba(0,0,0,.2);
+    box-shadow: 0 0 4px rgba(0, 0, 0, .2);
   }
 
   .el-main {

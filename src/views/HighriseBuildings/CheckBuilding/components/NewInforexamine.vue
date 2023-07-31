@@ -15,8 +15,7 @@ const props = defineProps({
     type: Object, default: () => {
       return {}
     }
-  },
-  isjc: {
+  }, isjc: {
     type: Boolean,
   }
 })
@@ -232,7 +231,8 @@ const DeleteCustom = (index) => {
       <el-row :gutter="0" justify="start">
         <el-col :span="8">
           <el-form-item label="社区" prop="csqloginid">
-            <el-select v-model="Information.csqloginid" :disabled="props.isjc" clearable placeholder="" @change="getxqList">
+            <el-select v-model="Information.csqloginid" :disabled="props.isjc" clearable placeholder=""
+                       @change="getxqList">
               <el-option
                   v-for="item in dict.sqList"
                   :key="item.loginid"
@@ -244,7 +244,7 @@ const DeleteCustom = (index) => {
         </el-col>
         <el-col :span="8">
           <el-form-item label="小区（楼）名称" prop="xqbh">
-            <el-select v-model="Information.xqbh" clearable :disabled="props.isjc" placeholder="" @change="getldList">
+            <el-select v-model="Information.xqbh" :disabled="props.isjc" clearable placeholder="" @change="getldList">
               <el-option
                   v-for="item in xqlist"
                   :key="item.xqbh"
@@ -268,13 +268,13 @@ const DeleteCustom = (index) => {
         </el-col>
         <el-col :span="8">
           <el-form-item label="所在地址" prop="szdz">
-            <el-input v-model="Information.szdz " :readonly="props.isjc" clearable placeholder="" maxlength="100"/>
+            <el-input v-model="Information.szdz " :readonly="props.isjc" clearable maxlength="100" placeholder=""/>
           </el-form-item>
         </el-col>
 
         <el-col :span="8">
           <el-form-item label="检查人" prop="jcr">
-            <el-input v-model="Information.jcr " clearable placeholder="" maxlength="20"/>
+            <el-input v-model="Information.jcr " clearable maxlength="20" placeholder=""/>
           </el-form-item>
         </el-col>
         <el-col :span="8">

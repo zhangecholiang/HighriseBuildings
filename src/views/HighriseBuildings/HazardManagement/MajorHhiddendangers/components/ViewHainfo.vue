@@ -225,6 +225,7 @@ const HazarInfo = reactive({})
         :deep(.el-input__wrapper) {
           box-shadow: none !important;
           font-size: 15px;
+
           .el-input__inner {
             cursor: auto;
 

@@ -1,19 +1,14 @@
 import { defineStore } from 'pinia'
 
 export const useStore = defineStore({
-	id: 'user',
-	state: () => {
+	id: 'user', state: () => {
 		return {
-			token: '',
-			userInfo: {}
+			token: '', userInfo: {}
 		}
-	},
-	getters: {},
-	actions: {
+	}, getters: {}, actions: {
 		setToken (val) {
 			this.token = val
-		},
-		setUserInfo (val) {
+		}, setUserInfo (val) {
 			this.userInfo = val
 		}
 	}, persist: true

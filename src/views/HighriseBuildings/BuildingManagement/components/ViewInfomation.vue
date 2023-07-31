@@ -1,6 +1,6 @@
 <script setup>
 import { editBuilding } from "@/apis/building.js";
-import { computed, reactive, ref } from "vue";
+import { reactive, ref } from "vue";
 
 const props = defineProps({
   bh: {

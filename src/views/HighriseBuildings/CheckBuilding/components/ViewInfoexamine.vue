@@ -53,7 +53,7 @@ const getinfos = async () => {
 }
 getinfos()
 
-const genderSpanCity = ({ row, column, rowIndex, columnIndex}) => {
+const genderSpanCity = ({row, column, rowIndex, columnIndex}) => {
   if (columnIndex === 0) {
     // 获取当前单元格的值
     const currentValue = row[column.property];

@@ -1,24 +1,16 @@
 <script setup>
-import { useRoute } from "vue-router";
-import { onMounted, ref } from "vue";
-import { routes } from "@/router/index.js";
+import {useRoute} from "vue-router";
+import {ref} from "vue";
+import {routes} from "@/router/index.js";
 
 const route = useRoute();
-const meuns = route.matched;
-
-const activeIndex = ref("");
-onMounted(() => {
-  activeIndex.value = route.path;
-});
-
 const isCollapse = ref(false);
 const closeColl = () => {
   isCollapse.value = !isCollapse.value;
 };
 defineExpose({
-               closeColl
-             });
-console.log(routes);
+  closeColl
+});
 </script>
 
 <template>

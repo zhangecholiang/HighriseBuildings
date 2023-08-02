@@ -1,4 +1,4 @@
-import { createPinia } from "pinia";
+import {createPinia} from "pinia";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 // 创建store实例
 const store = createPinia();

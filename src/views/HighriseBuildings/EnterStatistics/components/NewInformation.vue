@@ -1,17 +1,17 @@
 <script setup>
-import { reactive, ref } from "vue";
+import {reactive, ref} from "vue";
 import axios from "axios";
 
 const ruleFormRef = ref();
 const rules = reactive({
-                         District: [
-                           {
-                             required: true,
-                             message: "请输入区镇",
-                             trigger: "blur"
-                           },
-                         ]
-                       });
+  District: [
+    {
+      required: true,
+      message: "请输入区镇",
+      trigger: "blur"
+    },
+  ]
+});
 const Information = reactive({});
 
 const submitForm = (formEl) => {
@@ -25,9 +25,9 @@ const submitForm = (formEl) => {
   });
 };
 defineExpose({
-               submitForm,
-               ruleFormRef,
-             });
+  submitForm,
+  ruleFormRef,
+});
 
 const activeName = ref("first");
 const handleClick = (tab, event) => {
@@ -39,44 +39,44 @@ const handleChange = (val) => {
 };
 
 const fireSafety = ref([
-                         {
-                           label: "易燃易爆品",
-                           rules: [],
-                           option: [
-                             {
-                               label: "",
-                               value: ""
-                             }
-                           ],
-                           files: [],
-                         },
-                       ]);
+  {
+    label: "易燃易爆品",
+    rules: [],
+    option: [
+      {
+        label: "",
+        value: ""
+      }
+    ],
+    files: [],
+  },
+]);
 const buildingFireProtection = ref([
-                                     {
-                                       label: "竖向管井和电缆桥架防火封堵",
-                                       rules: [],
-                                       option: [
-                                         {
-                                           label: "",
-                                           value: ""
-                                         }
-                                       ],
-                                       files: [],
-                                     },
-                                   ]);
+  {
+    label: "竖向管井和电缆桥架防火封堵",
+    rules: [],
+    option: [
+      {
+        label: "",
+        value: ""
+      }
+    ],
+    files: [],
+  },
+]);
 const FireFightingFacilities = ref([
-                                     {
-                                       label: "建筑灭火器",
-                                       rules: [],
-                                       option: [
-                                         {
-                                           label: "",
-                                           value: ""
-                                         }
-                                       ],
-                                       files: [],
-                                     },
-                                   ]);
+  {
+    label: "建筑灭火器",
+    rules: [],
+    option: [
+      {
+        label: "",
+        value: ""
+      }
+    ],
+    files: [],
+  },
+]);
 const getDict = () => {
   axios.post("http://kfq.kejin.net.cn:8001/api20220708/api/dict/bindTree/635", {}, {
     headers: {
@@ -164,18 +164,18 @@ getDict();
 const tableData = [];
 
 const custom = ref([
-                     {
-                       checkTheMatter: "",
-                       checkTheResults: "",
-                       checkThePicture: []
-                     },
-                   ]);
+  {
+    checkTheMatter: "",
+    checkTheResults: "",
+    checkThePicture: []
+  },
+]);
 const AddCustom = () => {
   custom.value.push({
-                      checkTheMatter: "",
-                      checkTheResults: "",
-                      checkThePicture: []
-                    });
+    checkTheMatter: "",
+    checkTheResults: "",
+    checkThePicture: []
+  });
 };
 const DeleteCustom = (index) => {
   if (custom.value.length === 1) {

@@ -1,33 +1,33 @@
 <script setup>
-import { reactive, ref } from "vue";
+import {reactive, ref} from "vue";
 import NewInformation from "@/views/HighriseBuildings/BuildingManagement/components/NewInformation.vue";
-import { ElMessage, ElMessageBox } from "element-plus";
-import { Plus, Refresh, Search } from "@element-plus/icons-vue";
-import { useDict } from "@/stores/dict.js";
-import { getCommunity } from "@/apis/dict.js";
-import { deleteBuilding, getBuildingList } from "@/apis/building.js";
+import {ElMessage, ElMessageBox} from "element-plus";
+import {Plus, Refresh, Search} from "@element-plus/icons-vue";
+import {useDict} from "@/stores/dict.js";
+import {getCommunity} from "@/apis/dict.js";
+import {deleteBuilding, getBuildingList} from "@/apis/building.js";
 import dayjs from "dayjs";
 import NewInforexamine from "@/views/HighriseBuildings/CheckBuilding/components/NewInforexamine.vue";
 import ViewInfomation from "@/views/HighriseBuildings/BuildingManagement/components/ViewInfomation.vue";
 
 const params = reactive({
-                          "pageIndex": 1,
-                          "pageSize": 20,
-                          "where": {
-                            "csqLoginid": "",
-                            "xqbh": "",
-                            "jzxz": "",
-                            "szdz": "",
-                            "lh": "",
-                            "lxr": "",
-                          }
-                        });
+  "pageIndex": 1,
+  "pageSize": 20,
+  "where": {
+    "csqLoginid": "",
+    "xqbh": "",
+    "jzxz": "",
+    "szdz": "",
+    "lh": "",
+    "lxr": "",
+  }
+});
 const dict = useDict();
 const xqlist = ref([]);
 const getxqList = async (loginid) => {
   params.where.xqbh = "";
   if (loginid !== "") {
-    const { data } = await getCommunity(loginid);
+    const {data} = await getCommunity(loginid);
     xqlist.value = data;
   } else {
     loginid = null;
@@ -39,7 +39,7 @@ const loading = ref(false);
 const getData = () => {
   loading.value = true;
   setTimeout(async () => {
-    const { data } = await getBuildingList(params);
+    const {data} = await getBuildingList(params);
     tableData.value = data.list;
     total.value = data.total;
     loading.value = false;
@@ -77,10 +77,10 @@ const onRefresh = () => {
   params.where.lh = "";
   params.where.lxr = "";
   ElMessage({
-              message: "清除成功",
-              grouping: true,
-              type: "success",
-            });
+    message: "清除成功",
+    grouping: true,
+    type: "success",
+  });
   getData();
 };
 const Confirm = ref();
@@ -103,18 +103,18 @@ const delSuccess = async (row) => {
         const data = await deleteBuilding(row.bh);
         if (data.code === 200) {
           ElMessage({
-                      message: "删除成功",
-                      grouping: true,
-                      type: "success",
-                    });
+            message: "删除成功",
+            grouping: true,
+            type: "success",
+          });
           getData();
         }
       })
       .catch(() => {
         ElMessage({
-                    type: "info",
-                    message: "已取消",
-                  });
+          type: "info",
+          message: "已取消",
+        });
       });
 };
 

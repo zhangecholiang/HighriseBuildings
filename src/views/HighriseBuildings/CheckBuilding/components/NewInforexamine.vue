@@ -1,80 +1,80 @@
 <script setup>
-import { onMounted, reactive, ref } from "vue";
-import { Plus } from "@element-plus/icons-vue";
-import { getCommunity, getTreeMenu } from "@/apis/dict.js";
-import { useDict } from "@/stores/dict.js";
-import { ElMessage } from "element-plus";
-import { addcheck, getbuild, getbuildinfo, getcheckDetail } from "@/apis/examine.js";
-import { useStore } from "@/stores/user.js";
-import { afterRead, elFormErrorScrollIntoView } from "@/utils/tools.js";
+import {onMounted, reactive, ref} from "vue";
+import {Plus} from "@element-plus/icons-vue";
+import {getCommunity, getTreeMenu} from "@/apis/dict.js";
+import {useDict} from "@/stores/dict.js";
+import {ElMessage} from "element-plus";
+import {addcheck, getbuild, getbuildinfo, getcheckDetail} from "@/apis/examine.js";
+import {useStore} from "@/stores/user.js";
+import {afterRead, elFormErrorScrollIntoView} from "@/utils/tools.js";
 
 const props = defineProps({
-                            bh: {
-                              type: String,
-                              default: "",
-                            },
-                            jxinfo: {
-                              type: Object,
-                              default: () => {
-                                return {};
-                              }
-                            },
-                            isjc: {
-                              type: Boolean,
-                            }
-                          });
+  bh: {
+    type: String,
+    default: "",
+  },
+  jxinfo: {
+    type: Object,
+    default: () => {
+      return {};
+    }
+  },
+  isjc: {
+    type: Boolean,
+  }
+});
 console.log(props.isjc);
 const emits = defineEmits(["colsemasg"]);
 const dict = useDict();
 const store = useStore();
 const ruleFormRef = ref();
 const rules = reactive({
-                         csqloginid: [
-                           {
-                             required: true,
-                             message: "请输入社区",
-                             trigger: "blur"
-                           },
-                         ],
-                         xqbh: [
-                           {
-                             required: true,
-                             message: "请输入小区（楼）名称",
-                             trigger: "blur"
-                           },
-                         ],
-                         lh: [
-                           {
-                             required: true,
-                             message: "请输入楼号",
-                             trigger: "blur"
-                           },
-                         ],
-                         szdz: [
-                           {
-                             required: true,
-                             message: "请输入所在地址",
-                             trigger: "blur"
-                           },
-                         ],
-                         jcr: [
-                           {
-                             required: true,
-                             message: "请输入检查人",
-                             trigger: "blur"
-                           },
-                         ],
-                         jcsj: [
-                           {
-                             required: true,
-                             message: "请输入检查时间",
-                             trigger: "blur"
-                           },
-                         ],
-                       });
+  csqloginid: [
+    {
+      required: true,
+      message: "请输入社区",
+      trigger: "blur"
+    },
+  ],
+  xqbh: [
+    {
+      required: true,
+      message: "请输入小区（楼）名称",
+      trigger: "blur"
+    },
+  ],
+  lh: [
+    {
+      required: true,
+      message: "请输入楼号",
+      trigger: "blur"
+    },
+  ],
+  szdz: [
+    {
+      required: true,
+      message: "请输入所在地址",
+      trigger: "blur"
+    },
+  ],
+  jcr: [
+    {
+      required: true,
+      message: "请输入检查人",
+      trigger: "blur"
+    },
+  ],
+  jcsj: [
+    {
+      required: true,
+      message: "请输入检查时间",
+      trigger: "blur"
+    },
+  ],
+});
 const Information = reactive({
-                               jcxx: []
-                             });
+  jcxx: []
+});
 const BasicChecks = ref([]);
 const xqlist = ref([]);
 const getxqList = async (loginid) => {
@@ -82,16 +82,16 @@ const getxqList = async (loginid) => {
   if (!loginid) {
     loginid = null;
   }
-  const { data } = await getCommunity(loginid);
+  const {data} = await getCommunity(loginid);
   xqlist.value = data;
 };
 const ldlist = ref([]);
 const getldList = async () => {
-  const { data } = await getbuild(Information.csqloginid, Information.xqbh);
+  const {data} = await getbuild(Information.csqloginid, Information.xqbh);
   ldlist.value = data;
 };
 const getinfo = async () => {
-  const { data } = await getbuildinfo(Information.csqloginid, Information.xqbh, Information.lh);
+  const {data} = await getbuildinfo(Information.csqloginid, Information.xqbh, Information.lh);
   Information.szdz = data.szdz;
   Information.jzwb = data.bh;
 };
@@ -105,26 +105,26 @@ const submitForm = (formEl) => {
       BasicChecks.value.forEach((item) => {
         item.children.forEach((i) => {
           Information.jcxx.push({
-                                  jcxm: i.dictName,
-                                  jcjg: i.jcjg,
-                                  fj: i.files && i.files.map((item) => {
-                                    return item.response.data;
-                                  }),
-                                });
+            jcxm: i.dictName,
+            jcjg: i.jcjg,
+            fj: i.files && i.files.map((item) => {
+              return item.response.data;
+            }),
+          });
         });
       });
       custom.value.forEach((item) => {
         Information.jcxx.push({
-                                jcxm: item.jcxm,
-                                jcjg: {
-                                  dictName: item.jcjg,
-                                  dictValue2: ""
-                                },
-                                fj: item.fj && item.fj.map((item) => {
-                                  return item.response.data;
-                                }),
-                                zdy: true
-                              });
+          jcxm: item.jcxm,
+          jcjg: {
+            dictName: item.jcjg,
+            dictValue2: ""
+          },
+          fj: item.fj && item.fj.map((item) => {
+            return item.response.data;
+          }),
+          zdy: true
+        });
       });
       loadingText.value = "提交中...";
       loading.value = true;
@@ -133,20 +133,20 @@ const submitForm = (formEl) => {
         const data = await addcheck(Information);
         if (data.code === 200) {
           ElMessage({
-                      message: "修改成功",
-                      grouping: true,
-                      type: "success",
-                    });
+            message: "修改成功",
+            grouping: true,
+            type: "success",
+          });
           setTimeout(() => {
             loading.value = false;
             emits("colsemasg");
           }, 1000);
         } else {
           ElMessage({
-                      message: "修改失败",
-                      grouping: true,
-                      type: "warning",
-                    });
+            message: "修改失败",
+            grouping: true,
+            type: "warning",
+          });
           setTimeout(() => {
             emits("colsemasg");
           }, 1000);
@@ -156,20 +156,20 @@ const submitForm = (formEl) => {
         const data = await addcheck(Information);
         if (data.code === 200) {
           ElMessage({
-                      message: "提交成功",
-                      grouping: true,
-                      type: "success",
-                    });
+            message: "提交成功",
+            grouping: true,
+            type: "success",
+          });
           setTimeout(() => {
             loading.value = false;
             emits("colsemasg");
           }, 1000);
         } else {
           ElMessage({
-                      message: data.msg,
-                      grouping: true,
-                      type: "error",
-                    });
+            message: data.msg,
+            grouping: true,
+            type: "error",
+          });
           setTimeout(() => {
             emits("colsemasg");
           }, 1000);
@@ -190,9 +190,9 @@ const submitForm = (formEl) => {
   });
 };
 defineExpose({
-               submitForm,
-               ruleFormRef,
-             });
+  submitForm,
+  ruleFormRef,
+});
 const isAccordion = ref(true);
 const activeName = ref("first");
 const handleClick = () => {
@@ -201,7 +201,7 @@ const handleClick = () => {
 const activeNames = ref(["消防安全管理"]);
 
 const getDict = async () => {
-  const { data } = await getTreeMenu(873);
+  const {data} = await getTreeMenu(873);
   BasicChecks.value = data;
   Information.BasicChecks = data;
   EditInfo();
@@ -217,7 +217,7 @@ const EditInfo = () => {
     activeNames.value = ["0"];
     custom.value = [];
     const getinfos = async () => {
-      const { data } = await getcheckDetail(props.bh);
+      const {data} = await getcheckDetail(props.bh);
       await getxqList(data.csqloginid);
       Object.assign(Information, data);
       BasicChecks.value.forEach((item) => {
@@ -242,17 +242,17 @@ const EditInfo = () => {
       data.checkItem.forEach((item) => {
         if (item.zdy) {
           custom.value.push({
-                              jcxm: item.jcxm,
-                              jcjg: item.jcjg,
-                              fj: item.zp.map((item) => {
-                                return {
-                                  url: "http://kfq.kejin.net.cn:8223" + item.path,
-                                  response: {
-                                    data: item
-                                  }
-                                };
-                              })
-                            });
+            jcxm: item.jcxm,
+            jcjg: item.jcjg,
+            fj: item.zp.map((item) => {
+              return {
+                url: "http://kfq.kejin.net.cn:8223" + item.path,
+                response: {
+                  data: item
+                }
+              };
+            })
+          });
         }
       });
     };
@@ -272,18 +272,18 @@ if (JSON.stringify(props.jxinfo) !== "{}") {
 }
 
 const custom = ref([
-                     {
-                       jcxm: "",
-                       jcjg: "",
-                       fj: []
-                     },
-                   ]);
+  {
+    jcxm: "",
+    jcjg: "",
+    fj: []
+  },
+]);
 const AddCustom = () => {
   custom.value.push({
-                      checkTheMatter: "",
-                      checkTheResults: "",
-                      checkThePicture: []
-                    });
+    checkTheMatter: "",
+    checkTheResults: "",
+    checkThePicture: []
+  });
 };
 const DeleteCustom = (index) => {
   if (custom.value.length === 1) {

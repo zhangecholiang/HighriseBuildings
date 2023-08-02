@@ -1,15 +1,15 @@
 <script setup>
-import { editBuilding } from "@/apis/building.js";
-import { reactive, ref } from "vue";
+import {editBuilding} from "@/apis/building.js";
+import {reactive, ref} from "vue";
 
 const props = defineProps({
-                            bh: {
-                              type: String,
-                              default: ""
-                            }
-                          });
+  bh: {
+    type: String,
+    default: ""
+  }
+});
 const getData = async () => {
-  const { data } = await editBuilding(props.bh);
+  const {data} = await editBuilding(props.bh);
   Object.assign(Infor, data);
 };
 getData();

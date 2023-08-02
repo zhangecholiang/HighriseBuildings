@@ -1,10 +1,10 @@
 <script setup>
 import zhCn from "element-plus/dist/locale/zh-cn.mjs";
-import { onMounted } from "vue";
-import { getToken, getTokenuser } from "@/apis/index.js";
-import { useStore } from "@/stores/user.js";
-import { getCommunity, getTreeMenu, getVillage } from "@/apis/dict.js";
-import { useDict } from "@/stores/dict.js";
+import {onMounted} from "vue";
+import {getToken, getTokenuser} from "@/apis/index.js";
+import {useStore} from "@/stores/user.js";
+import {getCommunity, getTreeMenu, getVillage} from "@/apis/dict.js";
+import {useDict} from "@/stores/dict.js";
 
 const store = useStore();
 const dict = useDict();
@@ -17,7 +17,7 @@ onMounted(async () => {
     store.setUserInfo(user.data);
   }
   if (store.token) return;
-  const { data } = await getToken();
+  const {data} = await getToken();
   store.setToken(data.token);
   const csq = await getVillage();
   dict.setSqList(csq.data);

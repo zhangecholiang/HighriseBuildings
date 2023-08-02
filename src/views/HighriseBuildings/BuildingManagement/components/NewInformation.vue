@@ -1,155 +1,156 @@
 <script setup>
-import { onBeforeMount, reactive, ref } from "vue";
-import { Plus } from "@element-plus/icons-vue";
-import { addBuilding, editBuilding } from "@/apis/building.js";
-import { useDict } from "@/stores/dict.js";
-import { getCommunity } from "@/apis/dict.js";
-import { useStore } from "@/stores/user.js";
-import { ElMessage } from "element-plus";
-import { afterRead } from "@/utils/tools.js";
+import {onBeforeMount, reactive, ref} from "vue";
+import {Plus} from "@element-plus/icons-vue";
+import {addBuilding, editBuilding} from "@/apis/building.js";
+import {useDict} from "@/stores/dict.js";
+import {getCommunity} from "@/apis/dict.js";
+import {useStore} from "@/stores/user.js";
+import {ElMessage} from "element-plus";
+import {afterRead} from "@/utils/tools.js";
 
 const props = defineProps({
-                            bh: {
-                              type: String,
-                              default: ""
-                            }
-                          });
+  bh: {
+    type: String,
+    default: ""
+  }
+});
 const emits = defineEmits(["colsemasg"]);
 const ruleFormRef = ref();
-const rules = reactive({
-                         csqLoginid: [
-                           {
-                             required: true,
-                             message: "请输入社区",
-                             trigger: "change"
-                           },
-                         ],
-                         xqbh: [
-                           {
-                             required: true,
-                             message: "请输入小区（楼）名称",
-                             trigger: "change"
-                           },
-                         ],
-                         lh: [
-                           {
-                             required: true,
-                             message: "请输入楼号",
-                             trigger: "blur"
-                           },
-                         ],
-                         szdz: [
-                           {
-                             required: true,
-                             message: "请输入所在地址",
-                             trigger: "blur"
-                           },
-                         ],
-                         jzxz: [
-                           {
-                             required: true,
-                             message: "请选择建筑性质",
-                             trigger: "blur"
-                           },
-                         ],
-                         wydw: [
-                           {
-                             required: true,
-                             message: "请选择物业单位",
-                             trigger: "blur"
-                           },
-                         ],
-                         lxr: [
-                           {
-                             required: true,
-                             message: "请输入联系人",
-                             trigger: "blur"
-                           },
-                         ],
-                         lxdh: [
-                           {
-                             required: true,
-                             message: "请输入联系电话",
-                             trigger: "blur"
-                           },
-                           {
-                             pattern: /^1[3456789]\d{9}$/,
-                             message: "请输入正确的手机号",
-                             trigger: "blur"
-                           }
-                         ],
-                         el_ldqm: [
-                           {
-                             required: true,
-                             message: "请上传楼栋全貌",
-                             trigger: "blur"
-                           },
-                         ],
-                         jzgcxfyjs: [
-                           {
-                             required: true,
-                             message: "请上传建筑工程消防意见书",
-                             trigger: "blur"
-                           },
-                         ],
-                         gcjzlb: [
-                           {
-                             required: true,
-                             message: "请输入高层建筑类别",
-                             trigger: "blur"
-                           },
-                         ],
-                         lg: [
-                           {
-                             required: true,
-                             message: "请输入楼高",
-                             trigger: "blur"
-                           },
-                         ],
-                         sfgp: [
-                           {
-                             required: true,
-                             message: "请选择是否高层建筑",
-                             trigger: "blur"
-                           },
-                         ],
-                         dsjzcs: [
-                           {
-                             required: true,
-                             message: "请输入地上建筑层数",
-                             trigger: "blur"
-                           },
-                         ],
-                         dxjzcs: [
-                           {
-                             required: true,
-                             message: "请输入地下建筑层数",
-                             trigger: "blur"
-                           },
-                         ],
-                         jkc: [
-                           {
-                             required: true,
-                             message: "请输入架空层位置(层)",
-                             trigger: "blur"
-                           },
-                         ],
-                         hzfsqk: [
-                           {
-                             required: true,
-                             message: "请选择火灾发生情况",
-                             trigger: "blur"
-                           },
-                         ],
-                       });
+const rules = reactive(
+    {
+      csqLoginid: [
+        {
+          required: true,
+          message: "请输入社区",
+          trigger: "change"
+        },
+      ],
+      xqbh: [
+        {
+          required: true,
+          message: "请输入小区（楼）名称",
+          trigger: "change"
+        },
+      ],
+      lh: [
+        {
+          required: true,
+          message: "请输入楼号",
+          trigger: "blur"
+        },
+      ],
+      szdz: [
+        {
+          required: true,
+          message: "请输入所在地址",
+          trigger: "blur"
+        },
+      ],
+      jzxz: [
+        {
+          required: true,
+          message: "请选择建筑性质",
+          trigger: "blur"
+        },
+      ],
+      wydw: [
+        {
+          required: true,
+          message: "请选择物业单位",
+          trigger: "blur"
+        },
+      ],
+      lxr: [
+        {
+          required: true,
+          message: "请输入联系人",
+          trigger: "blur"
+        },
+      ],
+      lxdh: [
+        {
+          required: true,
+          message: "请输入联系电话",
+          trigger: "blur"
+        },
+        {
+          pattern: /^1[3456789]\d{9}$/,
+          message: "请输入正确的手机号",
+          trigger: "blur"
+        }
+      ],
+      el_ldqm: [
+        {
+          required: true,
+          message: "请上传楼栋全貌",
+          trigger: "blur"
+        },
+      ],
+      jzgcxfyjs: [
+        {
+          required: true,
+          message: "请上传建筑工程消防意见书",
+          trigger: "blur"
+        },
+      ],
+      gcjzlb: [
+        {
+          required: true,
+          message: "请输入高层建筑类别",
+          trigger: "blur"
+        },
+      ],
+      lg: [
+        {
+          required: true,
+          message: "请输入楼高",
+          trigger: "blur"
+        },
+      ],
+      sfgp: [
+        {
+          required: true,
+          message: "请选择是否高层建筑",
+          trigger: "blur"
+        },
+      ],
+      dsjzcs: [
+        {
+          required: true,
+          message: "请输入地上建筑层数",
+          trigger: "blur"
+        },
+      ],
+      dxjzcs: [
+        {
+          required: true,
+          message: "请输入地下建筑层数",
+          trigger: "blur"
+        },
+      ],
+      jkc: [
+        {
+          required: true,
+          message: "请输入架空层位置(层)",
+          trigger: "blur"
+        },
+      ],
+      hzfsqk: [
+        {
+          required: true,
+          message: "请选择火灾发生情况",
+          trigger: "blur"
+        },
+      ],
+    });
 const Information = reactive({
-                               ldqm: [],
-                               jzgcxfyjs: [],
-                             });
+  ldqm: [],
+  jzgcxfyjs: [],
+});
 onBeforeMount(() => {
   if (props.bh !== "") {
     const getBuilding = async (bh) => {
-      const { data } = await editBuilding(bh);
+      const {data} = await editBuilding(bh);
       Information.el_ldqm = data.ldqmzp.map(item => {
         return {
           url: "http://kfq.kejin.net.cn:8223" + item.path,
@@ -181,7 +182,7 @@ const getxqList = async (loginid) => {
   if (!loginid) {
     loginid = null;
   }
-  const { data } = await getCommunity(loginid);
+  const {data} = await getCommunity(loginid);
   xqlist.value = data;
 };
 const loading = ref(false);
@@ -200,20 +201,20 @@ const submitForm = async (formEl) => {
         const data = await addBuilding(Information);
         if (data.code === 200) {
           ElMessage({
-                      message: "修改成功",
-                      grouping: true,
-                      type: "success",
-                    });
+            message: "修改成功",
+            grouping: true,
+            type: "success",
+          });
           setTimeout(() => {
             emits("colsemasg");
             loading.value = false;
           }, 1000);
         } else {
           ElMessage({
-                      message: "修改失败",
-                      grouping: true,
-                      type: "warning",
-                    });
+            message: "修改失败",
+            grouping: true,
+            type: "warning",
+          });
           setTimeout(() => {
             emits("colsemasg");
           }, 1000);
@@ -222,20 +223,20 @@ const submitForm = async (formEl) => {
         const data = await addBuilding(Information);
         if (data.code === 200) {
           ElMessage({
-                      message: "提交成功",
-                      grouping: true,
-                      type: "success",
-                    });
+            message: "提交成功",
+            grouping: true,
+            type: "success",
+          });
           setTimeout(() => {
             emits("colsemasg");
             loading.value = false;
           }, 1000);
         } else {
           ElMessage({
-                      message: data.msg,
-                      grouping: true,
-                      type: "error",
-                    });
+            message: data.msg,
+            grouping: true,
+            type: "error",
+          });
           setTimeout(() => {
             emits("colsemasg");
           }, 1000);
@@ -247,9 +248,9 @@ const submitForm = async (formEl) => {
   });
 };
 defineExpose({
-               submitForm,
-               ruleFormRef,
-             });
+  submitForm,
+  ruleFormRef,
+});
 </script>
 
 <template>

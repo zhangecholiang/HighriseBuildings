@@ -1,31 +1,31 @@
 <script setup>
-import { reactive, ref } from "vue";
-import { ElMessage, ElMessageBox } from "element-plus";
+import {reactive, ref} from "vue";
+import {ElMessage, ElMessageBox} from "element-plus";
 import NewInformation from "@/views/HighriseBuildings/CheckBuilding/components/NewInforexamine.vue";
-import { Plus, Refresh, Search } from "@element-plus/icons-vue";
-import { useDict } from "@/stores/dict.js";
-import { getCommunity } from "@/apis/dict.js";
-import { checkstatus, delcheck, getcheckList } from "@/apis/examine.js";
+import {Plus, Refresh, Search} from "@element-plus/icons-vue";
+import {useDict} from "@/stores/dict.js";
+import {getCommunity} from "@/apis/dict.js";
+import {checkstatus, delcheck, getcheckList} from "@/apis/examine.js";
 import ViewInfoexamine from "@/views/HighriseBuildings/CheckBuilding/components/ViewInfoexamine.vue";
 
 const dict = useDict();
 const params = reactive({
-                          "pageIndex": 1,
-                          "pageSize": 20,
-                          "where": {
-                            "csqLoginid": "",
-                            "xqbh": "",
-                            "jzxz": "",
-                            "shzt": "",
-                            "lh": "",
-                            "jcr": "",
-                          }
-                        });
+  "pageIndex": 1,
+  "pageSize": 20,
+  "where": {
+    "csqLoginid": "",
+    "xqbh": "",
+    "jzxz": "",
+    "shzt": "",
+    "lh": "",
+    "jcr": "",
+  }
+});
 const xqlist = ref([]);
 const getxqList = async (loginid) => {
   params.where.xqbh = "";
   if (loginid !== "") {
-    const { data } = await getCommunity(loginid);
+    const {data} = await getCommunity(loginid);
     xqlist.value = data;
   } else {
     loginid = null;
@@ -37,7 +37,7 @@ const loading = ref(false);
 const getData = () => {
   loading.value = true;
   setTimeout(async () => {
-    const { data } = await getcheckList(params);
+    const {data} = await getcheckList(params);
     tableData.value = data.list;
     total.value = data.total;
     loading.value = false;
@@ -71,10 +71,10 @@ const onRefresh = () => {
   params.where.lh = "";
   params.where.jcr = "";
   ElMessage({
-              message: "清除成功",
-              grouping: true,
-              type: "success",
-            });
+    message: "清除成功",
+    grouping: true,
+    type: "success",
+  });
   getData();
 };
 const jzwbh = ref("");
@@ -92,17 +92,17 @@ const delSuccess = (row) => {
         const data = await delcheck(row.bh);
         if (data.code === 200) {
           ElMessage({
-                      type: "success",
-                      message: "已删除",
-                    });
+            type: "success",
+            message: "已删除",
+          });
           await getData();
         }
       })
       .catch(() => {
         ElMessage({
-                    type: "info",
-                    message: "已取消",
-                  });
+          type: "info",
+          message: "已取消",
+        });
       });
 };
 
@@ -142,9 +142,9 @@ const onApproved = async () => {
         const data = await checkstatus(bh.value, 1, "");
         if (data.code === 200) {
           ElMessage({
-                      type: "success",
-                      message: "已审核",
-                    });
+            type: "success",
+            message: "已审核",
+          });
           setTimeout(() => {
             view.value = false;
           }, 1000);
@@ -153,9 +153,9 @@ const onApproved = async () => {
       })
       .catch(() => {
         ElMessage({
-                    type: "info",
-                    message: "已取消",
-                  });
+          type: "info",
+          message: "已取消",
+        });
       });
 };
 const onisApproved = async () => {
@@ -168,9 +168,9 @@ const onisApproved = async () => {
         const data = await checkstatus(bh.value, 0, "");
         if (data.code === 200) {
           ElMessage({
-                      type: "success",
-                      message: "审核不通过",
-                    });
+            type: "success",
+            message: "审核不通过",
+          });
           setTimeout(() => {
             view.value = false;
           }, 1000);
@@ -179,9 +179,9 @@ const onisApproved = async () => {
       })
       .catch(() => {
         ElMessage({
-                    type: "info",
-                    message: "已取消",
-                  });
+          type: "info",
+          message: "已取消",
+        });
       });
 };
 </script>

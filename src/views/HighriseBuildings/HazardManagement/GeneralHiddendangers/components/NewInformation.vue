@@ -1,28 +1,28 @@
 <script setup>
-import { reactive, ref } from "vue";
-import { Plus } from "@element-plus/icons-vue";
-import { getRectification, submitRectification } from "@/apis/hiddenTrouble.js";
-import { ElMessage } from "element-plus";
-import { useStore } from "@/stores/user.js";
-import { afterRead } from "@/utils/tools.js";
+import {reactive, ref} from "vue";
+import {Plus} from "@element-plus/icons-vue";
+import {getRectification, submitRectification} from "@/apis/hiddenTrouble.js";
+import {ElMessage} from "element-plus";
+import {useStore} from "@/stores/user.js";
+import {afterRead} from "@/utils/tools.js";
 import dayjs from "dayjs";
 
 const store = useStore();
 const props = defineProps({
-                            params: {
-                              type: Object,
-                              default: () => {
-                                return {
-                                  bh: "",
-                                  jcxm: ""
-                                };
-                              }
-                            }
-                          });
+  params: {
+    type: Object,
+    default: () => {
+      return {
+        bh: "",
+        jcxm: ""
+      };
+    }
+  }
+});
 const emits = defineEmits(["colsemasg"]);
 if (props.params.bh !== "") {
   const getData = async () => {
-    const { data } = await getRectification(props.params.bh, props.params.jcxm);
+    const {data} = await getRectification(props.params.bh, props.params.jcxm);
     Object.assign(Information, data);
     Information.jzgcxfyjszp = data.jzgcxfyjszp.map(item => {
       return {
@@ -44,33 +44,33 @@ if (props.params.bh !== "") {
 }
 const ruleFormRef = ref();
 const rules = reactive({
-                         zgsm: [
-                           {
-                             required: true,
-                             message: "请输入整改说明",
-                             trigger: "blur"
-                           },
-                         ],
-                         zgwcsj: [
-                           {
-                             required: true,
-                             message: "请输入整改完成时间",
-                             trigger: "blur"
-                           },
-                         ],
-                         el_zgzp: [
-                           {
-                             required: true,
-                             message: "请上传整改图片",
-                             trigger: "blur"
-                           },
-                         ]
-                       });
+  zgsm: [
+    {
+      required: true,
+      message: "请输入整改说明",
+      trigger: "blur"
+    },
+  ],
+  zgwcsj: [
+    {
+      required: true,
+      message: "请输入整改完成时间",
+      trigger: "blur"
+    },
+  ],
+  el_zgzp: [
+    {
+      required: true,
+      message: "请上传整改图片",
+      trigger: "blur"
+    },
+  ]
+});
 const Information = reactive({
-                               qyfzrTel: "",
-                               fileList: [],
-                               fjbhzp: [],
-                             });
+  qyfzrTel: "",
+  fileList: [],
+  fjbhzp: [],
+});
 const loading = ref(false);
 const HazarInfo = reactive({});
 const submitForm = async (formEl) => {
@@ -86,20 +86,20 @@ const submitForm = async (formEl) => {
       const data = await submitRectification(HazarInfo);
       if (data.code === 200) {
         ElMessage({
-                    message: "提交成功",
-                    grouping: true,
-                    type: "success",
-                  });
+          message: "提交成功",
+          grouping: true,
+          type: "success",
+        });
         setTimeout(() => {
           loading.value = false;
           emits("colsemasg");
         }, 1000);
       } else {
         ElMessage({
-                    message: data.msg,
-                    grouping: true,
-                    type: "error",
-                  });
+          message: data.msg,
+          grouping: true,
+          type: "error",
+        });
         setTimeout(() => {
           loading.value = false;
           emits("colsemasg");
@@ -111,9 +111,9 @@ const submitForm = async (formEl) => {
   });
 };
 defineExpose({
-               submitForm,
-               ruleFormRef,
-             });
+  submitForm,
+  ruleFormRef,
+});
 </script>
 
 <template>

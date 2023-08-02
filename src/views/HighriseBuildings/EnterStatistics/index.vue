@@ -1,22 +1,22 @@
 <script setup>
-import { reactive, ref } from "vue";
-import { ElMessage } from "element-plus";
-import { Refresh, Search } from "@element-plus/icons-vue";
-import { useDict } from "@/stores/dict.js";
-import { getCommunity } from "@/apis/dict.js";
-import { getStatisticsList } from "@/apis/statistics.js";
+import {reactive, ref} from "vue";
+import {ElMessage} from "element-plus";
+import {Refresh, Search} from "@element-plus/icons-vue";
+import {useDict} from "@/stores/dict.js";
+import {getCommunity} from "@/apis/dict.js";
+import {getStatisticsList} from "@/apis/statistics.js";
 
 const params = reactive({
-                          "pageIndex": 1,
-                          "pageSize": 100,
-                          "where": {
-                            "loginid": "",
-                            "sj": [
-                              "",
-                              ""
-                            ],
-                          }
-                        });
+  "pageIndex": 1,
+  "pageSize": 100,
+  "where": {
+    "loginid": "",
+    "sj": [
+      "",
+      ""
+    ],
+  }
+});
 const dict = useDict();
 const xqlist = ref([]);
 const getxqList = async (loginid) => {
@@ -24,7 +24,7 @@ const getxqList = async (loginid) => {
   if (!loginid) {
     loginid = null;
   }
-  const { data } = await getCommunity(loginid);
+  const {data} = await getCommunity(loginid);
   xqlist.value = data;
 };
 const tableData = ref([]);
@@ -32,7 +32,7 @@ const loading = ref(false);
 const getData = () => {
   loading.value = true;
   setTimeout(async () => {
-    const { data } = await getStatisticsList(params);
+    const {data} = await getStatisticsList(params);
     tableData.value = data.list;
     total.value = data.total;
     loading.value = false;
@@ -58,10 +58,10 @@ const onRefresh = () => {
         ""
       ];
   ElMessage({
-              message: "清除成功",
-              grouping: true,
-              type: "success",
-            });
+    message: "清除成功",
+    grouping: true,
+    type: "success",
+  });
   getData();
 };
 const Confirm = ref();

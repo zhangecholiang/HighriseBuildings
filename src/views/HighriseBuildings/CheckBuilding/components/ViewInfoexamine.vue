@@ -1,21 +1,21 @@
 <script setup>
-import { editBuilding } from "@/apis/building.js";
-import { reactive, ref } from "vue";
-import { getcheckDetail } from "@/apis/examine.js";
-import { getTreeMenu } from "@/apis/dict.js";
+import {editBuilding} from "@/apis/building.js";
+import {reactive, ref} from "vue";
+import {getcheckDetail} from "@/apis/examine.js";
+import {getTreeMenu} from "@/apis/dict.js";
 
 const props = defineProps({
-                            bh: {
-                              type: String,
-                              default: ""
-                            },
-                            jcbh: {
-                              type: String,
-                              default: ""
-                            }
-                          });
+  bh: {
+    type: String,
+    default: ""
+  },
+  jcbh: {
+    type: String,
+    default: ""
+  }
+});
 const getData = async () => {
-  const { data } = await editBuilding(props.jcbh);
+  const {data} = await editBuilding(props.jcbh);
   Object.assign(Infor, data);
 };
 getData();
@@ -25,7 +25,7 @@ const BasicChecks = ref([]);
 const tableData = ref([]);
 
 const getinfos = async () => {
-  const { data } = await getcheckDetail(props.bh);
+  const {data} = await getcheckDetail(props.bh);
   const Basic = await getTreeMenu(873);
   BasicChecks.value = Basic.data.map((item) => {
     return item.children.map((i) => {
@@ -82,11 +82,11 @@ const genderSpanCity = ({
     } else {
       // 否则计算当前单元格应该跨越多少行
       let rowspan = 1;
-      for (let i = rowIndex + 1; i < tableData.value.length; i ++) {
+      for (let i = rowIndex + 1; i < tableData.value.length; i++) {
         const nextRow = tableData.value[i];
         const nextValue = nextRow[column.property];
         if (nextValue === currentValue) {
-          rowspan ++;
+          rowspan++;
         } else {
           break;
         }

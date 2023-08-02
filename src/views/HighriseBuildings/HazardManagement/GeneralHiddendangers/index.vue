@@ -1,32 +1,32 @@
 <script setup>
-import { reactive, ref } from "vue";
+import {reactive, ref} from "vue";
 import NewInformation
   from "@/views/HighriseBuildings/HazardManagement/GeneralHiddendangers/components/NewInformation.vue";
-import { ElMessage } from "element-plus";
-import { Refresh, Search } from "@element-plus/icons-vue";
-import { getHiddenDangerList } from "@/apis/hiddenTrouble.js";
-import { useDict } from "@/stores/dict.js";
-import { getCommunity } from "@/apis/dict.js";
+import {ElMessage} from "element-plus";
+import {Refresh, Search} from "@element-plus/icons-vue";
+import {getHiddenDangerList} from "@/apis/hiddenTrouble.js";
+import {useDict} from "@/stores/dict.js";
+import {getCommunity} from "@/apis/dict.js";
 import dayjs from "dayjs";
 import ViewHainfo from "@/views/HighriseBuildings/HazardManagement/GeneralHiddendangers/components/ViewHainfo.vue";
 
 const params = reactive({
-                          "pageIndex": 1,
-                          "pageSize": 20,
-                          "where": {
-                            "csqLoginid": "",
-                            "xqbh": "",
-                            "zt": "",
-                            "jzxz": "",
-                            "yhdj": "",
-                            "iszg": 1
-                          }
-                        });
+  "pageIndex": 1,
+  "pageSize": 20,
+  "where": {
+    "csqLoginid": "",
+    "xqbh": "",
+    "zt": "",
+    "jzxz": "",
+    "yhdj": "",
+    "iszg": 1
+  }
+});
 const xqlist = ref([]);
 const getxqList = async (loginid) => {
   params.where.xqbh = "";
   if (loginid !== "") {
-    const { data } = await getCommunity(loginid);
+    const {data} = await getCommunity(loginid);
     xqlist.value = data;
   } else {
     loginid = null;
@@ -39,7 +39,7 @@ const loading = ref(false);
 const getData = () => {
   loading.value = true;
   setTimeout(async () => {
-    const { data } = await getHiddenDangerList(params);
+    const {data} = await getHiddenDangerList(params);
     tableData.value = data.list;
     total.value = data.total;
     loading.value = false;
@@ -81,10 +81,10 @@ const onRefresh = () => {
   params.where.jzxz = "";
   params.where.iszg = "";
   ElMessage({
-              message: "清除成功",
-              grouping: true,
-              type: "success",
-            });
+    message: "清除成功",
+    grouping: true,
+    type: "success",
+  });
   getData();
 };
 const Confirm = ref();

@@ -1,7 +1,7 @@
 <script setup>
-import { useRouter } from "vue-router";
-import { Fold, Refresh, SwitchButton, UserFilled } from "@element-plus/icons-vue";
-import { useStore } from "@/stores/user.js";
+import {useRouter} from "vue-router";
+import {Fold, Refresh, SwitchButton, UserFilled} from "@element-plus/icons-vue";
+import {useStore} from "@/stores/user.js";
 
 const store = useStore();
 const emits = defineEmits(["CollapseChange"]);

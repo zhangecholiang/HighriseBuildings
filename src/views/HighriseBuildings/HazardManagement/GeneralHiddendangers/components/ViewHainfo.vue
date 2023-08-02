@@ -1,25 +1,25 @@
 <script setup>
-import { reactive, ref } from "vue";
-import { getRectificationDetail } from "@/apis/hiddenTrouble.js";
-import { useStore } from "@/stores/user.js";
+import {reactive, ref} from "vue";
+import {getRectificationDetail} from "@/apis/hiddenTrouble.js";
+import {useStore} from "@/stores/user.js";
 import dayjs from "dayjs";
 
 const store = useStore();
 const props = defineProps({
-                            params: {
-                              type: Object,
-                              default: () => {
-                                return {
-                                  bh: "",
-                                  jcxm: ""
-                                };
-                              }
-                            }
-                          });
+  params: {
+    type: Object,
+    default: () => {
+      return {
+        bh: "",
+        jcxm: ""
+      };
+    }
+  }
+});
 const emits = defineEmits(["colsemasg"]);
 if (props.params.bh !== "") {
   const getData = async () => {
-    const { data } = await getRectificationDetail(props.params.bh, props.params.jcxm);
+    const {data} = await getRectificationDetail(props.params.bh, props.params.jcxm);
     Object.assign(Information, data);
     Information.jzgcxfyjszp = data.jzgcxfyjszp.map(item => {
       return {
@@ -47,10 +47,10 @@ if (props.params.bh !== "") {
 const ruleFormRef = ref();
 
 const Information = reactive({
-                               qyfzrTel: "",
-                               fileList: [],
-                               fjbhzp: [],
-                             });
+  qyfzrTel: "",
+  fileList: [],
+  fjbhzp: [],
+});
 
 const HazarInfo = reactive({});
 

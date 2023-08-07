@@ -288,7 +288,7 @@ const onisApproved = async () => {
     </el-table-column>
     <el-table-column label="建筑性质" prop="jzxz"/>
     <el-table-column label="登记人" prop="jcr"/>
-    <el-table-column label="登记时间" prop="jcsj"/>
+    <el-table-column label="登记时间" prop="jcsj" width="140"/>
     <el-table-column label="检查条数" prop="jcts" width="120"/>
     <el-table-column fixed="right" label="操作" width="240">
       <template #default="{row}">

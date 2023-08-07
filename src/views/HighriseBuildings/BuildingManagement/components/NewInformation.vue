@@ -286,17 +286,17 @@ defineExpose({
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="楼号" prop="lh">
+          <el-form-item label="楼号" prop="">
             <el-input v-model="Information.lh" clearable maxlength="10" placeholder=""/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="所在地址" prop="szdz">
+          <el-form-item label="所在地址" prop="">
             <el-input v-model="Information.szdz" clearable maxlength="100" placeholder=""/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="建筑性质" prop="jzxz">
+          <el-form-item label="建筑性质" prop="">
             <el-select v-model="Information.jzxz" clearable>
               <el-option
                   v-for="item in dict.jzwxzlist"
@@ -308,22 +308,22 @@ defineExpose({
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="物业单位" prop="wydw">
+          <el-form-item label="物业单位" prop="">
             <el-input v-model="Information.wydw" clearable maxlength="20"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="联系人" prop="lxr">
+          <el-form-item label="联系人" prop="">
             <el-input v-model="Information.lxr" clearable maxlength="20" placeholder=""/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="联系电话" prop="lxdh">
+          <el-form-item label="联系电话" prop="">
             <el-input v-model="Information.lxdh" clearable placeholder=""/>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-form-item label="楼栋全貌" prop="el_ldqm">
+      <el-form-item label="楼栋全貌" prop="">
         <el-upload
             v-model:file-list=Information.el_ldqm
             :before-upload="afterRead"
@@ -356,7 +356,7 @@ defineExpose({
       </div>
       <el-row :gutter="0" justify="start">
         <el-col :span="8">
-          <el-form-item label="高层建筑类别" prop="gcjzlb">
+          <el-form-item label="高层建筑类别" prop="">
             <el-select v-model="Information.gcjzlb" clearable placeholder="">
               <el-option label="一类建筑" value="一类建筑"></el-option>
               <el-option label="二类建筑" value="二类建筑"></el-option>
@@ -364,12 +364,12 @@ defineExpose({
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="楼高（米）" prop="lg">
+          <el-form-item label="楼高（米）" prop="">
             <el-input v-model="Information.lg" clearable placeholder="" type="number"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="是否挂牌" prop="sfgp">
+          <el-form-item label="是否挂牌" prop="">
             <el-select v-model="Information.sfgp" clearable placeholder="">
               <el-option value="是">是</el-option>
               <el-option value="否">否</el-option>
@@ -377,17 +377,17 @@ defineExpose({
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="地上建筑层数(层)" prop="dsjzcs">
+          <el-form-item label="地上建筑层数(层)" prop="">
             <el-input v-model="Information.dsjzcs" clearable placeholder=""/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="地下建筑层数(层)" prop="dxjzcs">
+          <el-form-item label="地下建筑层数(层)" prop="">
             <el-input v-model="Information.dxjzcs" clearable placeholder=""/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="架空层(层)" prop="jkc">
+          <el-form-item label="架空层(层)" prop="">
             <el-select v-model="Information.jkc" clearable placeholder="">
               <el-option value="是">是</el-option>
               <el-option value="否">否</el-option>
@@ -400,7 +400,7 @@ defineExpose({
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="火灾发生情况" prop="hzfsqk">
+          <el-form-item label="火灾发生情况" prop="">
             <el-select v-model="Information.hzfsqk" clearable placeholder="">
               <el-option value="是">是</el-option>
               <el-option value="否">否</el-option>

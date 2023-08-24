@@ -1,55 +1,58 @@
 <script setup>
-import {reactive, ref} from "vue";
-import {ElMessage} from "element-plus";
-import {Refresh, Search} from "@element-plus/icons-vue";
-import {useDict} from "@/stores/dict.js";
-import {getCommunity} from "@/apis/dict.js";
-import {getStatisticsList} from "@/apis/statistics.js";
+import { reactive, ref } from "vue";
+import { ElMessage } from "element-plus";
+import { Refresh, Search } from "@element-plus/icons-vue";
+import { useDict } from "@/stores/dict.js";
+import { getCommunity } from "@/apis/dict.js";
+import { getStatisticsList } from "@/apis/statistics.js";
+import { useStore } from "@/stores/user.js";
 
-const params = reactive({
+const store = useStore ();
+const params = reactive ({
   "pageIndex": 1,
   "pageSize": 100,
   "where": {
-    "loginid": "",
+    "loginid": store.csqLoginid,
     "sj": [
       "",
       ""
     ],
   }
 });
-const dict = useDict();
-const xqlist = ref([]);
+const dict = useDict ();
+const xqlist = ref ([]);
 const getxqList = async (loginid) => {
   params.where.xqbh = "";
   if (!loginid) {
     loginid = null;
   }
-  const {data} = await getCommunity(loginid);
+  const { data } = await getCommunity (loginid);
   xqlist.value = data;
 };
-const tableData = ref([]);
-const loading = ref(false);
+getxqList (store.csqLoginid)
+const tableData = ref ([]);
+const loading = ref (false);
 const getData = () => {
   loading.value = true;
-  setTimeout(async () => {
-    const {data} = await getStatisticsList(params);
+  setTimeout (async () => {
+    const { data } = await getStatisticsList (params);
     tableData.value = data.list;
     total.value = data.total;
     loading.value = false;
   }, 500);
 };
-getData();
-const currentPage3 = ref(1);
-const pageSize3 = ref(10);
-const total = ref(1);
-const small = ref(false);
-const background = ref(false);
-const disabled = ref(false);
+getData ();
+const currentPage3 = ref (1);
+const pageSize3 = ref (10);
+const total = ref (1);
+const small = ref (false);
+const background = ref (false);
+const disabled = ref (false);
 const handleSizeChange = (val) => {
   params.pageSize = val;
-  getData();
+  getData ();
 };
-const showSuccess = ref(false);
+const showSuccess = ref (false);
 const onRefresh = () => {
   params.where.loginid = "";
   params.where.sj =
@@ -57,16 +60,16 @@ const onRefresh = () => {
         "",
         ""
       ];
-  ElMessage({
+  ElMessage ({
     message: "清除成功",
     grouping: true,
     type: "success",
   });
-  getData();
+  getData ();
 };
-const Confirm = ref();
+const Confirm = ref ();
 const onConfirm = () => {
-  Confirm.value.submitForm(Confirm.value.ruleFormRef);
+  Confirm.value.submitForm (Confirm.value.ruleFormRef);
 };
 </script>
 
@@ -75,7 +78,8 @@ const onConfirm = () => {
     <el-row :gutter="20" justify="start">
       <el-col :span="4">
         <el-form-item>
-          <el-select v-model="params.where.loginid" clearable placeholder="社区名称" @change="getxqList">
+          <el-select v-model="params.where.loginid" :disabled="store.csqLoginid" clearable placeholder="社区名称"
+                     @change="getxqList">
             <el-option
                 v-for="item in dict.sqList"
                 :key="item.loginid"

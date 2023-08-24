@@ -1,106 +1,109 @@
 <script setup>
-import {reactive, ref} from "vue";
-import {ElMessage, ElMessageBox} from "element-plus";
-import {Plus, Refresh, Search} from "@element-plus/icons-vue";
-import {useDict} from "@/stores/dict.js";
-import {getCommunity} from "@/apis/dict.js";
+import { reactive, ref } from "vue";
+import { ElMessage, ElMessageBox } from "element-plus";
+import { Plus, Refresh, Search } from "@element-plus/icons-vue";
+import { useDict } from "@/stores/dict.js";
+import { getCommunity } from "@/apis/dict.js";
 import ViewCommunity from "@/views/HighriseBuildings/CommunityManagement/components/ViewCommunity.vue";
-import {deleteCommunity, getCommunityList} from "@/apis/community.js";
+import { deleteCommunity, getCommunityList } from "@/apis/community.js";
+import { useStore } from "@/stores/user.js";
 
-const params = reactive({
+const store = useStore ();
+const params = reactive ({
   "pageIndex": 1,
   "pageSize": 20,
   "where": {
-    "csqLoginid": "",
+    "csqLoginid": store.csqLoginid,
     "xqName": "",
   }
 });
-const xqlist = ref([]);
+const xqlist = ref ([]);
 const getxqList = async (loginid) => {
   params.where.xqbh = "";
   if (loginid !== "") {
-    const {data} = await getCommunity(loginid);
+    const { data } = await getCommunity (loginid);
     xqlist.value = data;
   } else {
     loginid = null;
     xqlist.value = [];
   }
 };
-const dict = useDict();
-const tableData = ref([]);
-const loading = ref(false);
+getxqList (store.csqLoginid);
+const dict = useDict ();
+const tableData = ref ([]);
+const loading = ref (false);
 const getData = () => {
   loading.value = true;
-  setTimeout(async () => {
-    const {data} = await getCommunityList(params);
+  setTimeout (async () => {
+    const { data } = await getCommunityList (params);
     tableData.value = data.list;
     total.value = data.total;
     loading.value = false;
   }, 500);
 };
-getData();
-const currentPage3 = ref(1);
-const pageSize3 = ref(20);
-const total = ref(1);
-const small = ref(false);
-const background = ref(false);
-const disabled = ref(false);
+getData ();
+const currentPage3 = ref (1);
+const pageSize3 = ref (20);
+const total = ref (1);
+const small = ref (false);
+const background = ref (false);
+const disabled = ref (false);
 const handleSizeChange = (val) => {
   params.pageSize = val;
-  getData();
+  getData ();
 };
 const handleCurrentChange = (val) => {
   params.pageIndex = val;
-  getData();
+  getData ();
 };
 const onClose = () => {
   showView.value = false;
-  getData();
+  getData ();
 };
-const bh = ref("");
+const bh = ref ("");
 const onRefresh = () => {
   params.where.csqLoginid = "";
   params.where.xqName = "";
-  ElMessage({
+  ElMessage ({
     message: "清除成功",
     grouping: true,
     type: "success",
   });
-  getData();
+  getData ();
 };
-const Confirm = ref();
-const showView = ref(false)
+const Confirm = ref ();
+const showView = ref (false)
 const addCommunity = () => {
   bh.value = "";
   showView.value = true;
 }
 const onClick = () => {
-  Confirm.value.submitForm(Confirm.value.ruleFormRef)
+  Confirm.value.submitForm (Confirm.value.ruleFormRef)
 }
 const onEditor = (row) => {
   bh.value = row.bh;
   showView.value = true;
 }
 const delSuccess = (row) => {
-  ElMessageBox.confirm("是否删除该小区？", "提示", {
+  ElMessageBox.confirm ("是否删除该小区？", "提示", {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
     type: "warning",
-  }).then(async () => {
-    const data = await deleteCommunity(row.bh);
+  }).then (async () => {
+    const data = await deleteCommunity (row.bh);
     if (data.code === 200) {
-      ElMessage({
+      ElMessage ({
         message: "删除成功",
         type: "success",
       });
-      getData();
+      getData ();
     } else {
-      ElMessage({
+      ElMessage ({
         message: data.msg,
         type: "error",
       });
     }
-  }).catch(() => {
+  }).catch (() => {
   });
 }
 </script>
@@ -113,7 +116,8 @@ const delSuccess = (row) => {
     <el-row :gutter="20">
       <el-col :span="4">
         <el-form-item>
-          <el-select v-model="params.where.csqLoginid" clearable placeholder="社区名称" @change="getxqList">
+          <el-select v-model="params.where.csqLoginid" :disabled="store.csqLoginid" clearable placeholder="社区名称"
+                     @change="getxqList">
             <el-option
                 v-for="item in dict.sqList"
                 :key="item.loginid"

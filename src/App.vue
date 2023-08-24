@@ -16,6 +16,11 @@ onMounted (async () => {
     store.setToken (token);
     const user = await getTokenuser (token);
     store.setUserInfo (user.data);
+    if (user.data.ssdepartdlid == 20) {
+      store.setCsqLoginid (user.data.departLoginid);
+    } else {
+      store.setCsqLoginid (null);
+    }
   } else {
     // window.location.href = "http://kfq.kejin.net.cn:8005/login_230307.aspx"
   }

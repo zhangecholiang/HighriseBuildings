@@ -1,14 +1,15 @@
 <script setup>
-import {onMounted, reactive, ref} from "vue";
-import {Plus} from "@element-plus/icons-vue";
-import {getCommunity, getTreeMenu} from "@/apis/dict.js";
-import {useDict} from "@/stores/dict.js";
-import {ElMessage} from "element-plus";
-import {addcheck, getbuild, getbuildinfo, getcheckDetail} from "@/apis/examine.js";
-import {useStore} from "@/stores/user.js";
-import {afterRead, elFormErrorScrollIntoView} from "@/utils/tools.js";
+import { onMounted, reactive, ref } from "vue";
+import { Plus } from "@element-plus/icons-vue";
+import { getCommunity, getTreeMenu } from "@/apis/dict.js";
+import { useDict } from "@/stores/dict.js";
+import { ElMessage } from "element-plus";
+import { addcheck, getbuild, getbuildinfo, getcheckDetail } from "@/apis/examine.js";
+import { useStore } from "@/stores/user.js";
+import { afterRead, elFormErrorScrollIntoView } from "@/utils/tools.js";
 
-const props = defineProps({
+const store = useStore ();
+const props = defineProps ({
   bh: {
     type: String,
     default: "",
@@ -23,12 +24,11 @@ const props = defineProps({
     type: Boolean,
   }
 });
-console.log(props.isjc);
-const emits = defineEmits(["colsemasg"]);
-const dict = useDict();
-const store = useStore();
-const ruleFormRef = ref();
-const rules = reactive({
+console.log (props.isjc);
+const emits = defineEmits ([ "colsemasg" ]);
+const dict = useDict ();
+const ruleFormRef = ref ();
+const rules = reactive ({
   csqloginid: [
     {
       required: true,
@@ -72,55 +72,57 @@ const rules = reactive({
     },
   ],
 });
-const Information = reactive({
+const Information = reactive ({
+  csqloginid: store.csqLoginid,
   jcxx: []
 });
-const BasicChecks = ref([]);
-const xqlist = ref([]);
+const BasicChecks = ref ([]);
+const xqlist = ref ([]);
 const getxqList = async (loginid) => {
   Information.xqbh = "";
   if (!loginid) {
     loginid = null;
   }
-  const {data} = await getCommunity(loginid);
+  const { data } = await getCommunity (loginid);
   xqlist.value = data;
 };
-const ldlist = ref([]);
+getxqList (store.csqLoginid)
+const ldlist = ref ([]);
 const getldList = async () => {
-  const {data} = await getbuild(Information.csqloginid, Information.xqbh);
+  const { data } = await getbuild (Information.csqloginid, Information.xqbh);
   ldlist.value = data;
 };
 const getinfo = async () => {
-  const {data} = await getbuildinfo(Information.csqloginid, Information.xqbh, Information.lh);
+  const { data } = await getbuildinfo (Information.csqloginid, Information.xqbh, Information.lh);
   Information.szdz = data.szdz;
   Information.jzwb = data.bh;
 };
-const loading = ref(false);
-const loadingText = ref("加载中...");
+const loading = ref (false);
+const loadingText = ref ("加载中...");
 const submitForm = (formEl) => {
   if (!formEl) return;
-  formEl.validate(async (valid, fields) => {
+  formEl.validate (async (valid, fields) => {
     if (valid) {
       Information.jcxx = [];
-      BasicChecks.value.forEach((item) => {
-        item.children.forEach((i) => {
-          Information.jcxx.push({
+      BasicChecks.value.forEach ((item) => {
+        item.children.forEach ((i) => {
+          Information.jcxx.push ({
             jcxm: i.dictName,
             jcjg: i.jcjg,
-            fj: i.files && i.files.map((item) => {
+            fj: i.files && i.files.map ((item) => {
               return item.response.data;
             }),
           });
         });
       });
-      custom.value.forEach((item) => {
-        Information.jcxx.push({
+      custom.value.forEach ((item) => {
+        Information.jcxx.push ({
           jcxm: item.jcxm,
           jcjg: {
             dictName: item.jcjg,
             dictValue2: ""
           },
-          fj: item.fj && item.fj.map((item) => {
+          fj: item.fj && item.fj.map ((item) => {
             return item.response.data;
           }),
           zdy: true
@@ -130,48 +132,48 @@ const submitForm = (formEl) => {
       loading.value = true;
       if (props.bh !== "") {
         Information.bh = props.bh;
-        const data = await addcheck(Information);
+        const data = await addcheck (Information);
         if (data.code === 200) {
-          ElMessage({
+          ElMessage ({
             message: "修改成功",
             grouping: true,
             type: "success",
           });
-          setTimeout(() => {
+          setTimeout (() => {
             loading.value = false;
-            emits("colsemasg");
+            emits ("colsemasg");
           }, 1000);
         } else {
-          ElMessage({
+          ElMessage ({
             message: "修改失败",
             grouping: true,
             type: "warning",
           });
-          setTimeout(() => {
-            emits("colsemasg");
+          setTimeout (() => {
+            emits ("colsemasg");
           }, 1000);
         }
       } else {
-        activeNames.value = ["0"];
-        const data = await addcheck(Information);
+        activeNames.value = [ "0" ];
+        const data = await addcheck (Information);
         if (data.code === 200) {
-          ElMessage({
+          ElMessage ({
             message: "提交成功",
             grouping: true,
             type: "success",
           });
-          setTimeout(() => {
+          setTimeout (() => {
             loading.value = false;
-            emits("colsemasg");
+            emits ("colsemasg");
           }, 1000);
         } else {
-          ElMessage({
+          ElMessage ({
             message: data.msg,
             grouping: true,
             type: "error",
           });
-          setTimeout(() => {
-            emits("colsemasg");
+          setTimeout (() => {
+            emits ("colsemasg");
           }, 1000);
         }
       }
@@ -183,51 +185,51 @@ const submitForm = (formEl) => {
             "建筑防火",
             "消防设施"
           ];
-      setTimeout(() => {
-        elFormErrorScrollIntoView();
+      setTimeout (() => {
+        elFormErrorScrollIntoView ();
       }, 100);
     }
   });
 };
-defineExpose({
+defineExpose ({
   submitForm,
   ruleFormRef,
 });
-const isAccordion = ref(true);
-const activeName = ref("first");
+const isAccordion = ref (true);
+const activeName = ref ("first");
 const handleClick = () => {
   // console.log(tab, event)
 };
-const activeNames = ref(["消防安全管理"]);
+const activeNames = ref ([ "消防安全管理" ]);
 
 const getDict = async () => {
-  const {data} = await getTreeMenu(873);
+  const { data } = await getTreeMenu (873);
   BasicChecks.value = data;
   Information.BasicChecks = data;
-  EditInfo();
+  EditInfo ();
   loading.value = false;
 };
-onMounted(() => {
+onMounted (() => {
   loading.value = true;
-  getDict();
+  getDict ();
 });
 
 const EditInfo = () => {
   if (props.bh !== "") {
-    activeNames.value = ["0"];
+    activeNames.value = [ "0" ];
     custom.value = [];
     const getinfos = async () => {
-      const {data} = await getcheckDetail(props.bh);
-      await getxqList(data.csqloginid);
-      Object.assign(Information, data);
-      BasicChecks.value.forEach((item) => {
-        item.children.forEach((i) => {
-          data.checkItem.forEach((item) => {
+      const { data } = await getcheckDetail (props.bh);
+      await getxqList (data.csqloginid);
+      Object.assign (Information, data);
+      BasicChecks.value.forEach ((item) => {
+        item.children.forEach ((i) => {
+          data.checkItem.forEach ((item) => {
             if (item.jcxm === i.dictName) {
               i.jcjg = item.jcjgObj;
             }
             if (item.jcxm === i.dictName && item.zp) {
-              i.files = item.zp.map((item) => {
+              i.files = item.zp.map ((item) => {
                 return {
                   url: "http://kfq.kejin.net.cn:8223" + item.path,
                   response: {
@@ -239,12 +241,12 @@ const EditInfo = () => {
           });
         });
       });
-      data.checkItem.forEach((item) => {
+      data.checkItem.forEach ((item) => {
         if (item.zdy) {
-          custom.value.push({
+          custom.value.push ({
             jcxm: item.jcxm,
             jcjg: item.jcjg,
-            fj: item.zp.map((item) => {
+            fj: item.zp.map ((item) => {
               return {
                 url: "http://kfq.kejin.net.cn:8223" + item.path,
                 response: {
@@ -256,22 +258,22 @@ const EditInfo = () => {
         }
       });
     };
-    getinfos();
-    activeNames.value = ["消防安全管理"];
+    getinfos ();
+    activeNames.value = [ "消防安全管理" ];
     loading.value = false;
   }
 };
 // 管理检查
-if (JSON.stringify(props.jxinfo) !== "{}") {
+if (JSON.stringify (props.jxinfo) !== "{}") {
   Information.csqloginid = props.jxinfo.csqLoginid;
-  getxqList(props.jxinfo.csqLoginid);
+  getxqList (props.jxinfo.csqLoginid);
   Information.jzwb = props.jxinfo.bh;
   Information.xqbh = props.jxinfo.xqbh;
   Information.lh = props.jxinfo.lh;
   Information.szdz = props.jxinfo.szdz;
 }
 
-const custom = ref([
+const custom = ref ([
   {
     jcxm: "",
     jcjg: "",
@@ -279,7 +281,7 @@ const custom = ref([
   },
 ]);
 const AddCustom = () => {
-  custom.value.push({
+  custom.value.push ({
     checkTheMatter: "",
     checkTheResults: "",
     checkThePicture: []
@@ -289,7 +291,7 @@ const DeleteCustom = (index) => {
   if (custom.value.length === 1) {
     return;
   }
-  custom.value.splice(index, 1);
+  custom.value.splice (index, 1);
 };
 </script>
 
@@ -303,7 +305,8 @@ const DeleteCustom = (index) => {
       <el-row :gutter="0" justify="start">
         <el-col :span="8">
           <el-form-item label="社区" prop="csqloginid">
-            <el-select v-model="Information.csqloginid" :disabled="props.isjc" clearable placeholder=""
+            <el-select v-model="Information.csqloginid" :disabled="props.isjc || store.csqLoginid" clearable
+                       placeholder=""
                        @change="getxqList">
               <el-option
                   v-for="item in dict.sqList"

@@ -1,93 +1,95 @@
 <script setup>
-import {onMounted, reactive, ref} from "vue";
-import {useDict} from "@/stores/dict.js";
-import {ElMessage} from "element-plus";
-import {addCommunity, getCommunity} from "@/apis/community.js";
+import { onMounted, reactive, ref } from "vue";
+import { useDict } from "@/stores/dict.js";
+import { ElMessage } from "element-plus";
+import { addCommunity, getCommunity } from "@/apis/community.js";
+import { useStore } from "@/stores/user.js";
 
-const dict = useDict()
-const emits = defineEmits(["close"])
-const props = defineProps({
+const store = useStore ();
+const dict = useDict ()
+const emits = defineEmits ([ "close" ])
+const props = defineProps ({
   bh: {
     type: String,
     default: ""
   }
 })
-const loading = ref(false)
-const Information = reactive({
-  "csqLoginid": "",
+const loading = ref (false)
+const Information = reactive ({
+  "csqLoginid": store.csqLoginid,
   "xqName": "",
 })
-const rules = reactive({
+const rules = reactive ({
   csqLoginid: [
-    {required: true, message: '请选择社区', trigger: 'blur'}
+    { required: true, message: '请选择社区', trigger: 'blur' }
   ],
   xqName: [
-    {required: true, message: '请输入小区', trigger: 'blur'}
+    { required: true, message: '请输入小区', trigger: 'blur' }
   ],
 })
-onMounted(async () => {
+onMounted (async () => {
   if (props.bh !== "") {
-    const {data} = await getCommunity(props.bh)
-    Object.assign(Information, data)
+    const { data } = await getCommunity (props.bh)
+    Object.assign (Information, data)
   }
 })
-const ruleFormRef = ref()
+const ruleFormRef = ref ()
 const submitForm = async (formEl) => {
   if (!formEl) return;
-  await formEl.validate(async (valid, fields) => {
+  await formEl.validate (async (valid, fields) => {
     if (valid) {
       loading.value = true;
       if (props.bh !== "") {
-        const data = await addCommunity(Information);
+        const data = await addCommunity (Information);
         if (data.code === 200) {
-          ElMessage({
+          ElMessage ({
             message: "修改成功",
             grouping: true,
             type: "success",
           });
-          setTimeout(() => {
-            emits("close");
+          setTimeout (() => {
+            emits ("close");
             loading.value = false;
           }, 1000);
         } else {
-          ElMessage({
+          ElMessage ({
             message: "修改失败",
             grouping: true,
             type: "warning",
           });
-          setTimeout(() => {
-            emits("close");
+          setTimeout (() => {
+            emits ("close");
           }, 1000);
         }
       } else {
-        const data = await addCommunity(Information);
+        const data = await addCommunity (Information);
         if (data.code === 200) {
-          ElMessage({
+          ElMessage ({
             message: "提交成功",
             grouping: true,
             type: "success",
           });
-          setTimeout(() => {
-            emits("close");
+          setTimeout (() => {
+            emits ("close");
             loading.value = false;
           }, 1000);
         } else {
-          ElMessage({
+          ElMessage ({
             message: data.msg,
             grouping: true,
             type: "error",
           });
-          setTimeout(() => {
-            emits("close");
+          setTimeout (() => {
+            emits ("close");
           }, 1000);
         }
       }
     } else {
-      console.log("error submit!", fields);
+      console.log ("error submit!", fields);
     }
   });
 };
-defineExpose({
+defineExpose ({
   submitForm,
   ruleFormRef,
 });
@@ -102,7 +104,7 @@ defineExpose({
     <el-row :gutter="0" justify="start">
       <el-col :span="12">
         <el-form-item label="社区" prop="csqLoginid">
-          <el-select v-model="Information.csqLoginid" clearable>
+          <el-select v-model="Information.csqLoginid" :disabled="store.csqLoginid" clearable>
             <el-option
                 v-for="item in dict.sqList"
                 :key="item.loginid"

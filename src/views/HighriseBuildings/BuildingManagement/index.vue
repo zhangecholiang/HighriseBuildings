@@ -1,20 +1,22 @@
 <script setup>
-import {reactive, ref} from "vue";
+import { reactive, ref } from "vue";
 import NewInformation from "@/views/HighriseBuildings/BuildingManagement/components/NewInformation.vue";
-import {ElMessage, ElMessageBox} from "element-plus";
-import {Plus, Refresh, Search} from "@element-plus/icons-vue";
-import {useDict} from "@/stores/dict.js";
-import {getCommunity} from "@/apis/dict.js";
-import {deleteBuilding, getBuildingList} from "@/apis/building.js";
+import { ElMessage, ElMessageBox } from "element-plus";
+import { Plus, Refresh, Search } from "@element-plus/icons-vue";
+import { useDict } from "@/stores/dict.js";
+import { getCommunity } from "@/apis/dict.js";
+import { deleteBuilding, getBuildingList } from "@/apis/building.js";
 import dayjs from "dayjs";
 import NewInforexamine from "@/views/HighriseBuildings/CheckBuilding/components/NewInforexamine.vue";
 import ViewInfomation from "@/views/HighriseBuildings/BuildingManagement/components/ViewInfomation.vue";
+import { useStore } from "@/stores/user.js";
 
-const params = reactive({
+const store = useStore ();
+const params = reactive ({
   "pageIndex": 1,
   "pageSize": 20,
   "where": {
-    "csqLoginid": "",
+    "csqLoginid": store.csqLoginid,
     "xqbh": "",
     "jzxz": "",
     "szdz": "",
@@ -22,48 +24,49 @@ const params = reactive({
     "lxr": "",
   }
 });
-const dict = useDict();
-const xqlist = ref([]);
+const dict = useDict ();
+const xqlist = ref ([]);
 const getxqList = async (loginid) => {
   params.where.xqbh = "";
   if (loginid !== "") {
-    const {data} = await getCommunity(loginid);
+    const { data } = await getCommunity (loginid);
     xqlist.value = data;
   } else {
     loginid = null;
     xqlist.value = [];
   }
 };
-const tableData = ref([]);
-const loading = ref(false);
+getxqList (store.csqLoginid);
+const tableData = ref ([]);
+const loading = ref (false);
 const getData = () => {
   loading.value = true;
-  setTimeout(async () => {
-    const {data} = await getBuildingList(params);
+  setTimeout (async () => {
+    const { data } = await getBuildingList (params);
     tableData.value = data.list;
     total.value = data.total;
     loading.value = false;
   }, 500);
 };
-getData();
-const currentPage3 = ref(1);
-const pageSize3 = ref(20);
-const total = ref(1);
-const small = ref(false);
-const background = ref(false);
-const disabled = ref(false);
+getData ();
+const currentPage3 = ref (1);
+const pageSize3 = ref (20);
+const total = ref (1);
+const small = ref (false);
+const background = ref (false);
+const disabled = ref (false);
 const handleSizeChange = (val) => {
   params.pageSize = val;
-  getData();
+  getData ();
 };
 const handleCurrentChange = (val) => {
   params.pageIndex = val;
-  getData();
+  getData ();
 };
-const showSuccess = ref(false);
+const showSuccess = ref (false);
 const onClose = () => {
   showSuccess.value = false;
-  getData();
+  getData ();
 };
 const addmasg = () => {
   lcbh.value = "";
@@ -76,42 +79,42 @@ const onRefresh = () => {
   params.where.szdz = "";
   params.where.lh = "";
   params.where.lxr = "";
-  ElMessage({
+  ElMessage ({
     message: "清除成功",
     grouping: true,
     type: "success",
   });
-  getData();
+  getData ();
 };
-const Confirm = ref();
+const Confirm = ref ();
 const onConfirm = () => {
-  Confirm.value.submitForm(Confirm.value.ruleFormRef);
+  Confirm.value.submitForm (Confirm.value.ruleFormRef);
 };
 
-const lcbh = ref("");
+const lcbh = ref ("");
 const onEditor = (row) => {
   lcbh.value = row.bh;
   showSuccess.value = true;
 };
 const delSuccess = async (row) => {
-  ElMessageBox.confirm("是否确认删除?", "确认删除", {
+  ElMessageBox.confirm ("是否确认删除?", "确认删除", {
     confirmButtonText: "确认",
     cancelButtonText: "取消",
     type: "warning",
   })
-      .then(async () => {
-        const data = await deleteBuilding(row.bh);
+      .then (async () => {
+        const data = await deleteBuilding (row.bh);
         if (data.code === 200) {
-          ElMessage({
+          ElMessage ({
             message: "删除成功",
             grouping: true,
             type: "success",
           });
-          getData();
+          getData ();
         }
       })
-      .catch(() => {
-        ElMessage({
+      .catch (() => {
+        ElMessage ({
           type: "info",
           message: "已取消",
         });
@@ -119,24 +122,24 @@ const delSuccess = async (row) => {
 };
 
 // 检查
-const Examine = ref();
-const showExamine = ref(false);
+const Examine = ref ();
+const showExamine = ref (false);
 const onExamineclose = () => {
   showExamine.value = false;
-  getData();
+  getData ();
 };
 const onExamine = () => {
-  Examine.value.submitForm(Examine.value.ruleFormRef);
+  Examine.value.submitForm (Examine.value.ruleFormRef);
 };
-const jxinfo = ref({});
+const jxinfo = ref ({});
 const addVisit = (row) => {
   jxinfo.value = row;
   showExamine.value = true;
 };
 
 // 查看
-const showView = ref(false);
-const viewbh = ref();
+const showView = ref (false);
+const viewbh = ref ();
 const OnView = (row) => {
   viewbh.value = row.bh;
   showView.value = true;
@@ -151,7 +154,8 @@ const OnView = (row) => {
     <el-row :gutter="20" justify="space-between">
       <el-col :span="4">
         <el-form-item>
-          <el-select v-model="params.where.csqLoginid" clearable placeholder="社区名称" @change="getxqList">
+          <el-select v-model="params.where.csqLoginid" :disabled="store.csqLoginid" clearable placeholder="社区名称"
+                     @change="getxqList">
             <el-option
                 v-for="item in dict.sqList"
                 :key="item.loginid"
@@ -238,7 +242,7 @@ const OnView = (row) => {
     <el-table-column label="登记人" prop="lxr"/>
     <el-table-column label="登记时间">
       <template #default="{row}">
-        {{ dayjs(row.posttime).format("YYYY-MM-DD") }}
+        {{ dayjs (row.posttime).format ("YYYY-MM-DD") }}
       </template>
     </el-table-column>
     <el-table-column label="检查条数" prop="jcts" width="130"/>

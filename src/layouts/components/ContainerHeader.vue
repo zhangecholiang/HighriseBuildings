@@ -31,7 +31,7 @@ const cleanTheCache = () => {
   sessionStorage.clear ();
 };
 const gobigScreen = () => {
-  window.open ("http://kfq.kejin.net.cn:8001/bigscreenv2/#/highbuilding-inspection-kfq")
+  window.open (`http://kfq.kejin.net.cn:8001/bigscreenv2/#/highbuilding-inspection-kfq?token=${ store.token }`)
 }
 const logout = () => {
   // User.user.loginOut()

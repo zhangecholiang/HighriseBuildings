@@ -1,10 +1,10 @@
 <script setup>
-import {editBuilding} from "@/apis/building.js";
-import {reactive, ref} from "vue";
-import {getcheckDetail} from "@/apis/examine.js";
-import {getTreeMenu} from "@/apis/dict.js";
+import { editBuilding } from "@/apis/building.js";
+import { reactive, ref } from "vue";
+import { getcheckDetail } from "@/apis/examine.js";
+import { getTreeMenu } from "@/apis/dict.js";
 
-const props = defineProps({
+const props = defineProps ({
   bh: {
     type: String,
     default: ""
@@ -15,28 +15,28 @@ const props = defineProps({
   }
 });
 const getData = async () => {
-  const {data} = await editBuilding(props.jcbh);
-  Object.assign(Infor, data);
+  const { data } = await editBuilding (props.jcbh);
+  Object.assign (Infor, data);
 };
-getData();
-const size = ref("large");
-const Infor = reactive({});
-const BasicChecks = ref([]);
-const tableData = ref([]);
+getData ();
+const size = ref ("large");
+const Infor = reactive ({});
+const BasicChecks = ref ([]);
+const tableData = ref ([]);
 
 const getinfos = async () => {
-  const {data} = await getcheckDetail(props.bh);
-  const Basic = await getTreeMenu(873);
-  BasicChecks.value = Basic.data.map((item) => {
-    return item.children.map((i) => {
-      data.checkItem && data.checkItem.forEach((ite) => {
+  const { data } = await getcheckDetail (props.bh);
+  const Basic = await getTreeMenu (873);
+  BasicChecks.value = Basic.data.map ((item) => {
+    return item.children.map ((i) => {
+      data.checkItem && data.checkItem.forEach ((ite) => {
         if (ite.jcxm === i.dictName && ite.jcjg !== "") {
           i.iszg = ite.iszg;
           i.jcxm = ite.jcxm;
           i.jcjg = ite.jcjg;
         }
         if (ite.jcxm === i.dictName && ite.zp) {
-          i.files = ite.zp.map((item) => {
+          i.files = ite.zp.map ((item) => {
             return {
               url: "http://kfq.kejin.net.cn:8223" + item.path,
               response: {
@@ -55,11 +55,11 @@ const getinfos = async () => {
       };
     });
   });
-  tableData.value = BasicChecks.value.flat(Infinity).filter((item) => {
+  tableData.value = BasicChecks.value.flat (Infinity).filter ((item) => {
     return item.jcjg !== undefined;
   });
 };
-getinfos();
+getinfos ();
 
 const genderSpanCity = ({
                           row,
@@ -261,6 +261,7 @@ const genderSpanCity = ({
                   :src="item.url"
                   fit="contain"
                   hide-on-click-modal
+                  preview-teleported
                   style="width: 100px; height: 100px;margin-right: 10px;"
               />
             </template>

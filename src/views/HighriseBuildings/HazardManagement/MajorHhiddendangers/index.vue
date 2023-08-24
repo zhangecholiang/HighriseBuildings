@@ -1,20 +1,22 @@
 <script setup>
-import {reactive, ref} from "vue";
+import { reactive, ref } from "vue";
 import NewInformation
   from "@/views/HighriseBuildings/HazardManagement/GeneralHiddendangers/components/NewInformation.vue";
-import {ElMessage} from "element-plus";
-import {Refresh, Search} from "@element-plus/icons-vue";
-import {getHiddenDangerList} from "@/apis/hiddenTrouble.js";
-import {useDict} from "@/stores/dict.js";
-import {getCommunity} from "@/apis/dict.js";
+import { ElMessage } from "element-plus";
+import { Refresh, Search } from "@element-plus/icons-vue";
+import { getHiddenDangerList } from "@/apis/hiddenTrouble.js";
+import { useDict } from "@/stores/dict.js";
+import { getCommunity } from "@/apis/dict.js";
 import dayjs from "dayjs";
 import ViewHainfo from "@/views/HighriseBuildings/HazardManagement/GeneralHiddendangers/components/ViewHainfo.vue";
+import { useStore } from "@/stores/user.js";
 
-const params = reactive({
+const store = useStore ();
+const params = reactive ({
   "pageIndex": 1,
   "pageSize": 20,
   "where": {
-    "csqLoginid": "",
+    "csqLoginid": store.csqLoginid,
     "xqbh": "",
     "zt": "",
     "jzxz": "",
@@ -22,49 +24,50 @@ const params = reactive({
     iszg: 2
   }
 });
-const xqlist = ref([]);
+const xqlist = ref ([]);
 const getxqList = async (loginid) => {
   params.where.xqbh = "";
   if (loginid !== "") {
-    const {data} = await getCommunity(loginid);
+    const { data } = await getCommunity (loginid);
     xqlist.value = data;
   } else {
     loginid = null;
     xqlist.value = [];
   }
 };
-const dict = useDict();
-const tableData = ref([]);
-const loading = ref(false);
+getxqList (store.csqLoginid);
+const dict = useDict ();
+const tableData = ref ([]);
+const loading = ref (false);
 const getData = () => {
   loading.value = true;
-  setTimeout(async () => {
-    const {data} = await getHiddenDangerList(params);
+  setTimeout (async () => {
+    const { data } = await getHiddenDangerList (params);
     tableData.value = data.list;
     total.value = data.total;
     loading.value = false;
   }, 500);
 };
-getData();
-const currentPage3 = ref(1);
-const pageSize3 = ref(20);
-const total = ref(1);
-const small = ref(false);
-const background = ref(false);
-const disabled = ref(false);
+getData ();
+const currentPage3 = ref (1);
+const pageSize3 = ref (20);
+const total = ref (1);
+const small = ref (false);
+const background = ref (false);
+const disabled = ref (false);
 const handleSizeChange = (val) => {
   params.pageSize = val;
-  getData();
+  getData ();
 };
 const handleCurrentChange = (val) => {
   params.pageIndex = val;
-  getData();
+  getData ();
 };
-const showSuccess = ref(false);
+const showSuccess = ref (false);
 const onClose = () => {
   showSuccess.value = false;
 };
-const param = ref({});
+const param = ref ({});
 const addmasg = (row) => {
   if (row.zt === "未整改") {
     showSuccess.value = true;
@@ -80,20 +83,20 @@ const onRefresh = () => {
   params.where.zt = "";
   params.where.jzxz = "";
   params.where.iszg = "";
-  ElMessage({
+  ElMessage ({
     message: "清除成功",
     grouping: true,
     type: "success",
   });
-  getData();
+  getData ();
 };
-const Confirm = ref();
+const Confirm = ref ();
 const onConfirm = () => {
-  Confirm.value.submitForm(Confirm.value.ruleFormRef);
-  getData();
+  Confirm.value.submitForm (Confirm.value.ruleFormRef);
+  getData ();
 };
 
-const showView = ref(false);
+const showView = ref (false);
 </script>
 
 <template>
@@ -104,7 +107,8 @@ const showView = ref(false);
     <el-row :gutter="20" justify="space-between">
       <el-col :span="4">
         <el-form-item>
-          <el-select v-model="params.where.csqLoginid" clearable placeholder="社区名称" @change="getxqList">
+          <el-select v-model="params.where.csqLoginid" :disabled="store.csqLoginid" clearable placeholder="社区名称"
+                     @change="getxqList">
             <el-option
                 v-for="item in dict.sqList"
                 :key="item.loginid"
@@ -148,7 +152,7 @@ const showView = ref(false);
       </el-col>
       <el-col :span="4">
         <el-form-item>
-          <el-select v-model.number="params.where.iszg" clearable placeholder="隐患等级">
+          <el-select v-model.number="params.where.iszg" clearable disabled placeholder="隐患等级">
             <el-option :value="1" label="一般隐患">一般隐患</el-option>
             <el-option :value="2" label="重大隐患">重大隐患</el-option>
           </el-select>
@@ -198,7 +202,7 @@ const showView = ref(false);
     </el-table-column>
     <el-table-column label="整改期限">
       <template #default="{row}">
-        <span v-if="row.zgqx">{{ dayjs(row.zgqx).format("YYYY-MM-DD") }}</span>
+        <span v-if="row.zgqx">{{ dayjs (row.zgqx).format ("YYYY-MM-DD") }}</span>
       </template>
     </el-table-column>
     <el-table-column fixed="right" label="操作" width="140">

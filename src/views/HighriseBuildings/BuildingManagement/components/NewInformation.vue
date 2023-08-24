@@ -1,22 +1,23 @@
 <script setup>
-import {onBeforeMount, reactive, ref} from "vue";
-import {Plus} from "@element-plus/icons-vue";
-import {addBuilding, editBuilding} from "@/apis/building.js";
-import {useDict} from "@/stores/dict.js";
-import {getCommunity} from "@/apis/dict.js";
-import {useStore} from "@/stores/user.js";
-import {ElMessage} from "element-plus";
-import {afterRead} from "@/utils/tools.js";
+import { onBeforeMount, reactive, ref } from "vue";
+import { Plus } from "@element-plus/icons-vue";
+import { addBuilding, editBuilding } from "@/apis/building.js";
+import { useDict } from "@/stores/dict.js";
+import { getCommunity } from "@/apis/dict.js";
+import { useStore } from "@/stores/user.js";
+import { ElMessage } from "element-plus";
+import { afterRead } from "@/utils/tools.js";
 
-const props = defineProps({
+const store = useStore ();
+const props = defineProps ({
   bh: {
     type: String,
     default: ""
   }
 });
-const emits = defineEmits(["colsemasg"]);
-const ruleFormRef = ref();
-const rules = reactive(
+const emits = defineEmits ([ "colsemasg" ]);
+const ruleFormRef = ref ();
+const rules = reactive (
     {
       csqLoginid: [
         {
@@ -143,15 +144,16 @@ const rules = reactive(
         },
       ],
     });
-const Information = reactive({
+const Information = reactive ({
+  csqLoginid: store.csqLoginid,
   ldqm: [],
   jzgcxfyjs: [],
 });
-onBeforeMount(() => {
+onBeforeMount (() => {
   if (props.bh !== "") {
     const getBuilding = async (bh) => {
-      const {data} = await editBuilding(bh);
-      Information.el_ldqm = data.ldqmzp.map(item => {
+      const { data } = await editBuilding (bh);
+      Information.el_ldqm = data.ldqmzp.map (item => {
         return {
           url: "http://kfq.kejin.net.cn:8223" + item.path,
           response: {
@@ -159,7 +161,7 @@ onBeforeMount(() => {
           }
         };
       });
-      Information.el_jzgcxfyjs = data.jzgcxfyjszp.map(item => {
+      Information.el_jzgcxfyjs = data.jzgcxfyjszp.map (item => {
         return {
           url: "http://kfq.kejin.net.cn:8223" + item.path,
           response: {
@@ -167,87 +169,87 @@ onBeforeMount(() => {
           }
         };
       });
-      await getxqList(data.csqLoginid);
-      Object.assign(Information, data);
+      await getxqList (data.csqLoginid);
+      Object.assign (Information, data);
     };
-    getBuilding(props.bh);
+    getBuilding (props.bh);
   }
 });
 
-const dict = useDict();
-const store = useStore();
-const xqlist = ref([]);
+const dict = useDict ();
+const xqlist = ref ([]);
 const getxqList = async (loginid) => {
   Information.xqbh = "";
   if (!loginid) {
     loginid = null;
   }
-  const {data} = await getCommunity(loginid);
+  const { data } = await getCommunity (loginid);
   xqlist.value = data;
 };
-const loading = ref(false);
+getxqList (store.csqLoginid)
+const loading = ref (false);
 const submitForm = async (formEl) => {
   if (!formEl) return;
-  await formEl.validate(async (valid, fields) => {
+  await formEl.validate (async (valid, fields) => {
     if (valid) {
       loading.value = true;
-      Information.ldqm = Information.el_ldqm.map(item => {
+      Information.ldqm = Information.el_ldqm.map (item => {
         return item.response.data;
       });
-      Information.jzgcxfyjs = Information.el_jzgcxfyjs.map(item => {
+      Information.jzgcxfyjs = Information.el_jzgcxfyjs.map (item => {
         return item.response.data;
       });
       if (props.bh !== "") {
-        const data = await addBuilding(Information);
+        const data = await addBuilding (Information);
         if (data.code === 200) {
-          ElMessage({
+          ElMessage ({
             message: "修改成功",
             grouping: true,
             type: "success",
           });
-          setTimeout(() => {
-            emits("colsemasg");
+          setTimeout (() => {
+            emits ("colsemasg");
             loading.value = false;
           }, 1000);
         } else {
-          ElMessage({
+          ElMessage ({
             message: "修改失败",
             grouping: true,
             type: "warning",
           });
-          setTimeout(() => {
-            emits("colsemasg");
+          setTimeout (() => {
+            emits ("colsemasg");
           }, 1000);
         }
       } else {
-        const data = await addBuilding(Information);
+        const data = await addBuilding (Information);
         if (data.code === 200) {
-          ElMessage({
+          ElMessage ({
             message: "提交成功",
             grouping: true,
             type: "success",
           });
-          setTimeout(() => {
-            emits("colsemasg");
+          setTimeout (() => {
+            emits ("colsemasg");
             loading.value = false;
           }, 1000);
         } else {
-          ElMessage({
+          ElMessage ({
             message: data.msg,
             grouping: true,
             type: "error",
           });
-          setTimeout(() => {
-            emits("colsemasg");
+          setTimeout (() => {
+            emits ("colsemasg");
           }, 1000);
         }
       }
     } else {
-      console.log("error submit!", fields);
+      console.log ("error submit!", fields);
     }
   });
 };
-defineExpose({
+defineExpose ({
   submitForm,
   ruleFormRef,
 });
@@ -263,7 +265,8 @@ defineExpose({
       <el-row :gutter="0" justify="start">
         <el-col :span="8">
           <el-form-item label="社区" prop="csqLoginid">
-            <el-select v-model="Information.csqLoginid" clearable placeholder="" @change="getxqList">
+            <el-select v-model="Information.csqLoginid" :disabled="store.csqLoginid" clearable placeholder=""
+                       @change="getxqList">
               <el-option
                   v-for="item in dict.sqList"
                   :key="item.loginid"

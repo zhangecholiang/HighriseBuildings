@@ -1,20 +1,24 @@
-import {defineStore} from "pinia";
+import { defineStore } from "pinia";
 
-export const useStore = defineStore({
+export const useStore = defineStore ({
     id: "user",
     state: () => {
         return {
             token: "",
-            userInfo: {}
+            userInfo: {},
+            csqLoginid: "",
         };
     },
     getters: {},
     actions: {
-        setToken(val) {
+        setToken (val) {
             this.token = val;
         },
-        setUserInfo(val) {
+        setUserInfo (val) {
             this.userInfo = val;
+        },
+        setCsqLoginid (val) {
+            this.csqLoginid = val;
         }
     },
     persist: true

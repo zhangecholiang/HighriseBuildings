@@ -28,7 +28,7 @@ const getxqList = async (loginid) => {
     xqlist.value = [];
   }
 };
-getxqList (store.csqLoginid);
+store.csqLoginid && getxqList (store.csqLoginid);
 const dict = useDict ();
 const tableData = ref ([]);
 const loading = ref (false);

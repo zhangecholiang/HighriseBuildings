@@ -86,7 +86,7 @@ const getxqList = async (loginid) => {
   const { data } = await getCommunity (loginid);
   xqlist.value = data;
 };
-getxqList (store.csqLoginid)
+store.csqLoginid && getxqList (store.csqLoginid)
 const ldlist = ref ([]);
 const getldList = async () => {
   const { data } = await getbuild (Information.csqloginid, Information.xqbh);

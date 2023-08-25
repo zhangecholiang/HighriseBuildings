@@ -186,7 +186,7 @@ const getxqList = async (loginid) => {
   const { data } = await getCommunity (loginid);
   xqlist.value = data;
 };
-getxqList (store.csqLoginid)
+store.csqLoginid && getxqList (store.csqLoginid)
 const loading = ref (false);
 const submitForm = async (formEl) => {
   if (!formEl) return;

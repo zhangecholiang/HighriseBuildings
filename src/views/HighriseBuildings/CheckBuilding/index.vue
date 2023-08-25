@@ -34,7 +34,7 @@ const getxqList = async (loginid) => {
     xqlist.value = [];
   }
 };
-getxqList (store.csqLoginid);
+store.csqLoginid && getxqList (store.csqLoginid);
 const tableData = ref ([]);
 const loading = ref (false);
 const getData = () => {

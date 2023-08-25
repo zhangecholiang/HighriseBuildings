@@ -29,7 +29,7 @@ const getxqList = async (loginid) => {
   const { data } = await getCommunity (loginid);
   xqlist.value = data;
 };
-getxqList (store.csqLoginid)
+store.csqLoginid && getxqList (store.csqLoginid)
 const tableData = ref ([]);
 const loading = ref (false);
 const getData = () => {

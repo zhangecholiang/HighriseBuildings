@@ -31,6 +31,7 @@ const cleanTheCache = () => {
   sessionStorage.clear ();
 };
 const gobigScreen = () => {
+  console.log (store.token)
   if (store.userInfo.ssdepartdlid == 20) {
     window.open (`http://kfq.kejin.net.cn:8001/bigscreenv2/#/highbuilding-inspection-csq?token=${ store.token }`)
   } else {

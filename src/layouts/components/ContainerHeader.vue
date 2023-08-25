@@ -31,10 +31,14 @@ const cleanTheCache = () => {
   sessionStorage.clear ();
 };
 const gobigScreen = () => {
-  window.open (`http://kfq.kejin.net.cn:8001/bigscreenv2/#/highbuilding-inspection-kfq?token=${ store.token }`)
+  if (store.userInfo.ssdepartdlid == 20) {
+    window.open (`http://kfq.kejin.net.cn:8001/bigscreenv2/#/highbuilding-inspection-csq?token=${ store.token }`)
+  } else {
+    window.open (`http://kfq.kejin.net.cn:8001/bigscreenv2/#/highbuilding-inspection-kfq?token=${ store.token }`)
+  }
 }
 const logout = () => {
-  // User.user.loginOut()
+  localStorage.clear ();
   // router.push('/')
   window.location.href = "http://kfq.kejin.net.cn:8005/login_230307.aspx";
 };

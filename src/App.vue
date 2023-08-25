@@ -1,6 +1,6 @@
 <script setup>
 import zhCn from "element-plus/dist/locale/zh-cn.mjs";
-import { onMounted, ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import { getToken, getTokenuser } from "@/apis/index.js";
 import { useStore } from "@/stores/user.js";
 import { getCommunity, getTreeMenu, getVillage } from "@/apis/dict.js";
@@ -9,7 +9,7 @@ import { useDict } from "@/stores/dict.js";
 const store = useStore ();
 const dict = useDict ();
 const iftoken = ref ("");
-onMounted (async () => {
+onBeforeMount (async () => {
   const query = new URLSearchParams (location.href.split ("?")[1]);
   const token = query.get ("token");
   if (token) {

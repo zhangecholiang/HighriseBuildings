@@ -13,7 +13,6 @@ onBeforeMount (async () => {
   const query = new URLSearchParams (location.href.split ("?")[1]);
   const token = query.get ("token");
   if (token) {
-    store.setToken (token);
     const user = await getTokenuser (token);
     store.setUserInfo (user.data);
     if (user.data.ssdepartdlid == 20) {
@@ -21,8 +20,9 @@ onBeforeMount (async () => {
     } else {
       store.setCsqLoginid (null);
     }
+    store.setToken (token);
   } else {
-    // window.location.href = "http://kfq.kejin.net.cn:8005/login_230307.aspx"
+    window.location.href = "http://kfq.kejin.net.cn:8005/login_230307.aspx"
   }
   if (localStorage.getItem ('iftoken') === iftoken.value) {
   } else {
@@ -44,6 +44,6 @@ onBeforeMount (async () => {
 
 <template>
   <el-config-provider :locale="zhCn">
-    <router-view></router-view>
+    <router-view v-if="store.token"></router-view>
   </el-config-provider>
 </template>

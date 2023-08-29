@@ -1,6 +1,6 @@
-import {defineStore} from "pinia";
+import { defineStore } from "pinia";
 
-export const useDict = defineStore({
+export const useDict = defineStore ({
     id: "dist",
     state: () => {
         return {
@@ -12,16 +12,16 @@ export const useDict = defineStore({
     },
     getters: {},
     actions: {
-        setSqList(sqList) {
+        setSqList (sqList) {
             this.sqList = sqList;
         },
-        setXqList(xqList) {
+        setXqList (xqList) {
             this.xqList = xqList;
         },
-        setJzwxzlist(jzwxzlist) {
+        setJzwxzlist (jzwxzlist) {
             this.jzwxzlist = jzwxzlist;
         },
-        setGcjzlblist(gcjzlblist) {
+        setGcjzlblist (gcjzlblist) {
             this.gcjzlblist = gcjzlblist;
         },
     },

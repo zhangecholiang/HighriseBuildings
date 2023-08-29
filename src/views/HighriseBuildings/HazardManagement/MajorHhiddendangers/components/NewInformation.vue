@@ -1,14 +1,14 @@
 <script setup>
-import {reactive, ref} from "vue";
-import {Plus} from "@element-plus/icons-vue";
-import {getRectification, submitRectification} from "@/apis/hiddenTrouble.js";
-import {ElMessage} from "element-plus";
-import {useStore} from "@/stores/user.js";
-import {afterRead} from "@/utils/tools.js";
+import { reactive, ref } from "vue";
+import { Plus } from "@element-plus/icons-vue";
+import { getRectification, submitRectification } from "@/apis/hiddenTrouble.js";
+import { ElMessage } from "element-plus";
+import { useStore } from "@/stores/user.js";
+import { afterRead } from "@/utils/tools.js";
 import dayjs from "dayjs";
 
-const store = useStore();
-const props = defineProps({
+const store = useStore ();
+const props = defineProps ({
   params: {
     type: Object,
     default: () => {
@@ -19,31 +19,31 @@ const props = defineProps({
     }
   }
 });
-const emits = defineEmits(["colsemasg"]);
+const emits = defineEmits ([ "colsemasg" ]);
 if (props.params.bh !== "") {
   const getData = async () => {
-    const {data} = await getRectification(props.params.bh, props.params.jcxm);
-    Object.assign(Information, data);
-    Information.jzgcxfyjszp = data.jzgcxfyjszp.map(item => {
+    const { data } = await getRectification (props.params.bh, props.params.jcxm);
+    Object.assign (Information, data);
+    Information.jzgcxfyjszp = data.jzgcxfyjszp.map (item => {
       return {
         url: "http://kfq.kejin.net.cn:8223" + item.path,
       };
     });
-    Information.ldqmzp = data.ldqmzp.map(item => {
+    Information.ldqmzp = data.ldqmzp.map (item => {
       return {
         url: "http://kfq.kejin.net.cn:8223" + item.path,
       };
     });
-    Information.fjbhzp = data.fjbhzp.map(item => {
+    Information.fjbhzp = data.fjbhzp.map (item => {
       return {
         url: "http://kfq.kejin.net.cn:8223" + item.path,
       };
     });
   };
-  getData();
+  getData ();
 }
-const ruleFormRef = ref();
-const rules = reactive({
+const ruleFormRef = ref ();
+const rules = reactive ({
   zgsm: [
     {
       required: true,
@@ -66,51 +66,51 @@ const rules = reactive({
     },
   ]
 });
-const Information = reactive({
+const Information = reactive ({
   qyfzrTel: "",
   fileList: [],
   fjbhzp: [],
 });
-const loading = ref(false);
-const HazarInfo = reactive({});
+const loading = ref (false);
+const HazarInfo = reactive ({});
 const submitForm = async (formEl) => {
   if (!formEl) return;
-  await formEl.validate(async (valid, fields) => {
+  await formEl.validate (async (valid, fields) => {
     if (valid) {
       loading.value = true;
       HazarInfo.jcxx_itme = props.params.bh;
       HazarInfo.jcxm = props.params.jcxm;
-      HazarInfo.zgzp = HazarInfo.el_zgzp.map(item => {
+      HazarInfo.zgzp = HazarInfo.el_zgzp.map (item => {
         return item.response.data;
       });
-      const data = await submitRectification(HazarInfo);
+      const data = await submitRectification (HazarInfo);
       if (data.code === 200) {
-        ElMessage({
+        ElMessage ({
           message: "提交成功",
           grouping: true,
           type: "success",
         });
-        setTimeout(() => {
+        setTimeout (() => {
           loading.value = false;
-          emits("colsemasg");
+          emits ("colsemasg");
         }, 1000);
       } else {
-        ElMessage({
+        ElMessage ({
           message: data.msg,
           grouping: true,
           type: "error",
         });
-        setTimeout(() => {
+        setTimeout (() => {
           loading.value = false;
-          emits("colsemasg");
+          emits ("colsemasg");
         }, 1000);
       }
     } else {
-      console.log("error submit!", fields);
+      console.log ("error submit!", fields);
     }
   });
 };
-defineExpose({
+defineExpose ({
   submitForm,
   ruleFormRef,
 });

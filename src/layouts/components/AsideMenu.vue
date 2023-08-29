@@ -1,14 +1,15 @@
 <script setup>
-import {useRoute} from "vue-router";
-import {ref} from "vue";
-import {routes} from "@/router/index.js";
+import { useRoute } from "vue-router";
+import { ref } from "vue";
+import { routes } from "@/router/index.js";
 
-const route = useRoute();
-const isCollapse = ref(false);
+console.log (routes, 'routes')
+const route = useRoute ();
+const isCollapse = ref (false);
 const closeColl = () => {
   isCollapse.value = !isCollapse.value;
 };
-defineExpose({
+defineExpose ({
   closeColl
 });
 </script>

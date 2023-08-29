@@ -1,8 +1,9 @@
-import {createRouter, createWebHashHistory} from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 import {
     Edit,
     FolderDelete,
     FolderRemove,
+    House,
     List,
     Management,
     Memo,
@@ -22,9 +23,17 @@ export const routes = [
             icon: OfficeBuilding,
             name: "高层建筑",
         },
-        redirect: "/high-buildings/jzwgl",
+        redirect: "/high-buildings/home",
         component: () => import("@/layouts/index.vue"),
         children: [
+            {
+                path: 'home',
+                meta: {
+                    icon: House,
+                    name: "首页",
+                },
+                component: () => import("@/views/HighriseBuildings/Home/index.vue"),
+            },
             {
                 path: "xqgl",
                 meta: {
@@ -82,20 +91,20 @@ export const routes = [
                 },
                 component: () => import("@/views/HighriseBuildings/EnterStatistics/index.vue"),
             },
+            {
+                path: "process-agency",
+                meta: {
+                    name: "流程图代办",
+                    icon: Paperclip,
+                },
+                component: () => import("@/views/ProcessAgency/index.vue"),
+            },
         ],
-    },
-    {
-        path: "/process-agency",
-        meta: {
-            name: "流程图代办",
-            icon: Paperclip,
-        },
-        component: () => import("@/views/ProcessAgency/index.vue"),
     },
 ];
 
-const router = createRouter({
-    history: createWebHashHistory(),
+const router = createRouter ({
+    history: createWebHashHistory (),
     routes,
 });
 

@@ -1,13 +1,13 @@
 <script setup>
-import {getHiddenDangerList} from "@/apis/hiddenTrouble.js";
-import {ref} from "vue";
+import { getHiddenDangerList } from "@/apis/hiddenTrouble.js";
+import { ref } from "vue";
 
-const yhTotal = ref();
+const yhTotal = ref ();
 const getTotal = async () => {
-  const {data} = await getHiddenDangerList();
+  const { data } = await getHiddenDangerList ();
   yhTotal.value = data.total;
 };
-getTotal();
+getTotal ();
 </script>
 
 <template>

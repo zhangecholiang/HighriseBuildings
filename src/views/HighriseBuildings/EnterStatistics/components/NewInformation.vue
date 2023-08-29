@@ -1,9 +1,9 @@
 <script setup>
-import {reactive, ref} from "vue";
+import { reactive, ref } from "vue";
 import axios from "axios";
 
-const ruleFormRef = ref();
-const rules = reactive({
+const ruleFormRef = ref ();
+const rules = reactive ({
   District: [
     {
       required: true,
@@ -12,33 +12,33 @@ const rules = reactive({
     },
   ]
 });
-const Information = reactive({});
+const Information = reactive ({});
 
 const submitForm = (formEl) => {
   if (!formEl) return;
-  formEl.validate(async (valid, fields) => {
+  formEl.validate (async (valid, fields) => {
     if (!valid) {
       return false;
     } else {
-      console.log("error submit!", fields);
+      console.log ("error submit!", fields);
     }
   });
 };
-defineExpose({
+defineExpose ({
   submitForm,
   ruleFormRef,
 });
 
-const activeName = ref("first");
+const activeName = ref ("first");
 const handleClick = (tab, event) => {
-  console.log(tab, event);
+  console.log (tab, event);
 };
-const activeNames = ref(["1"]);
+const activeNames = ref ([ "1" ]);
 const handleChange = (val) => {
-  console.log(val);
+  console.log (val);
 };
 
-const fireSafety = ref([
+const fireSafety = ref ([
   {
     label: "易燃易爆品",
     rules: [],
@@ -51,7 +51,7 @@ const fireSafety = ref([
     files: [],
   },
 ]);
-const buildingFireProtection = ref([
+const buildingFireProtection = ref ([
   {
     label: "竖向管井和电缆桥架防火封堵",
     rules: [],
@@ -64,7 +64,7 @@ const buildingFireProtection = ref([
     files: [],
   },
 ]);
-const FireFightingFacilities = ref([
+const FireFightingFacilities = ref ([
   {
     label: "建筑灭火器",
     rules: [],
@@ -78,13 +78,13 @@ const FireFightingFacilities = ref([
   },
 ]);
 const getDict = () => {
-  axios.post("http://kfq.kejin.net.cn:8001/api20220708/api/dict/bindTree/635", {}, {
+  axios.post ("http://kfq.kejin.net.cn:8001/api20220708/api/dict/bindTree/635", {}, {
     headers: {
       "Authorization": "15449AF42BD3D76BD9624F70ED63F8854BD89625EAB98A1E3371B97D7804C8A31D881E94D8C405DF29CBDD7B006ECC0F2F4F948BE6CE5EB700A8C2AD44BAB80205ED7ACF09D0EC7CEA966EC6686F82F3B98890E15E829028E550B1148B4501B9B2589C0547C9D760"
     }
-  }).then(res => {
+  }).then (res => {
     if (res.data.code === 200) {
-      fireSafety.value = res.data.data.map(item => {
+      fireSafety.value = res.data.data.map (item => {
         return {
           label: item.dictName,
           rules: [
@@ -94,7 +94,7 @@ const getDict = () => {
               trigger: "blur"
             }
           ],
-          option: item.children.map(item => {
+          option: item.children.map (item => {
             return {
               label: item.dictName,
               value: item.id,
@@ -105,13 +105,13 @@ const getDict = () => {
       });
     }
   });
-  axios.post("http://kfq.kejin.net.cn:8001/api20220708/api/dict/bindTree/636", {}, {
+  axios.post ("http://kfq.kejin.net.cn:8001/api20220708/api/dict/bindTree/636", {}, {
     headers: {
       "Authorization": "15449AF42BD3D76BD9624F70ED63F8854BD89625EAB98A1E3371B97D7804C8A31D881E94D8C405DF29CBDD7B006ECC0F2F4F948BE6CE5EB700A8C2AD44BAB80205ED7ACF09D0EC7CEA966EC6686F82F3B98890E15E829028E550B1148B4501B9B2589C0547C9D760"
     }
-  }).then(res => {
+  }).then (res => {
     if (res.data.code === 200) {
-      buildingFireProtection.value = res.data.data.map(item => {
+      buildingFireProtection.value = res.data.data.map (item => {
         return {
           label: item.dictName,
           rules: [
@@ -121,7 +121,7 @@ const getDict = () => {
               trigger: "blur"
             }
           ],
-          option: item.children.map(item => {
+          option: item.children.map (item => {
             return {
               label: item.dictName,
               value: item.id,
@@ -132,13 +132,13 @@ const getDict = () => {
       });
     }
   });
-  axios.post("http://kfq.kejin.net.cn:8001/api20220708/api/dict/bindTree/637", {}, {
+  axios.post ("http://kfq.kejin.net.cn:8001/api20220708/api/dict/bindTree/637", {}, {
     headers: {
       "Authorization": "15449AF42BD3D76BD9624F70ED63F8854BD89625EAB98A1E3371B97D7804C8A31D881E94D8C405DF29CBDD7B006ECC0F2F4F948BE6CE5EB700A8C2AD44BAB80205ED7ACF09D0EC7CEA966EC6686F82F3B98890E15E829028E550B1148B4501B9B2589C0547C9D760"
     }
-  }).then(res => {
+  }).then (res => {
     if (res.data.code === 200) {
-      FireFightingFacilities.value = res.data.data.map(item => {
+      FireFightingFacilities.value = res.data.data.map (item => {
         return {
           label: item.dictName,
           rules: [
@@ -148,7 +148,7 @@ const getDict = () => {
               trigger: "blur"
             }
           ],
-          option: item.children.map(item => {
+          option: item.children.map (item => {
             return {
               label: item.dictName,
               value: item.id,
@@ -160,10 +160,10 @@ const getDict = () => {
     }
   });
 };
-getDict();
+getDict ();
 const tableData = [];
 
-const custom = ref([
+const custom = ref ([
   {
     checkTheMatter: "",
     checkTheResults: "",
@@ -171,7 +171,7 @@ const custom = ref([
   },
 ]);
 const AddCustom = () => {
-  custom.value.push({
+  custom.value.push ({
     checkTheMatter: "",
     checkTheResults: "",
     checkThePicture: []
@@ -181,7 +181,7 @@ const DeleteCustom = (index) => {
   if (custom.value.length === 1) {
     return;
   }
-  custom.value.splice(index, 1);
+  custom.value.splice (index, 1);
 };
 </script>
 

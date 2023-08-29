@@ -1,11 +1,11 @@
 <script setup>
 import ContainerHeader from "@/layouts/components/ContainerHeader.vue";
 import AsideMenu from "@/layouts/components/AsideMenu.vue";
-import {ref} from "vue";
+import { ref } from "vue";
 
-const Collapse = ref();
+const Collapse = ref ();
 const closeColl = () => {
-  Collapse.value.closeColl();
+  Collapse.value.closeColl ();
 };
 </script>
 

@@ -1,11 +1,11 @@
 <script setup>
-import {reactive, ref} from "vue";
-import {getRectificationDetail} from "@/apis/hiddenTrouble.js";
-import {useStore} from "@/stores/user.js";
+import { reactive, ref } from "vue";
+import { getRectificationDetail } from "@/apis/hiddenTrouble.js";
+import { useStore } from "@/stores/user.js";
 import dayjs from "dayjs";
 
-const store = useStore();
-const props = defineProps({
+const store = useStore ();
+const props = defineProps ({
   params: {
     type: Object,
     default: () => {
@@ -16,43 +16,43 @@ const props = defineProps({
     }
   }
 });
-const emits = defineEmits(["colsemasg"]);
+const emits = defineEmits ([ "colsemasg" ]);
 if (props.params.bh !== "") {
   const getData = async () => {
-    const {data} = await getRectificationDetail(props.params.bh, props.params.jcxm);
-    Object.assign(Information, data);
-    Information.jzgcxfyjszp = data.jzgcxfyjszp.map(item => {
+    const { data } = await getRectificationDetail (props.params.bh, props.params.jcxm);
+    Object.assign (Information, data);
+    Information.jzgcxfyjszp = data.jzgcxfyjszp.map (item => {
       return {
         url: "http://kfq.kejin.net.cn:8223" + item.path,
       };
     });
-    Information.ldqmzp = data.ldqmzp.map(item => {
+    Information.ldqmzp = data.ldqmzp.map (item => {
       return {
         url: "http://kfq.kejin.net.cn:8223" + item.path,
       };
     });
-    Information.fjbhzp = data.fjbhzp.map(item => {
+    Information.fjbhzp = data.fjbhzp.map (item => {
       return {
         url: "http://kfq.kejin.net.cn:8223" + item.path,
       };
     });
-    Information.zgzp = data.zgzp.map(item => {
+    Information.zgzp = data.zgzp.map (item => {
       return {
         url: "http://kfq.kejin.net.cn:8223" + item.path,
       };
     });
   };
-  getData();
+  getData ();
 }
-const ruleFormRef = ref();
+const ruleFormRef = ref ();
 
-const Information = reactive({
+const Information = reactive ({
   qyfzrTel: "",
   fileList: [],
   fjbhzp: [],
 });
 
-const HazarInfo = reactive({});
+const HazarInfo = reactive ({});
 
 </script>
 

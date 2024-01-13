@@ -9,6 +9,9 @@ const router = useRouter ();
 const gopack = () => {
   emits ("CollapseChange");
 };
+const goHome = () => {
+  window.location.href = "http://kfq.kejin.net.cn:8005/deskV5.aspx?fh=sjdz";
+};
 const amplification = () => {
 // 全屏/缩小
   const elem = document.documentElement; // 获取整个文档的根节点元素
@@ -48,7 +51,7 @@ const logout = () => {
 <template>
   <div class="toolbar">
     <el-row>
-      <el-col :span="20">
+      <el-col :span="18">
         <div class="function-l">
           <el-icon class="fun-ico" size="35" @click="gopack">
             <component :is="Fold"/>
@@ -56,8 +59,11 @@ const logout = () => {
           <span style="color: #000c17;line-height: 59px">欢迎进入 昆山开发区应急高层建筑检查系统</span>
         </div>
       </el-col>
-      <el-col :span="1">
+      <el-col :span="2">
         <div class="platform" @click="gobigScreen"></div>
+      </el-col>
+      <el-col :span="1">
+        <div class="home" @click="goHome"></div>
       </el-col>
       <el-col :span="3">
         <el-dropdown class="setting">
@@ -102,6 +108,14 @@ const logout = () => {
     width: 32px;
     height: 35px;
     background: url("/static/images/dp.png") no-repeat top/ 100% 100%;
+  }
+
+  .home {
+    background: url("https://bpic.588ku.com/element_origin_min_pic/01/39/37/31573cba85d4ebb.jpg") no-repeat
+      top/ 100% 100%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
   }
 
   .function-l {
